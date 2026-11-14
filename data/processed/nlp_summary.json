@@ -1,0 +1,248 @@
+{
+  "corpus_class_counts": {
+    "Data integrity": 651,
+    "Sterility and contamination": 391,
+    "Process validation": 115,
+    "Quality unit": 244,
+    "Other GMP": 1775
+  },
+  "severity_weights": {
+    "Data integrity": 1.0,
+    "Sterility and contamination": 1.0,
+    "Quality unit": 0.8,
+    "Process validation": 0.7,
+    "Other GMP": 0.4
+  },
+  "per_maker": {
+    "AVYXA": {
+      "citations_5yr": 0,
+      "severity": 0.0,
+      "status": "no citations in 5 years",
+      "class_counts": {
+        "Data integrity": 0,
+        "Sterility and contamination": 0,
+        "Process validation": 0,
+        "Quality unit": 0,
+        "Other GMP": 0
+      }
+    },
+    "ACCORD": {
+      "citations_5yr": 11,
+      "severity": 0.757,
+      "status": "scored from FDA citations",
+      "class_counts": {
+        "Data integrity": 2,
+        "Sterility and contamination": 2,
+        "Process validation": 1,
+        "Quality unit": 3,
+        "Other GMP": 3
+      }
+    },
+    "APOTEX": {
+      "citations_5yr": 11,
+      "severity": 0.8492,
+      "status": "scored from FDA citations",
+      "class_counts": {
+        "Data integrity": 1,
+        "Sterility and contamination": 5,
+        "Process validation": 2,
+        "Quality unit": 2,
+        "Other GMP": 1
+      }
+    },
+    "BPI": {
+      "citations_5yr": 18,
+      "severity": 0.6866,
+      "status": "scored from FDA citations",
+      "class_counts": {
+        "Data integrity": 4,
+        "Sterility and contamination": 1,
+        "Process validation": 1,
+        "Quality unit": 3,
+        "Other GMP": 9
+      }
+    },
+    "EUGIA": {
+      "citations_5yr": 27,
+      "severity": 0.8241,
+      "status": "scored from FDA citations",
+      "class_counts": {
+        "Data integrity": 4,
+        "Sterility and contamination": 11,
+        "Process validation": 3,
+        "Quality unit": 4,
+        "Other GMP": 5
+      }
+    },
+    "FRESENIUS": {
+      "citations_5yr": 14,
+      "severity": 0.8496,
+      "status": "scored from FDA citations",
+      "class_counts": {
+        "Data integrity": 2,
+        "Sterility and contamination": 6,
+        "Process validation": 0,
+        "Quality unit": 4,
+        "Other GMP": 2
+      }
+    },
+    "GLAND": {
+      "citations_5yr": 3,
+      "severity": 0.9198,
+      "status": "scored from FDA citations",
+      "class_counts": {
+        "Data integrity": 2,
+        "Sterility and contamination": 0,
+        "Process validation": 0,
+        "Quality unit": 1,
+        "Other GMP": 0
+      }
+    },
+    "HOSPIRA": {
+      "citations_5yr": 3,
+      "severity": 0.8301,
+      "status": "scored from FDA citations",
+      "class_counts": {
+        "Data integrity": 0,
+        "Sterility and contamination": 1,
+        "Process validation": 1,
+        "Quality unit": 1,
+        "Other GMP": 0
+      }
+    },
+    "NATCO": {
+      "citations_5yr": 7,
+      "severity": 0.93,
+      "status": "scored from FDA citations",
+      "class_counts": {
+        "Data integrity": 0,
+        "Sterility and contamination": 5,
+        "Process validation": 0,
+        "Quality unit": 2,
+        "Other GMP": 0
+      }
+    },
+    "TEVA": {
+      "citations_5yr": 0,
+      "severity": 0.0,
+      "status": "no citations in 5 years",
+      "class_counts": {
+        "Data integrity": 0,
+        "Sterility and contamination": 0,
+        "Process validation": 0,
+        "Quality unit": 0,
+        "Other GMP": 0
+      }
+    },
+    "TEYRO": {
+      "citations_5yr": 0,
+      "severity": 0.0,
+      "status": "no citations in 5 years",
+      "class_counts": {
+        "Data integrity": 0,
+        "Sterility and contamination": 0,
+        "Process validation": 0,
+        "Quality unit": 0,
+        "Other GMP": 0
+      }
+    }
+  },
+  "examples": [
+    {
+      "maker_id": "EUGIA",
+      "predicted_class": "Sterility and contamination",
+      "severity": 0.996,
+      "text": "Separate or defined areas to prevent contamination or mix-ups are deficient regarding the manufacturing and processing operations."
+    },
+    {
+      "maker_id": "EUGIA",
+      "predicted_class": "Data integrity",
+      "severity": 0.995,
+      "text": "Batch production and control records do not include complete information relating to the production and control of each batch."
+    },
+    {
+      "maker_id": "FRESENIUS",
+      "predicted_class": "Data integrity",
+      "severity": 0.995,
+      "text": "Batch production and control records do not include complete information relating to the production and control of each batch."
+    },
+    {
+      "maker_id": "APOTEX",
+      "predicted_class": "Data integrity",
+      "severity": 0.994,
+      "text": "Appropriate controls are not exercised over computers or related systems to assure that changes in master production and control records or other records are instituted only by authorized personnel."
+    },
+    {
+      "maker_id": "ACCORD",
+      "predicted_class": "Data integrity",
+      "severity": 0.994,
+      "text": "Appropriate controls are not exercised over computers or related systems to assure that changes in master production and control records or other records are instituted only by authorized personnel."
+    },
+    {
+      "maker_id": "BPI",
+      "predicted_class": "Data integrity",
+      "severity": 0.992,
+      "text": "All records of production and control associated with a batch of drug product were not maintained at least one (1) year after the expiration date."
+    },
+    {
+      "maker_id": "GLAND",
+      "predicted_class": "Data integrity",
+      "severity": 0.992,
+      "text": "All records of production and control associated with a batch of drug product were not maintained at least one (1) year after the expiration date."
+    },
+    {
+      "maker_id": "APOTEX",
+      "predicted_class": "Sterility and contamination",
+      "severity": 0.991,
+      "text": "Procedures designed to prevent microbiological contamination of drug products purporting to be sterile are not established."
+    },
+    {
+      "maker_id": "NATCO",
+      "predicted_class": "Sterility and contamination",
+      "severity": 0.989,
+      "text": "Procedures designed to prevent microbiological contamination of drug products purporting to be sterile did not include adequate validation of the aseptic process."
+    },
+    {
+      "maker_id": "FRESENIUS",
+      "predicted_class": "Sterility and contamination",
+      "severity": 0.989,
+      "text": "Procedures designed to prevent microbiological contamination of drug products purporting to be sterile did not include adequate validation of the aseptic process."
+    },
+    {
+      "maker_id": "ACCORD",
+      "predicted_class": "Sterility and contamination",
+      "severity": 0.988,
+      "text": "Procedures designed to prevent microbiological contamination of drug products purporting to be sterile are not established and followed."
+    },
+    {
+      "maker_id": "NATCO",
+      "predicted_class": "Sterility and contamination",
+      "severity": 0.988,
+      "text": "Procedures designed to prevent microbiological contamination of drug products purporting to be sterile are not established, written and followed."
+    },
+    {
+      "maker_id": "BPI",
+      "predicted_class": "Data integrity",
+      "severity": 0.988,
+      "text": "The batch production and control records are deficient in that they do not include the identity of major equipment used."
+    },
+    {
+      "maker_id": "HOSPIRA",
+      "predicted_class": "Sterility and contamination",
+      "severity": 0.987,
+      "text": "Procedures designed to prevent microbiological contamination of drug products purporting to be sterile are not written and followed."
+    },
+    {
+      "maker_id": "GLAND",
+      "predicted_class": "Data integrity",
+      "severity": 0.972,
+      "text": "Laboratory records do not include complete data derived from all tests, examinations and assay necessary to assure compliance with established specifications and standards."
+    },
+    {
+      "maker_id": "HOSPIRA",
+      "predicted_class": "Quality unit",
+      "severity": 0.798,
+      "text": "There is a failure to thoroughly review any unexplained discrepancy and the failure of a batch or any of its components to meet any of its specifications whether or not the batch has been already distributed."
+    }
+  ]
+}

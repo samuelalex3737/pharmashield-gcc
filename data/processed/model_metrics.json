@@ -1,0 +1,80 @@
+{
+  "c2": {
+    "train_period": "scheduled 2006-2013",
+    "test_period": "scheduled 2014-2015",
+    "train_lines": 7779,
+    "test_lines": 2545,
+    "test_late_lines": 356,
+    "test_late_rate": 0.1399,
+    "scale_pos_weight": 8.3723,
+    "chosen_max_depth": 3,
+    "inner_validation_auc_by_depth": {
+      "3": 0.6027,
+      "4": 0.5953,
+      "5": 0.5934
+    },
+    "models": {
+      "XGBoost": {
+        "roc_auc": 0.715823,
+        "pr_auc": 0.276927,
+        "recall_late": 0.719101,
+        "precision_late": 0.246154,
+        "f1_late": 0.366762,
+        "flagged_share": 0.408644,
+        "recall_at_equal_flag_share": 0.719101
+      },
+      "Logistic regression": {
+        "roc_auc": 0.626514,
+        "pr_auc": 0.211201,
+        "recall_late": 0.853933,
+        "precision_late": 0.160507,
+        "f1_late": 0.270222,
+        "flagged_share": 0.744204,
+        "recall_at_equal_flag_share": 0.47191
+      }
+    },
+    "confusion_matrices": {
+      "XGBoost": {
+        "tn": 1405,
+        "fp": 784,
+        "fn": 100,
+        "tp": 256
+      },
+      "Logistic regression": {
+        "tn": 599,
+        "fp": 1590,
+        "fn": 52,
+        "tp": 304
+      }
+    },
+    "threshold": 0.5
+  },
+  "c3": {
+    "groups_modelled": 36,
+    "lines_scored": 9207,
+    "lines_flagged": 475,
+    "population_flag_rate": 0.0516,
+    "contamination": 0.05
+  },
+  "nlp": {
+    "train_texts": 2540,
+    "test_texts": 636,
+    "classes": [
+      "Data integrity",
+      "Sterility and contamination",
+      "Process validation",
+      "Quality unit",
+      "Other GMP"
+    ],
+    "macro_f1": 0.9868,
+    "accuracy": 0.989,
+    "baseline_macro_f1": 0.657,
+    "per_class_f1": {
+      "Data integrity": 0.9962,
+      "Sterility and contamination": 0.9872,
+      "Process validation": 1.0,
+      "Quality unit": 0.9608,
+      "Other GMP": 0.9901
+    }
+  }
+}

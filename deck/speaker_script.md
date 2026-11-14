@@ -1,0 +1,80 @@
+# Speaker Script - PharmaShield GCC [GENAI]
+
+Timed script for the 10-minute presentation (about 80 seconds per slide, 9 minutes 20 seconds in total, 40 seconds buffer). The text is identical to the speaker notes in deck/notebooklm_source_pack.md (generated from that file so the two never drift apart). Speakers follow the master plan roster; replace "Member N" with names once confirmed (open item F18: ask the professor whether everyone must speak).
+
+Delivery rules:
+- Say the numbers exactly as written.
+- Pause after each headline.
+- Point at the figure when you say its number.
+- Hand over by naming the next speaker's topic.
+
+## Slide 1 - The 2026 GCC chokepoint problem and the 25-day gap (Member 1, Q7 context)
+
+- Speaker: Member 1
+- Time window: 0:00 to 1:20 (script length 165 words, about 69 seconds at 145 words a minute)
+
+Imagine you are the chief procurement officer of a UAE hospital buying group in 2026. About 80% of your medicines are imported, and the two routes they travel, the Strait of Hormuz and Gulf airspace, were both disrupted this year. Hormuz traffic fell by more than 90%. Now one of your oncology suppliers fails. Industry data says it takes 25 days on average to qualify and onboard a replacement, and three quarters of companies run short while they wait. For a chemotherapy drug like carboplatin, 25 days means missed treatment cycles. This is not hypothetical for carboplatin: the US FDA feed lists 29 current shortage records for it, touching 8 of the 11 companies allowed to sell it. Today procurement still picks suppliers mostly on price, once a year, with manual checks. Our proposal, PharmaShield GCC, is a decision cockpit that keeps a ranked, pre-qualified bench of suppliers for every critical drug. It tells the buyer how to split each order before the crisis hits.
+
+Hand over: "Member 2 will show you where the data comes from."
+
+## Slide 2 - Five risk dimensions from seven real data feeds (Members 2A and 2B, Q2)
+
+- Speaker: Member 2A (first half) and Member 2B (from "The second lesson was names")
+- Time window: 1:20 to 2:40 (script length 184 words, about 77 seconds at 145 words a minute)
+
+A supplier score is only as good as its data, so we built it from seven public feeds. Training uses 10,324 real pharmaceutical shipments from USAID. The 2026 makers come from the US FDA drug directory, shortage feed and recall feed, plus FDA inspection and citation records, Medicaid prices and the World Bank logistics index. The first lesson came from the data itself. The FDA directory lists 18 carboplatin labelers, but 7 of them sell only bulk powder to other factories. A hospital cannot buy from them, so we rank 11 makers. The second lesson was names. The company on the label is often not the plant: Eugia belongs to Aurobindo, and Hospira belongs to Pfizer. We built a reviewed map from labeler to plant owner to parent and used fuzzy matching with two tests. The single threshold in our original plan would have blamed Accord for inspections of seven unrelated firms. Finally, honesty about overlap: only 2 of the 11 makers appear in the shipment history, so our model scores every maker from its plant, lane and freight profile, not from its name.
+
+Hand over: "Member 3 will turn this evidence into a decision."
+
+## Slide 3 - Hybrid TOPSIS ranking and the MILP order split, Normal vs Crisis (Member 3, Q1 and Q5)
+
+- Speaker: Member 3
+- Time window: 2:40 to 4:00 (script length 173 words, about 72 seconds at 145 words a minute)
+
+Machine learning tells us the risk; the board must decide how much each risk matters. We use AHP, where the board compares criteria in pairs once per mode. All three matrices are consistent, with ratios below 0.005 against a limit of 0.10. We blend those judgements 50-50 with entropy weights, but only on criteria with real data, so an assumption can never earn weight by accident. TOPSIS then ranks the 11 makers on how close each is to the ideal supplier. The ranking becomes an order through a mixed-integer linear program. Binary variables pick the suppliers, then the model enforces dual sourcing, a 70% cap on the primary, and a 5 to 15% trial for new makers. For 10,000 vials a month it recommends Teva 70%, Accord 25% and AVYXA 5%, for 1.44 million dollars. In a Hormuz crisis the buyer clicks Crisis and turns the risk dial, lambda, to 1.5. The India-made share drops from 25% to zero for 8.7% more cost. And the primary choice survives 98% of random weight shocks.
+
+Hand over: "Member 4A will show how we predict the delays behind these scores."
+
+## Slide 4 - Predicting late deliveries and billing outliers before they hit (Member 4A, Q3)
+
+- Speaker: Member 4A
+- Time window: 4:00 to 5:20 (script length 173 words, about 72 seconds at 145 words a minute)
+
+Can AI predict a supplier disruption? We trained XGBoost on real shipments up to 2013 and tested it only on 2014 and 2015. That is a fair test, because the late rate actually rose from 10.7 to 14% between the two periods. Late shipments are rare, about one in nine, so we reweighted them; otherwise a model can look 86% accurate by always saying "on time". XGBoost reaches an ROC-AUC of 0.716 against 0.627 for a standard logistic model. In business terms, if both models raise the same number of alerts, ours catches 72% of late shipments and the baseline 47%. SHAP tells the buyer why: plant history, freight profile and consignment weight. For example, Eugia's parent plants were late 13.7% of the time, which is why its risk is the highest at 9%. For fraud and billing errors we use an Isolation Forest, which needs no labelled fraud cases. It flagged 5% of invoice lines, such as a test-kit order whose freight bill was more than twice the value of the goods.
+
+Hand over: "Member 4B will show what we learn from documents."
+
+## Slide 5 - NLP that reads FDA findings and supply contracts (Member 4B, Q4)
+
+- Speaker: Member 4B
+- Time window: 5:20 to 6:40 (script length 181 words, about 75 seconds at 145 words a minute)
+
+Most supplier risk is written down, in inspection reports and in contracts, and nobody has time to read it all. We trained an NLP classifier on the FDA's public inspection findings: 40,473 drug-manufacturing citations. Each citation names the regulation it breaks, and we used that as a label, removing the regulation number from the text so the model has to read the words. It sorts findings into data integrity, sterility, process validation, quality unit and other issues. The F1 score is 0.987, against 0.657 for keyword rules. But we checked by hand, and the labels agree with a human reading only about 83% of the time. So we present the tags as pointers for a quality auditor, not as verdicts. Applied to our makers, it shows that 11 of Eugia's 27 recent findings are about sterility, which is what matters for an injectable. On contracts, our extractor reads clauses for lead time, penalties and force majeure. On a synthetic example, it flags a clause that lets the supplier stop delivering if a strait closes, exactly when the GPO needs it most.
+
+Hand over: "Member 5 will show who stays in control, live."
+
+## Slide 6 - Human in the loop, UAE compliance and a 30-second live demo (Member 5, Q6 and Q7)
+
+- Speaker: Member 5
+- Time window: 6:40 to 8:00 (script length 177 words, about 74 seconds at 145 words a minute)
+
+An AI that picks suppliers raises three questions: who decides, is it fair, and is it lawful? Who decides: a human. PharmaShield never sends an order. The category manager sees the recommended split and approves it or overrides it. An override needs a written reason, and every decision is logged with its weights and allocation. Is it fair: every score shows its top three reasons, so a supplier can be challenged. Missing data is treated as neutral, so a maker is never punished or rewarded for being unknown. We use plant and lane evidence where we have it, and country-level evidence only where we do not. New makers get a structured path in: a capped 5 to 15% trial, but only after passing a safety gate. Is it lawful: the log holds business decisions only, in line with the UAE data protection law. Let me show you in 30 seconds. Here is the scorecard. I click Crisis, raise the risk dial, and the order moves off the exposed lane. Then I approve, and the decision is logged.
+
+Hand over: "Member 1 will close with the pilot and our ask."
+
+## Slide 7 - The 90-day pilot, KPIs and the ask (Member 1)
+
+- Speaker: Member 1
+- Time window: 8:00 to 9:20 (script length 185 words, about 77 seconds at 145 words a minute)
+
+We are not asking for a big-bang system. We are asking for 90 days. In the first month we connect the GPO's own delivery records and Tatmeen scan data, and retrain the delivery model on our real lanes instead of the historical proxy. In the second month the cockpit runs in shadow mode next to today's buying, so we can compare its alerts with what actually happens. In the third month buyers use it for live approvals on carboplatin and four more critical oncology drugs. We will judge it on four measures: dual-source coverage on every pilot drug, a pre-qualified backup bench for each one, on-time-in-full delivery, and the false-alarm rate of our alerts. We are transparent about cost. Resilience costs about 17% more than buying everything from the cheapest maker, a split our own Tier 1 rules forbid. In a crisis, another 8.7% takes the exposed lane out of the order. That is the insurance premium. The aim is to reduce stock-outs, not to promise they disappear. We ask for approval of the pilot, a data-sharing agreement, and one category manager to own it.
+
+Close: "Thank you. We welcome your questions."
+
+## Rehearsal checklist
+
+- [ ] Two timed full run-throughs on Mon 16 Nov (target 9:20 or less).
+- [ ] Demo laptop: app open on the Scorecard page, the backup video on the desktop.
+- [ ] Every [GENAI] element circled in red dashed outline; footnote on each slide.
+- [ ] Every number checked against docs/number_trace.md.
+- [ ] Q&A owners assigned (deck/qa_prep.md).

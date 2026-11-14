@@ -1,0 +1,199 @@
+{
+  "global_importance": {
+    "Site history (prior late rate)": 0.4444,
+    "Freight-to-value ratio": 0.3772,
+    "Shipment weight": 0.2903,
+    "Shipment mode": 0.2051,
+    "Origin country": 0.1784
+  },
+  "per_maker": {
+    "AVYXA": [
+      {
+        "feature": "Origin country",
+        "shap_log_odds": -1.2486,
+        "reason": "Plant country United States lowers delay risk"
+      },
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": -0.5262,
+        "reason": "Site history: 10.7% prior late rate (overall training rate) lowers delay risk"
+      },
+      {
+        "feature": "Shipment weight",
+        "shap_log_odds": -0.2938,
+        "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
+      }
+    ],
+    "ACCORD": [
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": -0.5094,
+        "reason": "Site history: 10.7% prior late rate (overall training rate) lowers delay risk"
+      },
+      {
+        "feature": "Freight-to-value ratio",
+        "shap_log_odds": -0.421,
+        "reason": "Freight cost at 9.0% of value (origin median) lowers delay risk"
+      },
+      {
+        "feature": "Shipment mode",
+        "shap_log_odds": -0.1138,
+        "reason": "Air shipment mode lowers delay risk"
+      }
+    ],
+    "APOTEX": [
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": -0.5192,
+        "reason": "Site history: 10.7% prior late rate (overall training rate) lowers delay risk"
+      },
+      {
+        "feature": "Origin country",
+        "shap_log_odds": -0.4958,
+        "reason": "Plant country Canada lowers delay risk"
+      },
+      {
+        "feature": "Shipment mode",
+        "shap_log_odds": -0.115,
+        "reason": "Air shipment mode lowers delay risk"
+      }
+    ],
+    "BPI": [
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": -0.5094,
+        "reason": "Site history: 10.7% prior late rate (overall training rate) lowers delay risk"
+      },
+      {
+        "feature": "Freight-to-value ratio",
+        "shap_log_odds": -0.421,
+        "reason": "Freight cost at 9.0% of value (origin median) lowers delay risk"
+      },
+      {
+        "feature": "Shipment mode",
+        "shap_log_odds": -0.1138,
+        "reason": "Air shipment mode lowers delay risk"
+      }
+    ],
+    "EUGIA": [
+      {
+        "feature": "Freight-to-value ratio",
+        "shap_log_odds": -0.4522,
+        "reason": "Freight cost at 9.0% of value (origin median) lowers delay risk"
+      },
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": 0.3175,
+        "reason": "Site history: 13.7% prior late rate (parent SCMS sites) raises delay risk"
+      },
+      {
+        "feature": "Shipment mode",
+        "shap_log_odds": -0.1312,
+        "reason": "Air shipment mode lowers delay risk"
+      }
+    ],
+    "FRESENIUS": [
+      {
+        "feature": "Origin country",
+        "shap_log_odds": -1.2486,
+        "reason": "Plant country United States lowers delay risk"
+      },
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": -0.5262,
+        "reason": "Site history: 10.7% prior late rate (overall training rate) lowers delay risk"
+      },
+      {
+        "feature": "Shipment weight",
+        "shap_log_odds": -0.2938,
+        "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
+      }
+    ],
+    "GLAND": [
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": -0.7895,
+        "reason": "Site history: 10.2% prior late rate (parent SCMS sites) lowers delay risk"
+      },
+      {
+        "feature": "Freight-to-value ratio",
+        "shap_log_odds": -0.428,
+        "reason": "Freight cost at 9.0% of value (origin median) lowers delay risk"
+      },
+      {
+        "feature": "Shipment mode",
+        "shap_log_odds": -0.1098,
+        "reason": "Air shipment mode lowers delay risk"
+      }
+    ],
+    "HOSPIRA": [
+      {
+        "feature": "Origin country",
+        "shap_log_odds": -1.2486,
+        "reason": "Plant country United States lowers delay risk"
+      },
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": -0.5262,
+        "reason": "Site history: 10.7% prior late rate (overall training rate) lowers delay risk"
+      },
+      {
+        "feature": "Shipment weight",
+        "shap_log_odds": -0.2938,
+        "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
+      }
+    ],
+    "NATCO": [
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": -0.5094,
+        "reason": "Site history: 10.7% prior late rate (overall training rate) lowers delay risk"
+      },
+      {
+        "feature": "Freight-to-value ratio",
+        "shap_log_odds": -0.421,
+        "reason": "Freight cost at 9.0% of value (origin median) lowers delay risk"
+      },
+      {
+        "feature": "Shipment mode",
+        "shap_log_odds": -0.1138,
+        "reason": "Air shipment mode lowers delay risk"
+      }
+    ],
+    "TEVA": [
+      {
+        "feature": "Origin country",
+        "shap_log_odds": -1.2486,
+        "reason": "Plant country United States lowers delay risk"
+      },
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": -0.5262,
+        "reason": "Site history: 10.7% prior late rate (overall training rate) lowers delay risk"
+      },
+      {
+        "feature": "Shipment weight",
+        "shap_log_odds": -0.2938,
+        "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
+      }
+    ],
+    "TEYRO": [
+      {
+        "feature": "Site history (prior late rate)",
+        "shap_log_odds": -0.5094,
+        "reason": "Site history: 10.7% prior late rate (overall training rate) lowers delay risk"
+      },
+      {
+        "feature": "Freight-to-value ratio",
+        "shap_log_odds": -0.421,
+        "reason": "Freight cost at 9.0% of value (origin median) lowers delay risk"
+      },
+      {
+        "feature": "Shipment mode",
+        "shap_log_odds": -0.1138,
+        "reason": "Air shipment mode lowers delay risk"
+      }
+    ]
+  },
+  "unit": "mean absolute SHAP value, log-odds of late delivery"
+}

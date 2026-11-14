@@ -1,0 +1,4 @@
+origin_country,air_gulf_share,sea_hormuz_share,sea_gulf_of_oman_share,rationale
+India,0.55,0.30,0.15,ASSUMPTION A8: short sea leg to Jebel Ali through Hormuz is common for India-made generics; some consignments land at Fujairah or Khor Fakkan on the Gulf of Oman coast outside Hormuz; oncology injectables mostly fly into Dubai through Gulf airspace
+United States,0.85,0.10,0.05,ASSUMPTION A8: long-haul oncology injectables fly into Dubai through Gulf airspace; a small share moves by sea via Suez and Hormuz
+Canada,0.85,0.10,0.05,ASSUMPTION A8: same pattern as the United States

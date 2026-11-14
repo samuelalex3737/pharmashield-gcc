@@ -1,0 +1,47 @@
+{
+ "run_utc": "2026-11-14T21:04:26Z",
+ "data_cutoff": "2026-11-14",
+ "raw_files": [
+  "fda_dashboard_citations_20261114.xlsx",
+  "fda_dashboard_inspections_20261114.xlsx",
+  "medicaid_sdud2025_carboplatin_20261114.json",
+  "openfda_ndc_carboplatin_20261114.json",
+  "openfda_recalls_carboplatin_firms_20261114.json",
+  "openfda_shortages_carboplatin_20261114.json",
+  "openfda_shortages_oncology_20261114.json",
+  "scms_shipment_pricing.csv",
+  "worldbank_lpi2023edition_20261114.json"
+ ],
+ "oncology_shortages": {
+  "source": "openFDA Drug Shortages API, therapeutic_category Oncology",
+  "retrieved_utc": "2026-11-14T11:54:29+00:00",
+  "records": 122,
+  "current_records": 84,
+  "current_drugs": 8,
+  "current_by_drug": {
+   "Carboplatin Injection": 29,
+   "Dexamethasone Sodium Phosphate Injection": 19,
+   "Methotrexate Sodium Injection": 15,
+   "Azacitidine Injection": 9,
+   "Ifosfamide Injection": 8,
+   "Streptozocin Powder, For Solution": 2,
+   "Flurazepam Hydrochloride Capsule": 1,
+   "Pentostatin Injection": 1
+  }
+ },
+ "sku_id": "CARBOPLATIN_INJ_10MG_ML",
+ "demand": 10000,
+ "lambda_default": 1.0,
+ "modes": [
+  "normal",
+  "crisis",
+  "cost"
+ ],
+ "makers": 11,
+ "notebooks": [
+  "01_scms_eda_cleaning",
+  "02_scoring_panel_2026",
+  "03_risk_models_xgb_iforest_nlp",
+  "04_mcdm_topsis_milp"
+ ]
+}

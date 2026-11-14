@@ -1,0 +1,47 @@
+{
+  "examples": [
+    {
+      "line_id": 52756,
+      "product_group": "HIV 1/2, Colloidal Gold, Diagnostic Kit, Antibody | Test kit",
+      "vendor": "SHANGHAI KEHUA BIOENGINEERING CO.,LTD.  (KHB)",
+      "origin_country": "China",
+      "year": 2012,
+      "unit_price_usd": 24.5,
+      "group_median_unit_price_usd": 24.5,
+      "price_vs_median_x": 1.0,
+      "freight_to_value": 2.356,
+      "group_median_freight_to_value": 0.3307,
+      "line_value_usd": 563.5,
+      "anomaly_score": 0.8087
+    },
+    {
+      "line_id": 22268,
+      "product_group": "Lamivudine/Zidovudine | Tablet - FDC",
+      "vendor": "CIPLA LIMITED",
+      "origin_country": "India",
+      "year": 2014,
+      "unit_price_usd": 0.04,
+      "group_median_unit_price_usd": 0.14,
+      "price_vs_median_x": 0.29,
+      "freight_to_value": 5.0,
+      "group_median_freight_to_value": 0.0399,
+      "line_value_usd": 322.5,
+      "anomaly_score": 0.7958
+    },
+    {
+      "line_id": 5935,
+      "product_group": "Lopinavir/Ritonavir | Tablet",
+      "vendor": "ABBVIE LOGISTICS (FORMERLY ABBOTT LOGISTICS BV)",
+      "origin_country": "Germany",
+      "year": 2008,
+      "unit_price_usd": 0.68,
+      "group_median_unit_price_usd": 0.25,
+      "price_vs_median_x": 2.72,
+      "freight_to_value": 5.0,
+      "group_median_freight_to_value": 0.0454,
+      "line_value_usd": 493.2,
+      "anomaly_score": 0.7942
+    }
+  ],
+  "population_flag_rate": 0.0516
+}

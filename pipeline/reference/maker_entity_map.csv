@@ -1,0 +1,12 @@
+maker_id,labeler_name_fda,labeler_codes,parent_group,scms_parent_key,fda_aliases,evidence
+AVYXA,"AVYXA Pharma, LLC",83831,Avyxa Pharma (privately held),,Avyxa Pharma,NDA holder for the Kyxata brand of carboplatin injection (NDC listing); no parent found in public filings
+ACCORD,"Accord Healthcare, Inc.",16729,Intas Pharmaceuticals,,Accord Healthcare;Intas Pharmaceuticals,Accord Healthcare is the US marketing arm of Intas Pharmaceuticals (India); Intas plants make the product
+APOTEX,Apotex Corp.,60505,Apotex,,Apotex;Apotex Research,Apotex Corp. is the US arm of Apotex Inc. (Canada); Apotex Research is its Indian finished-dose unit; shortage records list Teyro Labs for Apotex NDC 60505 (To Be Discontinued)
+BPI,BPI Labs LLC,54288,BPI Labs,,BPI Labs;Gland Pharma,openFDA shortage records list Gland Pharma Limited as the company for BPI Labs NDCs 54288-164/165/166/167 so Gland is treated as the contract maker
+EUGIA,Eugia US LLC,55150,Aurobindo Pharma,Aurobindo,Eugia Pharma Specialities;Eugia SEZ;Eugia US,Eugia is the injectables subsidiary of Aurobindo Pharma (formerly AuroMedics in the US)
+FRESENIUS,"Fresenius Kabi USA, LLC",63323,Fresenius SE,,Fresenius Kabi USA;Fresenius Kabi Oncology,Fresenius Kabi USA is part of Fresenius SE; Fresenius Kabi Oncology (India) is the group's oncology injectables unit. Fresenius Kabi Compounding is excluded (separate business)
+GLAND,Gland Pharma Limited,68083,Gland Pharma (Fosun Pharma majority owner),Gland,Gland Pharma,Gland Pharma is majority owned by Shanghai Fosun Pharmaceutical; Gland Chemicals is an API unit and is excluded
+HOSPIRA,"Hospira, Inc.",61703,Pfizer,,Hospira;Hospira Worldwide;Zydus Hospira Oncology,Hospira is a Pfizer company (shortage records name it Hospira Inc. a Pfizer Company)
+NATCO,Natco Pharma USA LLC,69339,Natco Pharma,,Natco Pharma,Natco Pharma USA is the US arm of Natco Pharma Limited (India); shortage records list Teyro Labs as the company for Natco NDC 69339-364/365/366/367
+TEVA,"Teva Parenteral Medicines, Inc.",0703,Teva Pharmaceutical Industries,,Teva Parenteral Medicines,Teva Parenteral Medicines is the Teva sterile injectables entity; Sicor is a Teva legacy name whose Mexico site supplies bulk carboplatin
+TEYRO,Teyro Labs Private Limited,82511,Teyro Labs (parent not confirmed),,Teyro Labs,Indian finished-dose maker; parent company not confirmed in public sources

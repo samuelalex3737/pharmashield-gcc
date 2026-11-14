@@ -1,0 +1,79 @@
+maker_id,alias,fda_legal_name,score,distinctive_name_score,decision
+ACCORD,Accord Healthcare,"Accord Healthcare, Inc.",100.0,100.0,accept
+ACCORD,Intas Pharmaceuticals,Intas Pharmaceuticals Ltd.,100.0,100.0,accept
+ACCORD,Intas Pharmaceuticals,Intas Pharmaceuticals Limited,100.0,100.0,accept
+ACCORD,Intas Pharmaceuticals,Inga Pharmaceuticals,92.7,66.7,reject (distinctive name differs)
+ACCORD,Accord Healthcare,"Corad Healthcare, Inc.",90.9,72.7,reject (distinctive name differs)
+ACCORD,Intas Pharmaceuticals,"Ionis Pharmaceuticals, Inc.",90.5,60.0,reject (distinctive name differs)
+ACCORD,Intas Pharmaceuticals,Ionis Pharmaceuticals Inc.,90.5,60.0,reject (distinctive name differs)
+ACCORD,Intas Pharmaceuticals,"Atlas Pharmaceuticals, LLC",90.5,60.0,reject (distinctive name differs)
+ACCORD,Intas Pharmaceuticals,NPS Pharmaceuticals Inc.,90.0,50.0,reject (distinctive name differs)
+ACCORD,Intas Pharmaceuticals,"Intermax Pharmaceuticals,  Inc.",88.9,61.5,reject (distinctive name differs)
+ACCORD,Accord Healthcare,ACI HealthCare Limited,83.9,44.4,reject (below 88)
+ACCORD,Accord Healthcare,A&D Healthcare,83.9,28.6,reject (below 88)
+ACCORD,Accord Healthcare,Aero Healthcare,81.2,40.0,reject (below 88)
+ACCORD,Accord Healthcare,Bayer HealthCare LLC,78.8,36.4,reject (below 88)
+ACCORD,Accord Healthcare,Almon Healthcare Private Limited,78.8,36.4,reject (below 88)
+ACCORD,Accord Healthcare,"Bayer HealthCare, LLC",78.8,36.4,reject (below 88)
+APOTEX,Apotex,Apotex Inc.,100.0,100.0,accept
+APOTEX,Apotex,"Apotex, Inc.",100.0,100.0,accept
+APOTEX,Apotex,Apotex Corp.,100.0,100.0,accept
+APOTEX,Apotex Research,Apotex Research Private Limited,100.0,100.0,accept
+APOTEX,Apotex Research,APF Research LLC,81.5,44.4,reject (below 88)
+APOTEX,Apotex Research,"Metrex Research, LLC.",80.0,50.0,reject (below 88)
+APOTEX,Apotex Research,Raptim Research Pvt. Ltd.,80.0,50.0,reject (below 88)
+APOTEX,Apotex Research,Notrox Research Private Limited,80.0,50.0,reject (below 88)
+APOTEX,Apotex Research,Raptim Research Ltd,80.0,50.0,reject (below 88)
+APOTEX,Apotex Research,"3A Research, LLC",76.9,25.0,reject (below 88)
+APOTEX,Apotex Research,Pegus Research Inc,75.9,36.4,reject (below 88)
+AVYXA,Avyxa Pharma,Maiva Pharma Private Limited,83.3,60.0,reject (below 88)
+AVYXA,Avyxa Pharma,Avesta Pharma Private Limited,80.0,54.5,reject (below 88)
+AVYXA,Avyxa Pharma,"ARNA Pharma Pty., Ltd.",78.3,44.4,reject (below 88)
+AVYXA,Avyxa Pharma,"EYWA PHARMA, INC.",78.3,44.4,reject (below 88)
+AVYXA,Avyxa Pharma,"Abba Pharma, Inc",78.3,44.4,reject (below 88)
+AVYXA,Avyxa Pharma,"Annovex Pharma, Inc.",76.9,50.0,reject (below 88)
+AVYXA,Avyxa Pharma,Yaopharma Co Ltd,76.2,28.6,reject (below 88)
+AVYXA,Avyxa Pharma,MAYNE PHARMA LLC,75.0,40.0,reject (below 88)
+BPI,BPI Labs,"BPI Labs, LLC",100.0,100.0,accept
+BPI,BPI Labs,BPI Labs,100.0,100.0,accept
+BPI,Gland Pharma,Gland Pharma Limited,100.0,100.0,accept
+BPI,Gland Pharma,Goran Pharma Private Ltd,83.3,60.0,reject (below 88)
+BPI,Gland Pharma,Losan Pharma GmbH,83.3,60.0,reject (below 88)
+BPI,Gland Pharma,GBA Pharma GmbH,81.8,50.0,reject (below 88)
+BPI,Gland Pharma,Anuh Pharma Limited,78.3,44.4,reject (below 88)
+BPI,Gland Pharma,"ARNA Pharma Pty., Ltd.",78.3,44.4,reject (below 88)
+BPI,Gland Pharma,Agon Pharma Private Limited,78.3,44.4,reject (below 88)
+BPI,Gland Pharma,Aton Pharma Inc.,78.3,44.4,reject (below 88)
+BPI,BPI Labs,"B & G Labs, Inc",75.0,50.0,reject (below 88)
+EUGIA,Eugia Pharma Specialities,Eugia Pharma Specialities Limited,100.0,100.0,accept
+EUGIA,Eugia Pharma Specialities,EUGIA Pharma Specialities Limited,100.0,100.0,accept
+EUGIA,Eugia SEZ,Eugia SEZ Private Limited,100.0,100.0,accept
+EUGIA,Eugia US,REGI US INC,80.0,66.7,reject (below 88)
+FRESENIUS,Fresenius Kabi USA,"Fresenius Kabi USA, LLC",100.0,100.0,accept
+FRESENIUS,Fresenius Kabi USA,Fresenius Kabi USA LLC,100.0,100.0,accept
+FRESENIUS,Fresenius Kabi Oncology,Fresenius Kabi Oncology Limited,100.0,100.0,accept
+FRESENIUS,Fresenius Kabi USA,Fresenius Kabi,87.5,100.0,reject (below 88)
+FRESENIUS,Fresenius Kabi USA,Fresenius Kabi USA LLC (FK USA),83.7,100.0,reject (below 88)
+FRESENIUS,Fresenius Kabi USA,Fresenius Kabi AB,80.0,100.0,reject (below 88)
+GLAND,Gland Pharma,Gland Pharma Limited,100.0,100.0,accept
+GLAND,Gland Pharma,Goran Pharma Private Ltd,83.3,60.0,reject (below 88)
+GLAND,Gland Pharma,Losan Pharma GmbH,83.3,60.0,reject (below 88)
+GLAND,Gland Pharma,GBA Pharma GmbH,81.8,50.0,reject (below 88)
+GLAND,Gland Pharma,Anuh Pharma Limited,78.3,44.4,reject (below 88)
+GLAND,Gland Pharma,"ARNA Pharma Pty., Ltd.",78.3,44.4,reject (below 88)
+GLAND,Gland Pharma,Agon Pharma Private Limited,78.3,44.4,reject (below 88)
+GLAND,Gland Pharma,Aton Pharma Inc.,78.3,44.4,reject (below 88)
+HOSPIRA,Hospira,"Hospira, Inc.",100.0,100.0,accept
+HOSPIRA,Hospira Worldwide,"Hospira Worldwide, LLC",100.0,100.0,accept
+HOSPIRA,Zydus Hospira Oncology,Zydus Hospira Oncology Private Ltd.,100.0,100.0,accept
+HOSPIRA,Zydus Hospira Oncology,"US Oncology, Inc. IRB",75.7,57.1,reject (below 88)
+NATCO,Natco Pharma,NATCO Pharma Limited,100.0,100.0,accept
+NATCO,Natco Pharma,Natco Pharma Limited,100.0,100.0,accept
+NATCO,Natco Pharma,NATCO PHARMA LTD,100.0,100.0,accept
+NATCO,Natco Pharma,Aton Pharma Inc.,87.0,66.7,reject (below 88)
+NATCO,Natco Pharma,Appco Pharma LLC,83.3,60.0,reject (below 88)
+NATCO,Natco Pharma,"Appco Pharma, LLC",83.3,60.0,reject (below 88)
+NATCO,Natco Pharma,ACM Pharma,81.8,50.0,reject (below 88)
+NATCO,Natco Pharma,"Denton Pharma, Inc.",80.0,54.5,reject (below 88)
+TEVA,Teva Parenteral Medicines,"Teva Parenteral Medicines, Inc.",100.0,100.0,accept
+TEYRO,Teyro Labs,Teyro Labs Private Limited,100.0,100.0,accept

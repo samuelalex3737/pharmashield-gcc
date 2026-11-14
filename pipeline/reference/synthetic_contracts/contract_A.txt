@@ -1,0 +1,9 @@
+SYNTHETIC CONTRACT - FOR ACADEMIC DEMONSTRATION ONLY
+SUPPLY AGREEMENT between the Purchaser (a GCC group purchasing organisation) and Supplier A (oncology injectables maker).
+Clause 1. Product. Carboplatin injection 10 mg/mL, 45 mL vial.
+Clause 4. Delivery. Supplier shall deliver each confirmed purchase order within 30 days of the order date, DAP Dubai.
+Clause 5. Late delivery. If delivery is late, Supplier shall pay liquidated damages of 2% of the order value per week of delay, capped at 10% of the order value.
+Clause 7. Force majeure. Neither party is liable for failure caused by natural disasters or government action, provided the affected party notifies the other within 5 days and uses reasonable efforts to resume supply through alternative routes.
+Clause 9. Exclusivity. This agreement is non-exclusive. The Purchaser may source from other makers at any time.
+Clause 11. Termination. Either party may terminate with 90 days written notice.
+Clause 12. Price. Prices are fixed for 12 months.

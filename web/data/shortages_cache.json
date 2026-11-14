@@ -1,0 +1,324 @@
+{
+ "source": "openFDA Drug Shortages API, generic_name carboplatin",
+ "retrieved_utc": "2026-11-14T11:54:28+00:00",
+ "cached_on": "2026-11-14",
+ "total": 35,
+ "results": [
+  {
+   "company_name": "Gland Pharma Limited",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 450mg/45mL (NDC 54288-166-01)",
+   "package_ndc": "54288-166-01",
+   "shortage_reason": "Demand increase for the drug",
+   "update_date": "10/21/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Gland Pharma Limited",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 50mg/5mL (NDC 54288-164-01)",
+   "package_ndc": "54288-164-01",
+   "shortage_reason": "Discontinuation of the manufacture of the drug",
+   "update_date": "10/21/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Hospira, Inc., a Pfizer Company",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 150 mg/15 mL (10 mg/mL) (NDC 61703-150-05)",
+   "package_ndc": "61703-150-05",
+   "shortage_reason": "Other",
+   "update_date": "11/09/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Hospira, Inc., a Pfizer Company",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 50 mg/5 mL (10 mg/mL) (NDC 61703-339-18)",
+   "package_ndc": "61703-339-18",
+   "shortage_reason": "Demand increase for the drug",
+   "update_date": "11/09/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Teyro Labs",
+   "status": "To Be Discontinued",
+   "presentation": "Carboplatin, Injection, 450 mg/45 mL (10 mg/mL) Multiple Dose Vial (NDC 60505-6282-6)",
+   "package_ndc": "60505-6282-6",
+   "shortage_reason": null,
+   "update_date": "06/01/2026",
+   "initial_posting_date": "06/01/2026"
+  },
+  {
+   "company_name": "Hospira, Inc., a Pfizer Company",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 150 mg/15 mL (10 mg/mL) (NDC 61703-339-22)",
+   "package_ndc": "61703-339-22",
+   "shortage_reason": "Other",
+   "update_date": "11/09/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Gland Pharma Limited",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 600 mg/65 mL (NDC 54288-167-01)",
+   "package_ndc": "54288-167-01",
+   "shortage_reason": "Demand increase for the drug",
+   "update_date": "10/21/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Hospira, Inc., a Pfizer Company",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 600 mg/60 mL (10 mg/mL) (NDC 61703-600-05)",
+   "package_ndc": "61703-600-05",
+   "shortage_reason": "Other",
+   "update_date": "11/09/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Teva Pharmaceuticals USA, Inc.",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 10 mg/1 mL (NDC 0703-4244-01)",
+   "package_ndc": "0703-4244-01",
+   "shortage_reason": "Other",
+   "update_date": "11/02/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Avyxa Pharma, LLC",
+   "status": "Current",
+   "presentation": "Kyxata, Injection, 80 mg/8 mL (10 mg/mL) (NDC 83831-141-08)",
+   "package_ndc": "83831-141-08",
+   "shortage_reason": null,
+   "update_date": "11/02/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Eugia US LLC",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 450 mg/45 mL (NDC 55150-335-01)",
+   "package_ndc": "55150-335-01",
+   "shortage_reason": "Demand increase for the drug",
+   "update_date": "10/19/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Accord Healthcare Inc.",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 10 mg/1 mL (NDC 16729-295-12)",
+   "package_ndc": "16729-295-12",
+   "shortage_reason": "Discontinuation of the manufacture of the drug",
+   "update_date": "11/02/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Teyro Labs",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 50 mg/5 mL (NDC 69339-364-05)",
+   "package_ndc": "69339-364-05",
+   "shortage_reason": null,
+   "update_date": "10/20/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Hospira, Inc., a Pfizer Company",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 450 mg/45 mL (10 mg/mL) (NDC 61703-262-05)",
+   "package_ndc": "61703-262-05",
+   "shortage_reason": "Other",
+   "update_date": "11/09/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Teva Pharmaceuticals USA, Inc.",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 10 mg/1 mL (NDC 0703-4239-01)",
+   "package_ndc": "0703-4239-01",
+   "shortage_reason": "Other",
+   "update_date": "11/02/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Teyro Labs",
+   "status": "To Be Discontinued",
+   "presentation": "Carboplatin, Injection, 600 mg/60 mL (10 mg/mL) Multiple Dose Vial (NDC 60505-6282-7)",
+   "package_ndc": "60505-6282-7",
+   "shortage_reason": null,
+   "update_date": "06/01/2026",
+   "initial_posting_date": "06/01/2026"
+  },
+  {
+   "company_name": "Teyro Labs",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 450 mg/45 mL (NDC 69339-366-45)",
+   "package_ndc": "69339-366-45",
+   "shortage_reason": null,
+   "update_date": "10/20/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Hospira, Inc., a Pfizer Company",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 600 mg/60 mL (10 mg/mL) (NDC 61703-339-56)",
+   "package_ndc": "61703-339-56",
+   "shortage_reason": "Other",
+   "update_date": "11/09/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Teyro Labs",
+   "status": "To Be Discontinued",
+   "presentation": "Carboplatin, Injection, 150 mg/15 mL (10 mg/mL) Multiple Dose Vial (NDC 60505-6282-3)",
+   "package_ndc": "60505-6282-3",
+   "shortage_reason": null,
+   "update_date": "06/01/2026",
+   "initial_posting_date": "06/01/2026"
+  },
+  {
+   "company_name": "Teva Pharmaceuticals USA, Inc.",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 10 mg/1 mL (NDC 0703-4246-01)",
+   "package_ndc": "0703-4246-01",
+   "shortage_reason": null,
+   "update_date": "11/02/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Avyxa Pharma, LLC",
+   "status": "Current",
+   "presentation": "Kyxata, Injection, 500 mg/50 mL (10 mg/mL) (NDC 83831-142-50)",
+   "package_ndc": "83831-142-50",
+   "shortage_reason": null,
+   "update_date": "11/02/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Eugia US LLC",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 600 mg/60 mL (NDC 55150-386-01)",
+   "package_ndc": "55150-386-01",
+   "shortage_reason": null,
+   "update_date": "10/19/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Hospira, Inc., a Pfizer Company",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 450 mg/45 mL (10 mg/mL) (NDC 61703-339-50)",
+   "package_ndc": "61703-339-50",
+   "shortage_reason": "Other",
+   "update_date": "11/09/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Ingenus Pharmaceuticals LLC",
+   "status": "To Be Discontinued",
+   "presentation": "Carboplatin, Injection, 600 mg/60 mL (NDC 50742-448-60)",
+   "package_ndc": "50742-448-60",
+   "shortage_reason": null,
+   "update_date": "02/20/2026",
+   "initial_posting_date": "02/20/2026"
+  },
+  {
+   "company_name": "Accord Healthcare Inc.",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 10 mg/1 mL (NDC 16729-295-31)",
+   "package_ndc": "16729-295-31",
+   "shortage_reason": "Discontinuation of the manufacture of the drug",
+   "update_date": "11/02/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Fresenius Kabi USA, LLC",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 10 mg/1 mL (NDC 63323-172-60)",
+   "package_ndc": "63323-172-60",
+   "shortage_reason": "Delay in shipping of the drug",
+   "update_date": "11/03/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Teyro Labs",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 150 mg/15 mL (NDC 69339-365-15)",
+   "package_ndc": "69339-365-15",
+   "shortage_reason": null,
+   "update_date": "10/20/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Teva Pharmaceuticals USA, Inc.",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 10 mg/1 mL (NDC 0703-4248-01)",
+   "package_ndc": "0703-4248-01",
+   "shortage_reason": "Other",
+   "update_date": "11/02/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Teyro Labs",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 600 mg/60 mL (NDC 69339-367-60)",
+   "package_ndc": "69339-367-60",
+   "shortage_reason": null,
+   "update_date": "10/20/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Ingenus Pharmaceuticals LLC",
+   "status": "To Be Discontinued",
+   "presentation": "Carboplatin, Injection, 450 mg/45 mL (NDC 50742-447-45)",
+   "package_ndc": "50742-447-45",
+   "shortage_reason": null,
+   "update_date": "02/20/2026",
+   "initial_posting_date": "02/20/2026"
+  },
+  {
+   "company_name": "Teyro Labs",
+   "status": "To Be Discontinued",
+   "presentation": "Carboplatin, Injection, 50 mg/5 mL (10 mg/mL) Multiple Dose Vial (NDC 60505-6282-1)",
+   "package_ndc": "60505-6282-1",
+   "shortage_reason": null,
+   "update_date": "06/01/2026",
+   "initial_posting_date": "06/01/2026"
+  },
+  {
+   "company_name": "Accord Healthcare Inc.",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 10 mg/1 mL (NDC 16729-295-34)",
+   "package_ndc": "16729-295-34",
+   "shortage_reason": "Discontinuation of the manufacture of the drug",
+   "update_date": "11/02/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Gland Pharma Limited",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 150mg/15mL (NDC 54288-165-01)",
+   "package_ndc": "54288-165-01",
+   "shortage_reason": null,
+   "update_date": "10/21/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Accord Healthcare Inc.",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 10 mg/1 mL (NDC 16729-295-33)",
+   "package_ndc": "16729-295-33",
+   "shortage_reason": "Discontinuation of the manufacture of the drug",
+   "update_date": "11/02/2026",
+   "initial_posting_date": "04/28/2023"
+  },
+  {
+   "company_name": "Hospira, Inc., a Pfizer Company",
+   "status": "Current",
+   "presentation": "Carboplatin, Injection, 50 mg/5 mL (10 mg/mL) (NDC 61703-360-18)",
+   "package_ndc": "61703-360-18",
+   "shortage_reason": "Other",
+   "update_date": "11/09/2026",
+   "initial_posting_date": "04/28/2023"
+  }
+ ],
+ "disclaimer": "openFDA data is not validated for clinical or production use. US data, used only as a supplier-risk signal."
+}

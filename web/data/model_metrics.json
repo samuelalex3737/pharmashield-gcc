@@ -1,0 +1,138 @@
+{
+ "c2": {
+  "train_period": "scheduled 2006-2013",
+  "test_period": "scheduled 2014-2015",
+  "train_lines": 7779,
+  "test_lines": 2545,
+  "test_late_lines": 356,
+  "test_late_rate": 0.1399,
+  "scale_pos_weight": 8.3723,
+  "chosen_max_depth": 3,
+  "inner_validation_auc_by_depth": {
+   "3": 0.6027,
+   "4": 0.5953,
+   "5": 0.5934
+  },
+  "models": {
+   "XGBoost": {
+    "roc_auc": 0.715823,
+    "pr_auc": 0.276927,
+    "recall_late": 0.719101,
+    "precision_late": 0.246154,
+    "f1_late": 0.366762,
+    "flagged_share": 0.408644,
+    "recall_at_equal_flag_share": 0.719101
+   },
+   "Logistic regression": {
+    "roc_auc": 0.626514,
+    "pr_auc": 0.211201,
+    "recall_late": 0.853933,
+    "precision_late": 0.160507,
+    "f1_late": 0.270222,
+    "flagged_share": 0.744204,
+    "recall_at_equal_flag_share": 0.47191
+   }
+  },
+  "confusion_matrices": {
+   "XGBoost": {
+    "tn": 1405,
+    "fp": 784,
+    "fn": 100,
+    "tp": 256
+   },
+   "Logistic regression": {
+    "tn": 599,
+    "fp": 1590,
+    "fn": 52,
+    "tp": 304
+   }
+  },
+  "threshold": 0.5
+ },
+ "c3": {
+  "groups_modelled": 36,
+  "lines_scored": 9207,
+  "lines_flagged": 475,
+  "population_flag_rate": 0.0516,
+  "contamination": 0.05,
+  "examples": [
+   {
+    "line_id": 52756,
+    "product_group": "HIV 1/2, Colloidal Gold, Diagnostic Kit, Antibody | Test kit",
+    "vendor": "SHANGHAI KEHUA BIOENGINEERING CO.,LTD.  (KHB)",
+    "origin_country": "China",
+    "year": 2012,
+    "unit_price_usd": 24.5,
+    "group_median_unit_price_usd": 24.5,
+    "price_vs_median_x": 1.0,
+    "freight_to_value": 2.356,
+    "group_median_freight_to_value": 0.3307,
+    "line_value_usd": 563.5,
+    "anomaly_score": 0.8087
+   },
+   {
+    "line_id": 22268,
+    "product_group": "Lamivudine/Zidovudine | Tablet - FDC",
+    "vendor": "CIPLA LIMITED",
+    "origin_country": "India",
+    "year": 2014,
+    "unit_price_usd": 0.04,
+    "group_median_unit_price_usd": 0.14,
+    "price_vs_median_x": 0.29,
+    "freight_to_value": 5.0,
+    "group_median_freight_to_value": 0.0399,
+    "line_value_usd": 322.5,
+    "anomaly_score": 0.7958
+   },
+   {
+    "line_id": 5935,
+    "product_group": "Lopinavir/Ritonavir | Tablet",
+    "vendor": "ABBVIE LOGISTICS (FORMERLY ABBOTT LOGISTICS BV)",
+    "origin_country": "Germany",
+    "year": 2008,
+    "unit_price_usd": 0.68,
+    "group_median_unit_price_usd": 0.25,
+    "price_vs_median_x": 2.72,
+    "freight_to_value": 5.0,
+    "group_median_freight_to_value": 0.0454,
+    "line_value_usd": 493.2,
+    "anomaly_score": 0.7942
+   }
+  ]
+ },
+ "nlp": {
+  "train_texts": 2540,
+  "test_texts": 636,
+  "classes": [
+   "Data integrity",
+   "Sterility and contamination",
+   "Process validation",
+   "Quality unit",
+   "Other GMP"
+  ],
+  "macro_f1": 0.9868,
+  "accuracy": 0.989,
+  "baseline_macro_f1": 0.657,
+  "per_class_f1": {
+   "Data integrity": 0.9962,
+   "Sterility and contamination": 0.9872,
+   "Process validation": 1.0,
+   "Quality unit": 0.9608,
+   "Other GMP": 0.9901
+  }
+ },
+ "robustness": {
+  "critic_weights": {
+   "C1": 0.39720295525124905,
+   "C2": 0.2678554398140217,
+   "C4": 0.3349416049347292
+  },
+  "monte_carlo_runs": 1000,
+  "base_top_established": "TEVA",
+  "stays_top_share": 0.983,
+  "top_counts": {
+   "TEVA": 983,
+   "HOSPIRA": 17
+  }
+ }
+}

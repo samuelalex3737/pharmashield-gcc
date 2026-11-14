@@ -1,0 +1,157 @@
+{
+ "mode": "crisis",
+ "demand": 10000,
+ "lambda": 1.0,
+ "status": "Optimal",
+ "objective": 1934429.3096637535,
+ "spot_buy_vials": 0,
+ "kpis": {
+  "purchase_cost_usd": 1435069.4328365047,
+  "cost_per_vial_usd": 143.50694328365046,
+  "expected_late_share": 0.02313821971810865,
+  "route_exposure_weighted": 0.26,
+  "india_made_share": 0.25,
+  "primary_share": 0.7,
+  "suppliers_used": 3,
+  "probation_trial_share": 0.05,
+  "warm_backup_share": 0.25,
+  "spot_buy_vials": 0
+ },
+ "rows": [
+  {
+   "id": "TEVA",
+   "vials": 7000,
+   "share": 0.7,
+   "role": "primary",
+   "unit_objective_cost": 186.3965983650258
+  },
+  {
+   "id": "ACCORD",
+   "vials": 2500,
+   "share": 0.25,
+   "role": "backup",
+   "unit_objective_cost": 207.72870336989425
+  },
+  {
+   "id": "AVYXA",
+   "vials": 500,
+   "share": 0.05,
+   "role": "probation trial",
+   "unit_objective_cost": 220.6627253676743
+  },
+  {
+   "id": "APOTEX",
+   "vials": 0,
+   "share": 0.0,
+   "role": "not selected",
+   "unit_objective_cost": 415.4693551047616
+  },
+  {
+   "id": "BPI",
+   "vials": 0,
+   "share": 0.0,
+   "role": "not selected",
+   "unit_objective_cost": 264.8699151385383
+  },
+  {
+   "id": "FRESENIUS",
+   "vials": 0,
+   "share": 0.0,
+   "role": "not selected",
+   "unit_objective_cost": 218.94511627985494
+  },
+  {
+   "id": "EUGIA",
+   "vials": 0,
+   "share": 0.0,
+   "role": "not selected",
+   "unit_objective_cost": 380.9813871661572
+  },
+  {
+   "id": "GLAND",
+   "vials": 0,
+   "share": 0.0,
+   "role": "not selected",
+   "unit_objective_cost": 243.79859342249904
+  },
+  {
+   "id": "HOSPIRA",
+   "vials": 0,
+   "share": 0.0,
+   "role": "not selected",
+   "unit_objective_cost": 275.5768763808214
+  },
+  {
+   "id": "NATCO",
+   "vials": 0,
+   "share": 0.0,
+   "role": "not selected",
+   "unit_objective_cost": 273.6161542396186
+  },
+  {
+   "id": "TEYRO",
+   "vials": 0,
+   "share": 0.0,
+   "role": "not selected",
+   "unit_objective_cost": 260.66066974604206
+  }
+ ],
+ "lambda_sensitivity": [
+  {
+   "lambda": 0.0,
+   "split": "ACCORD 7,000, TEVA 2,500, GLAND 500",
+   "purchase_cost_usd": 1320285.403252046,
+   "expected_late_share": 0.03704847527209922,
+   "india_made_share": 0.75,
+   "route_exposure_weighted": 0.3
+  },
+  {
+   "lambda": 0.5,
+   "split": "ACCORD 7,000, TEVA 2,500, AVYXA 500",
+   "purchase_cost_usd": 1320939.5010985248,
+   "expected_late_share": 0.036166400958835096,
+   "india_made_share": 0.7,
+   "route_exposure_weighted": 0.296
+  },
+  {
+   "lambda": 1.0,
+   "split": "TEVA 7,000, ACCORD 2,500, AVYXA 500",
+   "purchase_cost_usd": 1435069.4328365047,
+   "expected_late_share": 0.02313821971810865,
+   "india_made_share": 0.25,
+   "route_exposure_weighted": 0.26
+  },
+  {
+   "lambda": 1.5,
+   "split": "TEVA 7,000, AVYXA 1,500, FRESENIUS 1,500",
+   "purchase_cost_usd": 1559745.3152778423,
+   "expected_late_share": 0.0159003412510384,
+   "india_made_share": 0.0,
+   "route_exposure_weighted": 0.24
+  },
+  {
+   "lambda": 2.0,
+   "split": "TEVA 7,000, AVYXA 1,500, FRESENIUS 1,500",
+   "purchase_cost_usd": 1559745.3152778423,
+   "expected_late_share": 0.0159003412510384,
+   "india_made_share": 0.0,
+   "route_exposure_weighted": 0.24
+  },
+  {
+   "lambda": 3.0,
+   "split": "TEVA 7,000, AVYXA 1,500, FRESENIUS 1,500",
+   "purchase_cost_usd": 1559745.3152778423,
+   "expected_late_share": 0.0159003412510384,
+   "india_made_share": 0.0,
+   "route_exposure_weighted": 0.24
+  },
+  {
+   "lambda": 5.0,
+   "split": "TEVA 7,000, AVYXA 1,500, HOSPIRA 1,500",
+   "purchase_cost_usd": 1672429.5342521712,
+   "expected_late_share": 0.0159003412510384,
+   "india_made_share": 0.0,
+   "route_exposure_weighted": 0.24
+  }
+ ]
+}

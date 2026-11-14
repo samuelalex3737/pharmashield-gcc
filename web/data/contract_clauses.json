@@ -1,0 +1,45 @@
+{
+ "synthetic": true,
+ "note": "SYNTHETIC [GENAI] contracts for demonstration only; not used in the ranking",
+ "contracts": [
+  {
+   "contract": "contract_A",
+   "synthetic": true,
+   "lead_time_days": 30,
+   "lead_time_firm": true,
+   "late_penalty_pct_per_week": 2.0,
+   "force_majeure_covers_route_closure": false,
+   "force_majeure_requires_mitigation": true,
+   "sole_source_commitment": false,
+   "minimum_volume_commitment_pct": 0,
+   "price_revisable_on_notice": false,
+   "contract_risk": 0.0
+  },
+  {
+   "contract": "contract_B",
+   "synthetic": true,
+   "lead_time_days": 75,
+   "lead_time_firm": false,
+   "late_penalty_pct_per_week": 0.0,
+   "force_majeure_covers_route_closure": true,
+   "force_majeure_requires_mitigation": false,
+   "sole_source_commitment": true,
+   "minimum_volume_commitment_pct": 100,
+   "price_revisable_on_notice": true,
+   "contract_risk": 1.0
+  },
+  {
+   "contract": "contract_C",
+   "synthetic": true,
+   "lead_time_days": 45,
+   "lead_time_firm": true,
+   "late_penalty_pct_per_week": 0.5,
+   "force_majeure_covers_route_closure": true,
+   "force_majeure_requires_mitigation": true,
+   "sole_source_commitment": false,
+   "minimum_volume_commitment_pct": 60,
+   "price_revisable_on_notice": false,
+   "contract_risk": 0.05
+  }
+ ]
+}
