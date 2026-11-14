@@ -15,7 +15,7 @@ const LINKS = [
 export default function Nav() {
   const path = usePathname();
   return (
-    <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <header className="z-20 border-b md:sticky md:top-0 border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-navy-700 text-sm font-bold text-white">PS</span>

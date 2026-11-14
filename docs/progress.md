@@ -117,3 +117,15 @@ One short report per phase: what was built, key numbers, issues, self-check. All
   - Upstash Redis audit store, then a redeploy.
   - GitHub push (repo URL needed).
   - Backup video recording.
+
+## Phase 8 (continued) - Audit store and GitHub (15 Nov 2026, about 01:40 Dubai time)
+
+- **Audit store:** Upstash for Redis store `pharmashield-audit` created through the Vercel Marketplace.
+  - Free plan, auto-upgrade off, so it cannot start billing.
+  - Region iad1, connected to Production and Preview.
+  - After redeploying, the live /api/audit reports configured true. A test approval made on the live Approval page was stored and read back with the 70/25/5 allocation, and the page shows "Shared audit store".
+  - Two test entries with approver "BUILD TEST" remain in the log as evidence of the check.
+- **GitHub:** public repo https://github.com/samuelalex3737/pharmashield-gcc created.
+  - The local history was folded into one clean commit before the first push.
+  - Not published: raw data, *.xlsx, .env files and the lecture-slide screenshots (instructor material).
+- **UX fix:** on narrow screens the two-line navigation bar no longer sticks to the top, because it covered form fields. It stays sticky on desktop.
