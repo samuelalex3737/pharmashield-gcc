@@ -129,3 +129,4 @@ One short report per phase: what was built, key numbers, issues, self-check. All
   - The local history was folded into one clean commit before the first push.
   - Not published: raw data, *.xlsx, .env files and the lecture-slide screenshots (instructor material).
 - **UX fix:** on narrow screens the two-line navigation bar no longer sticks to the top, because it covered form fields. It stays sticky on desktop.
+- **GitHub push:** done. The GitHub CLI was authorized through a device code and the repo is public on branch main. A check of the remote tree found 154 entries and none matching screenshots, .env, .xlsx or data/raw.

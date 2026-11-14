@@ -3,6 +3,9 @@
 Group 3, AI in Operations (Dr. Sandip Kumar Roy), SP Jain School of Global Management, Dubai, MAIB.
 Presentation: Tue 17 Nov 2026, 9:30 am. Blackboard submission: 11:59 pm the same day.
 
+Live app: https://pharmashield-gcc.vercel.app  
+Code: https://github.com/samuelalex3737/pharmashield-gcc (public; raw data and course lecture screenshots are not included)
+
 PharmaShield GCC is a minimum viable product pitched to the C-suite of a hypothetical UAE healthcare group purchasing organisation (GPO). It is not a real company. It scores every qualified maker of a critical drug on five risk criteria, ranks them with TOPSIS, and recommends an order split with a backup supplier. A human buyer approves every recommendation.
 
 Demo SKU: carboplatin injection (Tier 1, injectable oncology). It is not a cold-chain product.
