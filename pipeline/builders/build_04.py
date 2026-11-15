@@ -427,6 +427,8 @@ print("Saved outputs/topsis_ranking_carboplatin_<mode>.csv and outputs/lp_alloca
 """),
     bi("saved_csv"),
     code("""
+entity_map = pd.read_csv(Path.cwd().parents[0] / "reference" / "maker_entity_map.csv", dtype=str)
+entity_codes = {row.maker_id: row.labeler_codes.split(";") for row in entity_map.itertuples()}
 makers_json = []
 for m, r in d.iterrows():
     makers_json.append({
@@ -440,9 +442,18 @@ for m, r in d.iterrows():
         "c3_status": r["c3_status"], "c3_lines_scored": int(r["c3_lines_scored"]), "c4_evidence_status": r["c4_evidence_status"],
         "scms_lines": int(r["scms_lines"]), "site_prior_source": r["site_prior_source"], "hormuz_air_share": r["hormuz_air_share"], "lpi": r["lpi_2023"],
         "criteria": {"C1": r["C1"], "C2": r["C2"], "C3": r["C3"], "C4": r["C4"], "C5_normal": r["C5_normal"], "C5_crisis": r["C5_crisis"]},
-        "shap_top3": json.loads(r["shap_top3_reasons"])})
+        "shap_top3": json.loads(r["shap_top3_reasons"]),
+        # Drill-down drawer data (Phase 11): C4 composition as used in the score, evidence dates, labeler codes
+        "c4_parts": {"inspection": float(insp_term[m]), "recalls": float(0.20 * recall_term[m]), "nlp": float(0.20 * nlp_term[m]),
+                     "shortage": float(0.20 * shortage_term[m])},
+        "last_inspection": None if pd.isna(r["last_inspection"]) else str(r["last_inspection"])[:10],
+        "labeler_codes": [c for c in entity_codes.get(m, [])],
+        "recalls_5yr": int(r["recalls_5yr"]), "c2_site_prior": r["site_prior"]})
 export.write("suppliers.json", {"sku_id": SKU_ID, "sku_label": "Carboplatin injection 10 mg/mL (45 mL vial)", "tier": TIER, "demand": DEMAND,
                                 "lambda_default": MODE_LAMBDA["normal"], "mode_lambda": MODE_LAMBDA, "compliance_gate": COMPLIANCE_GATE, "data_criteria": DATA_CRITERIA, "entropy_inputs": {"C1": "landed_cost of makers with c1_imputed false", "C2": "criteria.C2", "C4": "criteria.C4"},
+                                "route_mix": pd.read_csv(Path.cwd().parents[0] / "reference" / "route_mix_assumptions.csv")[
+                                    ["origin_country", "air_gulf_share", "sea_hormuz_share", "sea_gulf_of_oman_share"]].to_dict(orient="records"),
+                                "route_mix_note": "ASSUMPTION A8: route mix by origin country is a scenario assumption, not observed data",
                                 "makers": makers_json})
 normal_rank = rank["rank_normal"]
 for mode in MODES:

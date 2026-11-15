@@ -24,11 +24,11 @@ Demo SKU: carboplatin injection (Tier 1, injectable oncology). It is not a cold-
 | pipeline/reference/ | Reviewed reference tables: site-to-country map, maker entity map, route-mix assumptions, synthetic contracts [GENAI]. |
 | pipeline/run_all.py, validate_contract.py, check_numbers.py | One-command re-run, JSON contract checks, number trace for the deck. |
 | app/ | Data clients used in Phase 1 (openFDA, Medicaid) and the pinned Python requirements. |
-| web/ | Next.js dashboard deployed on Vercel. Reads web/data/*.json exported by notebook 04. |
+| web/ | Next.js dashboard deployed on Vercel: Overview, Scorecard (drawer, custom weights, comparison), Scenario (disruption simulator, route map), Live Alerts, Model Evidence, Approval & Audit, Boardroom mode (/boardroom), board memo (/memo), command palette (Ctrl+K). Reads web/data/*.json exported by notebook 04. |
 | figures/ | Static charts exported by the notebooks (fig_NN_name.png). |
 | outputs/ | TOPSIS rankings and MILP allocations per SKU and mode. |
 | deck/ | NotebookLM source pack and prompt, speaker script, Q&A prep, peer questions. |
-| docs/ | This README, assumptions register, decision log, progress log, number trace, demo script, GenAI prompt log. |
+| docs/ | This README, assumptions register, decision log, progress log, number trace, demo script, GenAI prompt log, screenshots/ (live app, for the slides). |
 
 ## 2. Environment setup (Windows, PowerShell)
 

@@ -29,6 +29,27 @@
   "C2": "criteria.C2",
   "C4": "criteria.C4"
  },
+ "route_mix": [
+  {
+   "origin_country": "India",
+   "air_gulf_share": 0.55,
+   "sea_hormuz_share": 0.3,
+   "sea_gulf_of_oman_share": 0.15
+  },
+  {
+   "origin_country": "United States",
+   "air_gulf_share": 0.85,
+   "sea_hormuz_share": 0.1,
+   "sea_gulf_of_oman_share": 0.05
+  },
+  {
+   "origin_country": "Canada",
+   "air_gulf_share": 0.85,
+   "sea_hormuz_share": 0.1,
+   "sea_gulf_of_oman_share": 0.05
+  }
+ ],
+ "route_mix_note": "ASSUMPTION A8: route mix by origin country is a scenario assumption, not observed data",
  "makers": [
   {
    "id": "AVYXA",
@@ -84,7 +105,19 @@
      "shap_log_odds": -0.2938,
      "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.1,
+    "recalls": 0.0,
+    "nlp": 0.16792649572971924,
+    "shortage": 0.2
+   },
+   "last_inspection": null,
+   "labeler_codes": [
+    "83831"
+   ],
+   "recalls_5yr": 0,
+   "c2_site_prior": 0.106697518961306
   },
   {
    "id": "ACCORD",
@@ -140,7 +173,19 @@
      "shap_log_odds": -0.1138,
      "reason": "Air shipment mode lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.3,
+    "recalls": 0.2,
+    "nlp": 0.15140585764222778,
+    "shortage": 0.2
+   },
+   "last_inspection": "2025-09-16",
+   "labeler_codes": [
+    "16729"
+   ],
+   "recalls_5yr": 103,
+   "c2_site_prior": 0.106697518961306
   },
   {
    "id": "APOTEX",
@@ -196,7 +241,19 @@
      "shap_log_odds": -0.115,
      "reason": "Air shipment mode lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.4,
+    "recalls": 0.2,
+    "nlp": 0.16983529783453882,
+    "shortage": 0.0
+   },
+   "last_inspection": "2026-09-25",
+   "labeler_codes": [
+    "60505"
+   ],
+   "recalls_5yr": 20,
+   "c2_site_prior": 0.106697518961306
   },
   {
    "id": "BPI",
@@ -252,7 +309,19 @@
      "shap_log_odds": -0.1138,
      "reason": "Air shipment mode lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.1,
+    "recalls": 0.0,
+    "nlp": 0.13732596604118394,
+    "shortage": 0.2
+   },
+   "last_inspection": "2025-04-23",
+   "labeler_codes": [
+    "54288"
+   ],
+   "recalls_5yr": 0,
+   "c2_site_prior": 0.106697518961306
   },
   {
    "id": "EUGIA",
@@ -308,7 +377,19 @@
      "shap_log_odds": -0.1312,
      "reason": "Air shipment mode lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.4,
+    "recalls": 0.2,
+    "nlp": 0.16482915914588828,
+    "shortage": 0.2
+   },
+   "last_inspection": "2026-02-06",
+   "labeler_codes": [
+    "55150"
+   ],
+   "recalls_5yr": 21,
+   "c2_site_prior": 0.1372404890034805
   },
   {
    "id": "FRESENIUS",
@@ -364,7 +445,19 @@
      "shap_log_odds": -0.2938,
      "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.4,
+    "recalls": 0.2,
+    "nlp": 0.16991761119868898,
+    "shortage": 0.2
+   },
+   "last_inspection": "2026-02-13",
+   "labeler_codes": [
+    "63323"
+   ],
+   "recalls_5yr": 27,
+   "c2_site_prior": 0.106697518961306
   },
   {
    "id": "GLAND",
@@ -420,7 +513,19 @@
      "shap_log_odds": -0.1098,
      "reason": "Air shipment mode lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.1,
+    "recalls": 0.0,
+    "nlp": 0.18396493946372283,
+    "shortage": 0.0
+   },
+   "last_inspection": "2024-07-25",
+   "labeler_codes": [
+    "68083"
+   ],
+   "recalls_5yr": 0,
+   "c2_site_prior": 0.1016166847250534
   },
   {
    "id": "HOSPIRA",
@@ -476,7 +581,19 @@
      "shap_log_odds": -0.2938,
      "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.1,
+    "recalls": 0.0,
+    "nlp": 0.16601769362489965,
+    "shortage": 0.2
+   },
+   "last_inspection": "2025-12-16",
+   "labeler_codes": [
+    "61703"
+   ],
+   "recalls_5yr": 0,
+   "c2_site_prior": 0.106697518961306
   },
   {
    "id": "NATCO",
@@ -532,7 +649,19 @@
      "shap_log_odds": -0.1138,
      "reason": "Air shipment mode lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.1,
+    "recalls": 0.2,
+    "nlp": 0.18600769056783859,
+    "shortage": 0.2
+   },
+   "last_inspection": "2025-11-21",
+   "labeler_codes": [
+    "69339"
+   ],
+   "recalls_5yr": 2,
+   "c2_site_prior": 0.106697518961306
   },
   {
    "id": "TEVA",
@@ -588,7 +717,19 @@
      "shap_log_odds": -0.2938,
      "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.1,
+    "recalls": 0.2,
+    "nlp": 0.16792649572971924,
+    "shortage": 0.2
+   },
+   "last_inspection": null,
+   "labeler_codes": [
+    "0703"
+   ],
+   "recalls_5yr": 60,
+   "c2_site_prior": 0.106697518961306
   },
   {
    "id": "TEYRO",
@@ -644,7 +785,19 @@
      "shap_log_odds": -0.1138,
      "reason": "Air shipment mode lowers delay risk"
     }
-   ]
+   ],
+   "c4_parts": {
+    "inspection": 0.1,
+    "recalls": 0.0,
+    "nlp": 0.16792649572971924,
+    "shortage": 0.0
+   },
+   "last_inspection": "2025-11-12",
+   "labeler_codes": [
+    "82511"
+   ],
+   "recalls_5yr": 0,
+   "c2_site_prior": 0.106697518961306
   }
  ]
 }

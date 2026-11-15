@@ -323,3 +323,226 @@ If time gets tight, cut in this order: live TypeScript MILP (keep precomputed), 
 
 Start Phase 2 now.
 ````
+
+---
+
+## Entry 6
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Phase 8 - Deployment |
+| Team member | Sam |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app |
+| Output produced | Checked Vercel credentials; started the Vercel CLI login in the Terminal panel (PowerShell blocked npx.ps1, so npx.cmd was used). |
+| Where used | Deployment. |
+
+### Exact prompt
+
+````text
+Done, deploy now
+````
+
+---
+
+## Entry 7
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Phase 8 - Deployment |
+| Team member | Sam |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app, built-in browser |
+| Output produced | Diagnosed the retired Vercel CLI login flow; moved to Vercel CLI 65.9.0 device login; upgraded Next.js to 15.5.28 and React to 19.0.9 after Vercel blocked the vulnerable version; deployed to https://pharmashield-gcc.vercel.app and verified all 6 pages. |
+| Where used | Live app; docs/decisions.md D20. |
+
+### Exact prompt
+
+````text
+Login problem
+````
+
+---
+
+## Entry 8
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Phase 8 - Audit store and GitHub |
+| Team member | Sam |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app, built-in browser |
+| Output produced | Installed GitHub CLI (winget); created the Upstash Redis audit store (free plan, auto-upgrade off) through the Vercel CLI; created the GitHub repository samuelalex3737/pharmashield-gcc. |
+| Where used | Live audit log; GitHub repository. |
+
+### Exact prompt
+
+````text
+do it all for me even the github
+````
+
+````text
+do it all for me even the github
+my github is https://github.com/samuelalex3737
+````
+
+---
+
+## Entry 9
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Phase 8 - GitHub |
+| Team member | Sam |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app |
+| Output produced | Created the repository as public; removed course lecture screenshots and .env files from the published history (single clean commit). |
+| Where used | GitHub repository. |
+
+### Exact prompt
+
+````text
+make it a public repo
+````
+
+---
+
+## Entry 10
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Phase 8 - Audit store and GitHub |
+| Team member | Sam |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app, built-in browser |
+| Output produced | Completed the Upstash store connection and redeploy; verified a test approval in the shared audit log; entered the GitHub CLI device code in the browser. |
+| Where used | Live audit log. |
+
+### Exact prompt
+
+````text
+Both answered, continue
+````
+
+---
+
+## Entry 11
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Phase 8 - GitHub |
+| Team member | Sam |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app |
+| Output produced | Pushed the repository to GitHub and verified that no raw data, screenshots or secrets were published. |
+| Where used | GitHub repository. |
+
+### Exact prompt
+
+````text
+Authorized, push
+````
+
+---
+
+## Entry 12
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Second-review fixes and Phase 11 (design and interactivity) |
+| Team member | Sam (review findings from a second reviewer) |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app, built-in browser |
+| Output produced | Review fixes: mode profiles, S_risk objective, compliance gate, scorecard clarity, admin audit-log clear (decisions D21-D26). Phase 11: design system with light and dark themes, disruption simulator, custom weights, supplier drawer, comparison, route map, Boardroom mode, board decision memo, command palette, Overview redesign, screenshots in docs/screenshots. |
+| Where used | pipeline/src/mcdm.py, notebook 04, web/, deck/, docs/. |
+
+### Exact prompt
+
+````text
+Review findings from a second reviewer. Apply these fixes autonomously, re-run run_all.py, re-run parity tests, redeploy, and report. Log each change in decisions.md and update the source pack, speaker script, qa_prep and number_trace with the new numbers.
+
+1. Crisis mode must visibly change the decision. Today the MILP gives Teva 70 / Accord 25 / AVYXA 5 in all three modes at lambda 1.0. Make each mode a full profile: weights + C5 stress factor + lambda (Normal 1.0, Crisis 1.5, Cost 0.5), shown in the UI, slider still adjustable. Verify Normal vs Crisis produce different splits and report both.
+
+2. Remove cost double counting in the MILP. C1 is inside S and also in the objective. Use S_risk = TOPSIS closeness on C2-C5 only (same weights renormalised) in the objective: min sum[(landed_cost_i + lambda * mean_cost * (1 - S_risk_i)) * x_i] + M*u. Keep the 5-criteria S for the ranking display. Port to engine.ts and keep parity tests passing.
+
+3. Add a compliance gate: a maker with C4_compliance_risk > 0.80 cannot be primary or backup unless no feasible alternative exists (then flag it in red with the reason). Make the threshold a labelled assumption. Show gated makers in the scorecard.
+
+4. Ranking vs allocation clarity: in the scorecard show "rank among established makers" next to the overall rank, and label probation makers "Probation - capped at trial share (5-15%)". Add one sentence on the Scenario page explaining why the top-ranked probation maker gets a small share.
+
+5. Add an admin-only "Clear audit log" action protected by an env-var passcode (AUDIT_ADMIN_KEY), then clear the BUILD TEST entries.
+
+Do not change anything else. No long dashes.
+````
+
+````text
+# PHASE 11: MAKE PHARMASHIELD OUTSTANDING (design + interactivity)
+Run this only after the previous review fixes are deployed and parity tests pass.
+Goal: a C-suite-grade, interactive decision cockpit that wins the Presentation and Application of Techniques marks. It must look like a professional product (think Bloomberg terminal meets Linear), not a student dashboard.
+Work autonomously. Freeze by Sun 15 Nov, 11:59 pm Dubai time. Correctness beats polish: never break parity tests, never invent numbers, every number still comes from web/data or the live engine.
+
+## 1. Design system (do first)
+- Typography: Inter (next/font), clear scale (display, h1-h3, body, caption), tabular numbers for all figures.
+- Palette: deep navy base, one accent (teal), neutral greys; red ONLY for risk or alerts, amber for warnings, green for approved. Light and dark themes with a toggle; both pass WCAG AA contrast.
+- Components: consistent cards, KPI tiles (value, label, delta, source chip), badges (Probation, Imputed, Gated, Shortage, Assumption), tooltips with plain-English definitions of every metric (S score, C1-C5, lambda, CR, SHAP), skeleton loaders, empty and error states.
+- Number formatting everywhere: USD with thousands separators, percentages to 1 decimal, vials as integers.
+- Subtle motion only (Framer Motion): rank changes animate rows to their new position; allocation bars animate between modes; respect prefers-reduced-motion.
+
+## 2. Interactive features (in priority order; build top-down, cut from the bottom if time runs short)
+1. Disruption simulator ("What if a supplier fails?"): on the Scenario page, toggle any maker off (plant shutdown) or cut its capacity with a slider; the MILP re-solves live and shows the new split, cost change and Hormuz-exposed share, with a before/after comparison. This is the hero demo.
+2. Custom weights: sliders for C1-C5 that stay summing to 1, with "Reset to AHP preset" and the CR shown; the ranking re-sorts live with animation.
+3. Supplier drill-down drawer: click any maker for a side panel with its C1-C5 radar or bar chart vs panel median, top-3 SHAP reasons in plain English, FDA evidence (inspections, recalls, shortage records with dates), C4 composition, data-coverage flags, and "why this rank / why this share" in one sentence each.
+4. Supplier comparison: pick 2-3 makers and compare them side by side on every criterion.
+5. Route map: Plotly scattergeo showing each maker's origin country to the UAE, with lanes coloured by Hormuz sea / Gulf air / other share (from route_mix_assumptions, labelled as an assumption); Crisis mode highlights the stressed lanes.
+6. Boardroom mode: a full-screen guided walkthrough (6 steps: problem, ranking, crisis click, supplier failure, recommended split, approve) with large type, keyboard arrows to advance and Esc to exit. This is the presentation demo path; update docs/demo_script.md to use it.
+7. Decision memo: a one-click "Board decision memo" that renders the current mode, weights, ranking, split, cost, risks and assumptions as a clean printable A4 page (print CSS) and links to the audit entry.
+8. Command palette (Ctrl+K) to jump between pages, makers and modes.
+
+## 3. Overview page redesign
+A hero statement of the problem, 4 KPI tiles with source chips, the 5-layer pipeline as an interactive diagram (hover a layer to see its technique, the question it answers, and a link to the page that proves it), and a "Start boardroom demo" button.
+
+## 4. Guardrails
+- Performance: Lighthouse desktop 90+ on every page; lazy-load Plotly and the map; first-load JS budget 200 kB per page.
+- Every interactive result labels its source: "Live engine (parity verified)" or "Precomputed (Python)".
+- Mobile and tablet usable; no overlapping elements at 375 px width.
+- Accessibility: keyboard navigable, focus states, aria labels on charts, alt text.
+- No new backend services. No long dashes anywhere.
+- After building: run lint, type-check, parity tests and a production build; click through every feature on the live URL in Normal and Crisis; capture screenshots of each page into docs/screenshots/ for the slides; update the source pack figure list to use the best screenshots; redeploy; report what was built, what was cut, and the Lighthouse scores.
+````
+
+---
+
+## Entry 13
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Pause |
+| Team member | Sam |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app |
+| Output produced | Status summary of the partially applied review fixes. |
+| Where used | Internal. |
+
+### Exact prompt
+
+````text
+lets havew a pause and continue later
+````
+
+---
+
+## Entry 14
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Second-review fixes and Phase 11 (resumed) |
+| Team member | Sam |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app, built-in browser |
+| Output produced | Completed the work listed in entry 12. |
+| Where used | As entry 12. |
+
+### Exact prompt
+
+````text
+ok continue
+````

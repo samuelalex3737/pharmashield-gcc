@@ -41,7 +41,7 @@ Group 3, AI in Operations (Dr. Sandip Kumar Roy), SP Jain School of Global Manag
 | 8 of 11 qualified makers with a current shortage | data/processed/scoring_panel_carboplatin.csv, column active_fda_shortage; notebook 02 section 4.2 |
 | 84 current US oncology shortage records covering 8 drugs | web/data/meta.json, oncology_shortages (openFDA, 14 Nov 2026) |
 
-**Figure:** none (title-style problem slide). Optional: Overview page screenshot of the live app.
+**Figure:** docs/screenshots/01_overview.png (live app hero and KPI tiles) [GENAI-ASSISTED CODE].
 
 **Speaker notes (about 80 seconds) [GENAI]**
 Imagine you are the chief procurement officer of a UAE hospital buying group in 2026. About 80% of your medicines are imported, and the two routes they travel, the Strait of Hormuz and Gulf airspace, were both disrupted this year. Hormuz traffic fell by more than 90%. Now one of your oncology suppliers fails. Industry data says it takes 25 days on average to qualify and onboard a replacement, and three quarters of companies run short while they wait. For a chemotherapy drug like carboplatin, 25 days means missed treatment cycles. This is not hypothetical for carboplatin: the US FDA feed lists 29 current shortage records for it, touching 8 of the 11 companies allowed to sell it. Today procurement still picks suppliers mostly on price, once a year, with manual checks. Our proposal, PharmaShield GCC, is a decision cockpit that keeps a ranked, pre-qualified bench of suppliers for every critical drug. It tells the buyer how to split each order before the crisis hits.
@@ -80,7 +80,7 @@ Imagine you are the chief procurement officer of a UAE hospital buying group in 
 | 2 of 11 makers with SCMS history (Eugia via Aurobindo, 3,283 lines; Gland, 2 lines) | notebook 02, section 3.4 |
 | Data feeds: SCMS, openFDA NDC, openFDA Shortages, openFDA Recalls, FDA Data Dashboard inspections and citations, Medicaid SDUD 2025, World Bank LPI 2023 | docs/README.md, section 3 |
 
-**Figure:** figures/fig_06_panel_evidence_heatmap.png [GENAI-ASSISTED CODE] (evidence fused per maker). Alternative: figures/fig_05_panel_share_and_cost.png.
+**Figure:** docs/screenshots/03_supplier_drawer.png (one maker's fused profile in the live app) or figures/fig_06_panel_evidence_heatmap.png [GENAI-ASSISTED CODE].
 
 **Speaker notes (about 80 seconds) [GENAI]**
 A supplier score is only as good as its data, so we built it from seven public feeds. Training uses 10,324 real pharmaceutical shipments from USAID. The 2026 makers come from the US FDA drug directory, shortage feed and recall feed, plus FDA inspection and citation records, Medicaid prices and the World Bank logistics index. The first lesson came from the data itself. The FDA directory lists 18 carboplatin labelers, but 7 of them sell only bulk powder to other factories. A hospital cannot buy from them, so we rank 11 makers. The second lesson was names. The company on the label is often not the plant: Eugia belongs to Aurobindo, and Hospira belongs to Pfizer. We built a reviewed map from labeler to plant owner to parent and used fuzzy matching with two tests. The single threshold in our original plan would have blamed Accord for inspections of seven unrelated firms. Finally, honesty about overlap: only 2 of the 11 makers appear in the shipment history, so our model scores every maker from its plant, lane and freight profile, not from its name.
@@ -113,7 +113,7 @@ A supplier score is only as good as its data, so we built it from seven public f
 | 98.3% robustness (983 of 1,000) | notebook 04, section 5; web/data/model_metrics.json, robustness |
 | Demand 10,000 vials and capacities are assumptions | docs/assumptions.md A11, A27, A28 |
 
-**Figure:** figures/fig_14_milp_split_by_mode.png and figures/fig_15_lambda_sensitivity.png [GENAI-ASSISTED CODE]. Label "Demand and capacities: assumptions A11, A27-A28".
+**Figure:** docs/screenshots/05_scenario_crisis.png (live app, Crisis profile) with figures/fig_15_lambda_sensitivity.png as backup [GENAI-ASSISTED CODE]. Label "Demand and capacities: assumptions A11, A27-A28".
 
 **Speaker notes (about 80 seconds) [GENAI]**
 Machine learning tells us the risk; the board must decide how much each risk matters. We use AHP, where the board compares criteria in pairs once per mode. All three are consistent. We blend them 50-50 with entropy weights computed only from real data. TOPSIS then ranks the 11 makers on how close each is to the ideal supplier. The ranking becomes an order through a mixed-integer linear program. Binary variables pick the suppliers, then the model enforces dual sourcing, a 70% cap on the primary, and a 5 to 15% trial for new makers. Cost is counted only once, and a compliance gate keeps the three makers with the worst FDA records out of the main roles. For 10,000 vials a month it recommends Teva 70%, Hospira 10%, and small trials with AVYXA and Gland, for 1.65 million dollars. In a Hormuz crisis the buyer clicks Crisis. That one click changes the weights, the route stress and the price of risk together, and the India-made trial drops out: India-made volume goes from 5% to zero for 1.4% more cost. And the primary choice survives 98% of random weight shocks.
@@ -203,7 +203,7 @@ Most supplier risk is written down, in inspection reports and in contracts, and 
 | Trial 5-15%, at most 2 per order | notebook 04, section 4.4; assumptions A29, A13 |
 | Neutral evidence: AVYXA C4 0.200 becomes 0.468 | notebook 04, section 3; assumption A31 |
 
-**Figure:** live demo (docs/demo_script.md, 30 seconds), with the backup video ready. Optional static: Approval page screenshot.
+**Figure:** live demo in Boardroom mode (docs/demo_script.md, 30 seconds), with the backup video ready. Static fallback: docs/screenshots/10_boardroom.png and docs/screenshots/08_approval.png [GENAI-ASSISTED CODE].
 
 **Speaker notes (about 80 seconds) [GENAI]**
 An AI that picks suppliers raises three questions: who decides, is it fair, and is it lawful? Who decides: a human. PharmaShield never sends an order. The category manager sees the recommended split and approves it or overrides it. An override needs a written reason, and every decision is logged with its weights and allocation. Is it fair: every score shows its top three reasons, so a supplier can be challenged. Missing data is treated as neutral, so a maker is never punished or rewarded for being unknown. We use plant and lane evidence where we have it, and country-level evidence only where we do not. New makers get a structured path in: a capped 5 to 15% trial, but only after passing a safety gate. Is it lawful: the log holds business decisions only, in line with the UAE data protection law. Let me show you in 30 seconds. Here is the scorecard. I click Crisis, and the order moves off the exposed lane. Then I approve, and the decision is logged.

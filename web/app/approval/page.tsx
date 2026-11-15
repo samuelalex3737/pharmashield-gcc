@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ModeTabs from "@/components/ModeTabs";
+import Link from "next/link";
 import { Badge, PageTitle, pct } from "@/components/ui";
 import { allocations, makerById, MODE_LABEL, suppliers, weights, type Mode } from "@/lib/data";
 
@@ -137,7 +138,7 @@ export default function Approval() {
         A category manager approves or overrides the recommended split. Every decision is logged with its timestamp, mode, final weights and
         allocation.
       </PageTitle>
-      <div className="mb-6 rounded-lg border-2 border-navy-700 bg-navy-50 px-4 py-3 text-sm font-semibold text-navy-900">
+      <div className="mb-6 rounded-lg border-2 border-accent bg-accent-soft px-4 py-3 text-sm font-semibold text-ink">
         No order is sent automatically. This tool recommends; a human decides.
       </div>
 
@@ -145,7 +146,7 @@ export default function Approval() {
         <div className="card lg:col-span-3">
           <div className="mb-4 flex flex-wrap items-center gap-4">
             <ModeTabs mode={mode} onChange={setMode} />
-            <span className="text-xs text-slate-500">lambda {rec.lambda} (precomputed MILP, status {rec.status})</span>
+            <span className="text-xs text-muted">lambda {rec.lambda} (precomputed MILP, status {rec.status})</span>
           </div>
           <table className="table-clean w-full">
             <thead>
@@ -174,7 +175,7 @@ export default function Approval() {
                           step={5}
                           value={shares[m.id] ?? 0}
                           onChange={(e) => setShares({ ...shares, [m.id]: Math.max(0, Math.min(100, Number(e.target.value))) })}
-                          className="w-20 rounded border border-slate-300 px-2 py-1 font-mono text-sm"
+                          className="w-20 rounded border border-line px-2 py-1 font-mono text-sm"
                           aria-label={`Share for ${m.name}`}
                         />
                       ) : (
@@ -194,12 +195,12 @@ export default function Approval() {
             </label>
             {override ? (
               <>
-                <div className={`text-sm font-medium ${total === 100 ? "text-emerald-700" : "text-red-700"}`}>Shares total {total}% (must equal 100%)</div>
+                <div className={`text-sm font-medium ${total === 100 ? "text-good" : "text-risk"}`}>Shares total {total}% (must equal 100%)</div>
                 <textarea
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Reason for override (required, at least 10 characters)"
-                  className="h-20 w-full rounded border border-slate-300 p-2 text-sm"
+                  className="h-20 w-full rounded border border-line p-2 text-sm"
                 />
               </>
             ) : null}
@@ -207,27 +208,34 @@ export default function Approval() {
               value={approver}
               onChange={(e) => setApprover(e.target.value)}
               placeholder="Approver role or initials (no personal contact details)"
-              className="w-full rounded border border-slate-300 p-2 text-sm"
+              className="w-full rounded border border-line p-2 text-sm"
             />
             <button className="btn btn-primary disabled:opacity-40" disabled={!canSubmit} onClick={submit}>
               {override ? "Log override" : "Approve and log"}
             </button>
-            {message ? <p className="text-sm text-emerald-700">{message}</p> : null}
+            {message ? (
+              <p className="text-sm text-good">
+                {message}{" "}
+                <Link className="font-semibold underline" href={`/memo?mode=${mode}&logged=${encodeURIComponent(entries[0]?.timestamp_utc ?? "")}`}>
+                  Open the board decision memo
+                </Link>
+              </p>
+            ) : null}
           </div>
         </div>
 
         <div className="card lg:col-span-2">
-          <h3 className="text-sm font-semibold text-navy-900">Final weights logged with this decision ({MODE_LABEL[mode]})</h3>
+          <h2 className="text-sm font-semibold text-ink">Final weights logged with this decision ({MODE_LABEL[mode]})</h2>
           <ul className="mt-2 grid grid-cols-5 gap-2 text-center text-xs">
             {Object.entries(weights[mode].final_weights).map(([c, w]) => (
-              <li key={c} className="rounded bg-slate-50 p-2">
+              <li key={c} className="rounded bg-raised p-2">
                 <div className="font-semibold">{c}</div>
                 <div className="font-mono">{w.toFixed(3)}</div>
               </li>
             ))}
           </ul>
-          <h3 className="mt-5 text-sm font-semibold text-navy-900">Governance controls</h3>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-slate-600">
+          <h2 className="mt-5 text-sm font-semibold text-ink">Governance controls</h2>
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-muted">
             <li>Every score shows its top 3 SHAP reasons (Scorecard).</li>
             <li>Probation makers receive a capped 5-15% trial, and only if they pass the safety gate (no OAI and no Class I recall in 3 years).</li>
             <li>Evidence is plant- and lane-level where available, country-level otherwise.</li>
@@ -261,7 +269,7 @@ export default function Approval() {
             <tbody>
               {entries.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-slate-500">
+                  <td colSpan={6} className="text-muted">
                     No decisions logged yet.
                   </td>
                 </tr>
@@ -288,8 +296,8 @@ export default function Approval() {
           </table>
         </div>
               {remote ? (
-          <details className="mt-4 rounded border border-slate-200 p-3 text-sm">
-            <summary className="cursor-pointer font-medium text-slate-600">Admin: clear audit log</summary>
+          <details className="mt-4 rounded border border-line p-3 text-sm">
+            <summary className="cursor-pointer font-medium text-muted">Admin: clear audit log</summary>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <input
                 type="password"
@@ -297,12 +305,12 @@ export default function Approval() {
                 onChange={(e) => setAdminKey(e.target.value)}
                 placeholder="Admin passcode"
                 aria-label="Admin passcode"
-                className="rounded border border-slate-300 px-2 py-1 text-sm"
+                className="rounded border border-line px-2 py-1 text-sm"
               />
-              <button className="btn btn-ghost border-red-300 text-red-700 disabled:opacity-40" disabled={!adminKey} onClick={clearLog}>
+              <button className="btn btn-ghost border-risk/40 text-risk disabled:opacity-40" disabled={!adminKey} onClick={clearLog}>
                 Clear audit log
               </button>
-              {adminMsg ? <span className="text-xs text-slate-600">{adminMsg}</span> : null}
+              {adminMsg ? <span className="text-xs text-muted">{adminMsg}</span> : null}
             </div>
           </details>
         ) : null}

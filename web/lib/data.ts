@@ -54,6 +54,11 @@ export interface Maker {
   lpi: number;
   criteria: { C1: number; C2: number; C3: number; C4: number; C5_normal: number; C5_crisis: number };
   shap_top3: ShapReason[];
+  c4_parts: { inspection: number; recalls: number; nlp: number; shortage: number };
+  last_inspection: string | null;
+  labeler_codes: string[];
+  recalls_5yr: number;
+  c2_site_prior: number;
 }
 
 export interface WeightsDoc {
@@ -135,6 +140,8 @@ export const suppliers = suppliersJson as unknown as {
   mode_lambda: Record<Mode, number>;
   compliance_gate: number;
   data_criteria: string[];
+  route_mix: { origin_country: string; air_gulf_share: number; sea_hormuz_share: number; sea_gulf_of_oman_share: number }[];
+  route_mix_note: string;
   makers: Maker[];
 };
 export const meta = metaJson as unknown as { run_utc: string; data_cutoff: string; raw_files: string[]; oncology_shortages?: OncologySummary };

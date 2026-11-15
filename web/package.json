@@ -12,14 +12,17 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "framer-motion": "11.15.0",
     "javascript-lp-solver": "0.4.24",
     "next": "15.5.28",
     "plotly.js-basic-dist-min": "2.35.3",
+    "plotly.js-geo-dist-min": "2.35.3",
     "react": "19.0.9",
     "react-dom": "19.0.9",
     "react-plotly.js": "2.6.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "3.2.0",
     "@types/node": "22.10.7",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
@@ -27,7 +30,6 @@
     "autoprefixer": "10.4.20",
     "eslint": "9.18.0",
     "eslint-config-next": "15.5.28",
-    "@eslint/eslintrc": "3.2.0",
     "postcss": "8.4.49",
     "tailwindcss": "3.4.17",
     "typescript": "5.7.3",

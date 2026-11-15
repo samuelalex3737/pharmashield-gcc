@@ -146,3 +146,33 @@ One short report per phase: what was built, key numbers, issues, self-check. All
   - 20 of 20 parity tests pass; type-check and lint are clean; the build passes.
   - Redeployed and verified on the live URL.
 - **Updated:** source pack (slides 3, 6, 7 and the "Do not change" list), speaker script (regenerated, 165-190 words a slide), Q&A prep (questions 4, 9, 10, 11, 15 and new 19, 20), demo script, assumptions A12, A34, A35, decisions D21-D26.
+
+## Phase 11 - Design and interactivity (15 Nov 2026)
+
+- **Built:**
+  - Design system: Inter, navy and teal tokens, light and dark themes, KPI tiles with deltas and source chips, badges, glossary tooltips, skeletons, empty states, Framer Motion.
+  - Overview redesign: hero, 4 KPI tiles with sources, interactive 5-layer pipeline, "Start boardroom demo".
+  - Disruption simulator (hero demo).
+  - Custom weights.
+  - Supplier drill-down drawer.
+  - Supplier comparison.
+  - Route map.
+  - Boardroom mode: 6 steps, arrow keys, Esc to exit.
+  - Board decision memo: printable A4, linked from approvals.
+  - Command palette (Ctrl+K).
+  - 10 screenshots in docs/screenshots.
+- **Cut:** nothing. All 8 features from the brief are built.
+- **Checks:**
+  - 20 of 20 parity tests pass; lint and type-check are clean; production build passes.
+  - First-load JS is 103-172 kB per page, under the 200 kB budget.
+  - No horizontal scroll at 375 px on any page.
+  - WCAG AA contrast passes in both themes.
+- **Lighthouse desktop on the live URL:**
+  - Performance 99-100 on all 8 pages (Overview 99; Scorecard, Scenario, Alerts, Evidence, Approval, Memo, Boardroom 100).
+  - Accessibility 100 and best practices 100 on all 8.
+- **Verified on the live URL (Normal and Crisis):**
+  - Normal: 1,648,949 USD.
+  - Crisis: 1,672,430 USD.
+  - Teva failure in Crisis: 1,761,473 USD, with the gate relaxed for Fresenius Kabi.
+  - Command palette jump to a maker, theme toggle, memo.
+- **Docs:** demo_script.md now uses Boardroom mode; the source pack figure list uses the screenshots; prompt log entries 6-14; decisions D27-D30.
