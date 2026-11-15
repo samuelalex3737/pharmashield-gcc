@@ -51,6 +51,8 @@ export default function Approval() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [remote, setRemote] = useState<boolean | null>(null);
   const [message, setMessage] = useState("");
+  const [adminKey, setAdminKey] = useState("");
+  const [adminMsg, setAdminMsg] = useState("");
 
   useEffect(() => {
     setShares(Object.fromEntries(suppliers.makers.map((m) => [m.id, Math.round((recommended[m.id] ?? 0) * 100)])));
@@ -105,6 +107,19 @@ export default function Approval() {
     setMessage(`Decision logged (${entry.decision}). No order has been sent.`);
     setReason("");
     setOverride(false);
+  }
+
+  async function clearLog() {
+    if (!window.confirm("Clear the entire shared audit log? This cannot be undone.")) return;
+    const res = await fetch("/api/audit", { method: "DELETE", headers: { "x-admin-key": adminKey } });
+    const body = (await res.json()) as { cleared?: number; error?: string };
+    if (res.ok) {
+      setEntries([]);
+      setAdminMsg(`Audit log cleared (${body.cleared ?? 0} entries removed).`);
+    } else {
+      setAdminMsg(body.error ?? "Clearing failed.");
+    }
+    setAdminKey("");
   }
 
   function download() {
@@ -272,7 +287,26 @@ export default function Approval() {
             </tbody>
           </table>
         </div>
-      </div>
+              {remote ? (
+          <details className="mt-4 rounded border border-slate-200 p-3 text-sm">
+            <summary className="cursor-pointer font-medium text-slate-600">Admin: clear audit log</summary>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <input
+                type="password"
+                value={adminKey}
+                onChange={(e) => setAdminKey(e.target.value)}
+                placeholder="Admin passcode"
+                aria-label="Admin passcode"
+                className="rounded border border-slate-300 px-2 py-1 text-sm"
+              />
+              <button className="btn btn-ghost border-red-300 text-red-700 disabled:opacity-40" disabled={!adminKey} onClick={clearLog}>
+                Clear audit log
+              </button>
+              {adminMsg ? <span className="text-xs text-slate-600">{adminMsg}</span> : null}
+            </div>
+          </details>
+        ) : null}
+</div>
     </div>
   );
 }

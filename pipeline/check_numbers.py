@@ -53,9 +53,9 @@ def run():
     nb3 = nb_text("03_risk_models_xgb_iforest_nlp.ipynb")
     nb4 = nb_text("04_mcdm_topsis_milp.ipynb")
     makers = {m["id"]: m for m in sup["makers"]}
-    est_min = min(m["landed_cost"] for m in sup["makers"] if not m["is_probation"])
-    lam15 = next(r for r in ac["lambda_sensitivity"] if r["lambda"] == 1.5)
+    est_min = min(m["landed_cost"] for m in sup["makers"] if not m["is_probation"] and not m["compliance_gated"])
     rows_n = {r["id"]: r for r in an["rows"]}
+    rows_c = {r["id"]: r for r in ac["rows"]}
     c2m = met["c2"]["models"]
     cm = met["c2"]["confusion_matrices"]
 
@@ -85,13 +85,21 @@ def run():
         (3, "Final Normal weights C1 to C5", "0.137 / 0.318 / 0.050 / 0.234 / 0.261", "web/data/weights_normal.json",
          " / ".join(f"{w['normal']['final_weights'][c]:.3f}" for c in ["C1", "C2", "C3", "C4", "C5"])),
         (3, "Final Crisis weight C5", "0.314", "web/data/weights_crisis.json", f"{w['crisis']['final_weights']['C5']:.3f}"),
-        (3, "Split Teva / Accord / AVYXA (vials)", "7,000 / 2,500 / 500", "web/data/allocations_normal.json",
-         f"{rows_n['TEVA']['vials']:,} / {rows_n['ACCORD']['vials']:,} / {rows_n['AVYXA']['vials']:,}"),
-        (3, "Monthly purchase cost (USD)", "1,435,069", "web/data/allocations_normal.json", f"{an['kpis']['purchase_cost_usd']:,.0f}"),
-        (3, "Crisis lambda 1.5 cost (USD)", "1,559,745", "web/data/allocations_crisis.json", f"{lam15['purchase_cost_usd']:,.0f}"),
-        (3, "Crisis lambda 1.5 India-made share", "0%", "web/data/allocations_crisis.json", f"{lam15['india_made_share'] * 100:.0f}%"),
-        (3, "Crisis premium (USD)", "124,676", "web/data/allocations_crisis.json", f"{lam15['purchase_cost_usd'] - an['kpis']['purchase_cost_usd']:,.0f}"),
-        (3, "Crisis premium (%)", "8.7%", "web/data/allocations_crisis.json", pct1(lam15["purchase_cost_usd"] / an["kpis"]["purchase_cost_usd"] - 1)),
+        (3, "Normal split Teva / Hospira / AVYXA / Gland (vials)", "7,000 / 1,000 / 1,500 / 500", "web/data/allocations_normal.json",
+         f"{rows_n['TEVA']['vials']:,} / {rows_n['HOSPIRA']['vials']:,} / {rows_n['AVYXA']['vials']:,} / {rows_n['GLAND']['vials']:,}"),
+        (3, "Normal monthly purchase cost (USD)", "1,648,949", "web/data/allocations_normal.json", f"{an['kpis']['purchase_cost_usd']:,.0f}"),
+        (3, "Crisis split Teva / Hospira / AVYXA (vials)", "7,000 / 1,500 / 1,500", "web/data/allocations_crisis.json",
+         f"{rows_c['TEVA']['vials']:,} / {rows_c['HOSPIRA']['vials']:,} / {rows_c['AVYXA']['vials']:,}"),
+        (3, "Crisis monthly purchase cost (USD)", "1,672,430", "web/data/allocations_crisis.json", f"{ac['kpis']['purchase_cost_usd']:,.0f}"),
+        (3, "India-made share Normal to Crisis", "5% to 0%", "web/data/allocations_normal.json + allocations_crisis.json",
+         f"{an['kpis']['india_made_share'] * 100:.0f}% to {ac['kpis']['india_made_share'] * 100:.0f}%"),
+        (3, "Crisis premium (USD)", "23,481", "web/data/allocations_crisis.json", f"{ac['kpis']['purchase_cost_usd'] - an['kpis']['purchase_cost_usd']:,.0f}"),
+        (3, "Crisis premium (%)", "1.4%", "web/data/allocations_crisis.json", pct1(ac["kpis"]["purchase_cost_usd"] / an["kpis"]["purchase_cost_usd"] - 1)),
+        (3, "Mode lambdas Normal / Crisis / Cost", "1.0 / 2.0 / 0.5", "web/data/suppliers.json",
+         " / ".join(f"{sup['mode_lambda'][m]:.1f}" for m in ["normal", "crisis", "cost"])),
+        (3, "Compliance gate threshold", "0.80", "web/data/suppliers.json", f"{sup['compliance_gate']:.2f}"),
+        (3, "Makers blocked by the compliance gate", "Accord, Eugia and Fresenius Kabi", "web/data/allocations_normal.json",
+         "Accord, Eugia and Fresenius Kabi" if sorted(an["gated_blocked"]) == ["ACCORD", "EUGIA", "FRESENIUS"] else str(an["gated_blocked"])),
         (3, "Robustness: Teva stays top established", "98.3%", "web/data/model_metrics.json", pct1(met["robustness"]["stays_top_share"])),
         (4, "Train lines", "7,779", "web/data/model_metrics.json", f"{met['c2']['train_lines']:,}"),
         (4, "Test lines", "2,545", "web/data/model_metrics.json", f"{met['c2']['test_lines']:,}"),
@@ -128,8 +136,8 @@ def run():
         (6, "Incumbent share of 2025 Medicaid units", "98.3%", "web/data/suppliers.json", pct1(sum(m["unit_share_2025"] for m in sup["makers"] if not m["is_probation"]))),
         (6, "AVYXA C4 with the neutral-evidence rule", "0.468", "web/data/suppliers.json", f"{makers['AVYXA']['criteria']['C4']:.3f}"),
         (6, "AVYXA C4 without the rule", "0.200", "pipeline/notebooks/04 output", "0.200" if re.search(r"AVYXA\s+0\.3255\s+0\.0159\s+0\.0516\s+0\.4679\s+0\.2000", nb4) else "not found"),
-        (7, "Premium over all-Accord (USD)", "211,311", "web/data/allocations_normal.json + suppliers.json", f"{an['kpis']['purchase_cost_usd'] - est_min * sup['demand']:,.0f}"),
-        (7, "Premium over all-Accord (%)", "17.3%", "web/data/allocations_normal.json + suppliers.json", pct1(an["kpis"]["purchase_cost_usd"] / (est_min * sup["demand"]) - 1)),
+        (7, "Premium over all-Teva, cheapest compliant maker (USD)", "171,568", "web/data/allocations_normal.json + suppliers.json", f"{an['kpis']['purchase_cost_usd'] - est_min * sup['demand']:,.0f}"),
+        (7, "Premium over all-Teva (%)", "11.6%", "web/data/allocations_normal.json + suppliers.json", pct1(an["kpis"]["purchase_cost_usd"] / (est_min * sup["demand"]) - 1)),
     ]
     lines = ["# Number Trace - PharmaShield GCC", "",
              "Generated by pipeline/check_numbers.py after pipeline/run_all.py. Every number quoted in deck/notebooklm_source_pack.md is recomputed from the file that produced it. PASS means the recomputed value equals the quoted value and the quoted value appears in the source pack.", "",

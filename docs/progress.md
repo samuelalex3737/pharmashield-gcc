@@ -130,3 +130,19 @@ One short report per phase: what was built, key numbers, issues, self-check. All
   - Not published: raw data, *.xlsx, .env files and the lecture-slide screenshots (instructor material).
 - **UX fix:** on narrow screens the two-line navigation bar no longer sticks to the top, because it covered form fields. It stays sticky on desktop.
 - **GitHub push:** done. The GitHub CLI was authorized through a device code and the repo is public on branch main. A check of the remote tree found 154 entries and none matching screenshots, .env, .xlsx or data/raw.
+
+## Second-review fixes (15 Nov 2026)
+
+- **Fix 1, mode profiles:** Normal lambda 1.0, Crisis 2.0, Cost focus 0.5 (A35). The reviewer's Crisis 1.5 gave the same split as Normal, so Crisis uses 2.0 (D22).
+  - Normal: Teva 7,000, AVYXA 1,500, Hospira 1,000, Gland 500; USD 1,648,949; India-made 5%.
+  - Crisis: Teva 7,000, Hospira 1,500, AVYXA 1,500; USD 1,672,430 (+1.4%); India-made 0%.
+- **Fix 2, cost counted once:** the MILP uses S_risk (TOPSIS on C2-C5, weights renormalised; D23), in Python and TypeScript.
+- **Fix 3, compliance gate:** C4 above 0.80 (A34) blocks Accord, Eugia and Fresenius Kabi from primary or backup. A fallback with a red flag applies when no alternative exists, and the parity tests cover it (D24).
+- **Fix 4, scorecard clarity:** "Est. rank" column, the "Probation - capped at trial share (5-15%)" label, the "Gated" badge, and a Scenario sentence explaining the small probation share (D25).
+- **Fix 5, admin clear:** DELETE /api/audit protected by AUDIT_ADMIN_KEY (Vercel secret, plus the git-ignored web/.env.local). It returns 401 for a wrong key. The 2 BUILD TEST entries were cleared, and the live log is empty (D26).
+- **Checks:**
+  - run_all.py clean; contract validation passed (new rules: S_risk present, gate respected, lambda matches the profile, Normal differs from Crisis).
+  - Number trace 64 of 64 PASS.
+  - 20 of 20 parity tests pass; type-check and lint are clean; the build passes.
+  - Redeployed and verified on the live URL.
+- **Updated:** source pack (slides 3, 6, 7 and the "Do not change" list), speaker script (regenerated, 165-190 words a slide), Q&A prep (questions 4, 9, 10, 11, 15 and new 19, 20), demo script, assumptions A12, A34, A35, decisions D21-D26.

@@ -3,7 +3,7 @@
 import { describe, expect, it } from "vitest";
 import { CRITERIA, entropyWeights, topsis } from "@/lib/engine";
 import { allocations, MODES, rankings, suppliers, weights } from "@/lib/data";
-import { liveAllocation, liveScores, liveWeights, parityCheck } from "@/lib/live";
+import { liveAllocation, liveRiskScores, liveScores, liveWeights, parityCheck } from "@/lib/live";
 
 describe("entropy and blended weights", () => {
   it("match the Python entropy weights", () => {
@@ -42,6 +42,13 @@ describe("TOPSIS", () => {
     });
   }
 
+  for (const mode of MODES) {
+    it(`S_risk (C2-C5 only) matches Python within 1e-6 (${mode})`, () => {
+      const s = liveRiskScores(mode);
+      for (const r of rankings[mode]) expect(Math.abs(s[r.id] - r.S_risk)).toBeLessThan(1e-6);
+    });
+  }
+
   it("treats a zero column as zero, not NaN", () => {
     const s = topsis([[0, 1], [0, 2], [0, 3]], [0.5, 0.5]);
     expect(s.every((v) => Number.isFinite(v))).toBe(true);
@@ -60,8 +67,34 @@ describe("MILP order split", () => {
         expect(lv.role).toBe(r.role);
       }
       expect(live.spotBuyVials).toBe(allocations[mode].spot_buy_vials);
+      expect(live.gatedBlocked.sort()).toEqual([...allocations[mode].gated_blocked].sort());
+      expect(live.gateRelaxed).toEqual(allocations[mode].gate_relaxed);
     });
   }
+
+  it("uses the mode lambda profile and gives different Normal and Crisis splits", () => {
+    expect(allocations.normal.lambda).toBe(suppliers.mode_lambda.normal);
+    expect(allocations.crisis.lambda).toBe(suppliers.mode_lambda.crisis);
+    const key = (m: "normal" | "crisis") => allocations[m].rows.filter((r) => r.vials > 0).map((r) => `${r.id}:${r.vials}`).join(",");
+    expect(key("normal")).not.toBe(key("crisis"));
+  });
+
+  it("never gives a compliance-gated maker a primary or backup role while an alternative exists", () => {
+    for (const mode of MODES) {
+      const live = liveAllocation(mode, allocations[mode].lambda);
+      for (const r of live.rows) {
+        const m = suppliers.makers.find((x) => x.id === r.id)!;
+        if (m.compliance_gated && !m.is_probation) expect(r.vials).toBe(0);
+      }
+    }
+  });
+
+  it("relaxes the gate and flags the maker when no feasible alternative exists", () => {
+    // Shut down Teva and Hospira: only gated established makers remain, so the gate must be relaxed.
+    const live = liveAllocation("normal", 1.0, { capacityFactor: { TEVA: 0, HOSPIRA: 0 } });
+    expect(live.gateRelaxed.length).toBeGreaterThan(0);
+    expect(live.spotBuyVials).toBe(0);
+  });
 
   it("respects Tier 1 rules at every lambda in the sensitivity table", () => {
     for (const mode of ["normal", "crisis"] as const) {

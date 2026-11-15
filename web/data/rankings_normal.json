@@ -8,7 +8,8 @@
    "rank": 1,
    "rank_normal": 1,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.8253852693699857
+   "S_ahp_only": 0.8253852693699857,
+   "S_risk": 0.8806650725207357
   },
   {
    "id": "TEVA",
@@ -17,7 +18,8 @@
    "rank": 2,
    "rank_normal": 2,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.7609550785836793
+   "S_ahp_only": 0.7609550785836793,
+   "S_risk": 0.798673251703407
   },
   {
    "id": "HOSPIRA",
@@ -26,7 +28,8 @@
    "rank": 3,
    "rank_normal": 3,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.7790046458636852
+   "S_ahp_only": 0.7790046458636852,
+   "S_risk": 0.8814577571373164
   },
   {
    "id": "GLAND",
@@ -35,7 +38,8 @@
    "rank": 4,
    "rank_normal": 4,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.7587435856310296
+   "S_ahp_only": 0.7587435856310296,
+   "S_risk": 0.7600022144366285
   },
   {
    "id": "FRESENIUS",
@@ -44,7 +48,8 @@
    "rank": 5,
    "rank_normal": 5,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.640877886601211
+   "S_ahp_only": 0.640877886601211,
+   "S_risk": 0.6951722232978572
   },
   {
    "id": "TEYRO",
@@ -53,7 +58,8 @@
    "rank": 6,
    "rank_normal": 6,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.6742607533871818
+   "S_ahp_only": 0.6742607533871818,
+   "S_risk": 0.6485144852920913
   },
   {
    "id": "BPI",
@@ -62,7 +68,8 @@
    "rank": 7,
    "rank_normal": 7,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.641084510066064
+   "S_ahp_only": 0.641084510066064,
+   "S_risk": 0.6237354912201777
   },
   {
    "id": "ACCORD",
@@ -71,7 +78,8 @@
    "rank": 8,
    "rank_normal": 8,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.5490918461323677
+   "S_ahp_only": 0.5490918461323677,
+   "S_risk": 0.5330031305952931
   },
   {
    "id": "NATCO",
@@ -80,7 +88,8 @@
    "rank": 9,
    "rank_normal": 9,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.5660883168703447
+   "S_ahp_only": 0.5660883168703447,
+   "S_risk": 0.5703929573255726
   },
   {
    "id": "APOTEX",
@@ -89,7 +98,8 @@
    "rank": 10,
    "rank_normal": 10,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.5245769786060014
+   "S_ahp_only": 0.5245769786060014,
+   "S_risk": 0.6430323406910721
   },
   {
    "id": "EUGIA",
@@ -98,7 +108,8 @@
    "rank": 11,
    "rank_normal": 11,
    "rank_change_vs_normal": 0,
-   "S_ahp_only": 0.17552778578634132
+   "S_ahp_only": 0.17552778578634132,
+   "S_risk": 0.008534224103484983
   }
  ]
 }

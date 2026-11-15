@@ -28,7 +28,10 @@ cells = [
 2. Weight them: 50% board judgement (AHP, one pairwise matrix per mode, consistency ratio below 0.10) and 50% data (Shannon entropy), applied only where the data is real (override 7). The final blended weights are shown for every mode (override 9).
 3. Rank the makers with TOPSIS in each mode.
 4. Split a monthly order of 10,000 vials with a MILP (PuLP + CBC). Binary variables select suppliers, enforce dual sourcing, cap the primary at 70% and allow at most 2 probation trials (override 5).
-5. Test how sensitive the split is to lambda, the board's price of risk, and how stable the ranking is to weight changes.
+5. Treat each mode as a full profile (review fix 1): AHP weights, the C5 stress factor and lambda, the board's price of risk (Normal 1.0, Crisis 2.0, Cost focus 0.5, assumption A35).
+6. Keep cost out of the risk term (review fix 2): the MILP uses S_risk, a TOPSIS closeness on C2 to C5 only, because landed cost is already in the objective. The five-criteria S is kept for the ranking.
+7. Apply a compliance gate (review fix 3): a maker with C4 above 0.80 cannot be primary or backup unless no feasible alternative exists (assumption A34).
+8. Test how sensitive the split is to lambda and how stable the ranking is to weight changes.
 """),
     code("""
 import sys, json
@@ -42,16 +45,18 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from src.common import PROCESSED, OUTPUTS, RANDOM_STATE, PALETTE, style, save_fig, shape
-from src.mcdm import CRITERIA, ahp, entropy_weights, blend_weights, topsis, allocate_milp
+from src.mcdm import CRITERIA, ahp, entropy_weights, blend_weights, topsis, risk_closeness, allocate_milp
 from src import export
 
 style()
 rng = np.random.default_rng(RANDOM_STATE)
 SKU_ID = "CARBOPLATIN_INJ_10MG_ML"
 DEMAND = 10_000   # ASSUMPTION A11: monthly carboplatin demand of the GPO, in 45 mL vials
-LAMBDA = 1.0      # override 5: board price of risk in the MILP objective, default 1.0
 MODES = ["normal", "crisis", "cost"]
-print("Demand", DEMAND, "vials | lambda", LAMBDA, "| modes", MODES)
+# Review fix 1: each mode is a full profile (AHP weights + C5 stress factor + lambda, the board's price of risk).
+MODE_LAMBDA = {"normal": 1.0, "crisis": 2.0, "cost": 0.5}  # ASSUMPTION A35 (Crisis 2.0: at 1.5 the split equals Normal, decision D22)
+COMPLIANCE_GATE = 0.80  # ASSUMPTION A34: C4 above this blocks a maker from primary or backup roles
+print("Demand", DEMAND, "vials | lambda by mode", MODE_LAMBDA, "| compliance gate C4 >", COMPLIANCE_GATE)
 """),
     md("""
 **Section summary.** The two scenario inputs that drive the order split, demand and lambda, are fixed in one place and labelled as assumptions.
@@ -117,7 +122,9 @@ CAPACITY_ESTABLISHED, CAPACITY_PROBATION, SHORTAGE_FACTOR = 10_000, 2_000, 0.8  
 d["monthly_capacity_units"] = (np.where(d["is_probation"], CAPACITY_PROBATION, CAPACITY_ESTABLISHED)
                                * np.where(d["active_fda_shortage"], SHORTAGE_FACTOR, 1.0)).astype(int)
 print("Tier rules:", TIER)
-d[["is_probation", "trial_gate_pass", "active_fda_shortage", "monthly_capacity_units"]]
+d["gated"] = d["C4"] > COMPLIANCE_GATE
+print("Compliance-gated makers (C4 >", COMPLIANCE_GATE, "):", list(d.index[d["gated"]]))
+d[["is_probation", "trial_gate_pass", "active_fda_shortage", "monthly_capacity_units", "C4", "gated"]].round(3)
 """),
     bi("tier"),
     md("""
@@ -214,6 +221,7 @@ for mode in MODES:
     X = matrix_for(mode)
     rank[f"S_{mode}"] = topsis(X, [final[mode][c] for c in CRITERIA])
     rank[f"S_ahp_only_{mode}"] = topsis(X, [ahp_out[mode]["weights"][c] for c in CRITERIA])
+    rank[f"S_risk_{mode}"] = risk_closeness(X[:, 1:], final[mode])  # C2-C5 only, for the MILP objective
     rank[f"rank_{mode}"] = rank[f"S_{mode}"].rank(ascending=False, method="min").astype(int)
     rank[f"rank_ahp_only_{mode}"] = rank[f"S_ahp_only_{mode}"].rank(ascending=False, method="min").astype(int)
 rank["is_probation"] = d["is_probation"]
@@ -248,7 +256,8 @@ plt.show()
 ### 4.4 MILP order split per mode (Build step 8)
 
 **Section intro.** The order split is a mixed-integer linear program because binary variables y_i decide whether maker i is in the portfolio:
-- Minimise the sum of (landed cost_i + lambda x mean landed cost x (1 - S_i)) x vials_i + 1,000,000 x spot-buy vials.
+- Minimise the sum of (landed cost_i + lambda x mean landed cost x (1 - S_risk_i)) x vials_i + 1,000,000 x spot-buy vials. S_risk is the TOPSIS closeness on C2 to C5 only (the mode's final weights renormalised to sum to 1), so cost is counted once, in the landed-cost term. Lambda comes from the mode profile: Normal 1.0, Crisis 2.0, Cost focus 0.5 (A35; the review proposed 1.5 for Crisis, but at 1.5 the Crisis split is identical to Normal, see section 4.5 and decision D22).
+- Compliance gate: an established maker with C4 above 0.80 cannot be selected as primary or backup (A34). If no feasible gated split exists (a spot buy would be needed), the MILP is re-solved without the gate and the gated maker is flagged.
 - Demand: vials from all makers + spot buy = 10,000.
 - Capacity: vials_i <= capacity_i x y_i (assumptions A27, A28).
 - Tier 1 concentration: an established maker gets at most 70% of demand; if selected, at least 10% (a warm backup, assumption A30).
@@ -260,12 +269,14 @@ plt.show()
     code("""
 alloc, summary = {}, {}
 for mode in MODES:
-    inp = pd.DataFrame({"landed_cost": lc, "S": rank[f"S_{mode}"], "is_probation": d["is_probation"],
-                        "trial_gate_pass": d["trial_gate_pass"], "capacity": d["monthly_capacity_units"]})
-    a, s = allocate_milp(inp, DEMAND, lam=LAMBDA)
+    inp = pd.DataFrame({"landed_cost": lc, "S": rank[f"S_risk_{mode}"], "is_probation": d["is_probation"],
+                        "trial_gate_pass": d["trial_gate_pass"], "capacity": d["monthly_capacity_units"], "gated": d["gated"]})
+    a, s = allocate_milp(inp, DEMAND, lam=MODE_LAMBDA[mode])
     assert s["status"] == "Optimal", s
     assert a["vials"].sum() + s["spot_buy_vials"] == DEMAND
     alloc[mode], summary[mode] = a, s
+for mode in MODES:
+    print(f"{mode:7s} lambda {MODE_LAMBDA[mode]} | gated makers blocked: {summary[mode]['gated_blocked']} | gate relaxed: {summary[mode]['gate_relaxed'] or 'none'}")
 split = pd.concat({m: alloc[m].loc[alloc[m]["vials"] > 0, ["role", "vials", "share"]] for m in MODES})
 split
 """),
@@ -284,8 +295,10 @@ def kpis(mode):
             "spot_buy_vials": summary[mode]["spot_buy_vials"]}
 kpi = pd.DataFrame({m: kpis(m) for m in MODES}).astype(float)
 pd.set_option("display.float_format", "{:,.4f}".format)
-cheapest_single = float(lc[~d["is_probation"]].min() * DEMAND)
-print(f"Reference: buying all 10,000 vials from the cheapest established maker would cost {cheapest_single:,.0f} USD but breaks the Tier 1 rules (70% cap, dual sourcing).")
+eligible_est = ~d["is_probation"] & ~d["gated"]
+cheapest_id = lc[eligible_est].idxmin()
+cheapest_single = float(lc[eligible_est].min() * DEMAND)
+print(f"Reference: buying all 10,000 vials from {cheapest_id}, the cheapest established maker that passes the compliance gate, would cost {cheapest_single:,.0f} USD but breaks the Tier 1 rules (70% cap, dual sourcing).")
 kpi.round(4)
 """),
     bi("kpis"),
@@ -304,7 +317,7 @@ for i, mode in enumerate(MODES):
         ax.text(start + r["share"] * 50, i, f"{m}\\n{r['share']:.0%}", ha="center", va="center", color="white", fontsize=8, fontweight="bold")
         start += r["share"] * 100
 ax.set_yticks(range(len(MODES)), [m.capitalize() for m in MODES])
-ax.set_title(f"MILP order split for {DEMAND:,} vials of carboplatin injection (lambda = {LAMBDA})")
+ax.set_title(f"MILP order split for {DEMAND:,} vials of carboplatin injection (mode profiles: lambda 1.0 / 2.0 / 0.5)")
 ax.set_xlabel("Share of monthly demand (%)")
 ax.set_ylabel("Mode")
 ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=3)
@@ -322,8 +335,8 @@ LAMBDAS = [0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0]
 sens_rows = []
 for mode in ["normal", "crisis"]:
     for lam in LAMBDAS:
-        inp = pd.DataFrame({"landed_cost": lc, "S": rank[f"S_{mode}"], "is_probation": d["is_probation"],
-                            "trial_gate_pass": d["trial_gate_pass"], "capacity": d["monthly_capacity_units"]})
+        inp = pd.DataFrame({"landed_cost": lc, "S": rank[f"S_risk_{mode}"], "is_probation": d["is_probation"],
+                            "trial_gate_pass": d["trial_gate_pass"], "capacity": d["monthly_capacity_units"], "gated": d["gated"]})
         a, s = allocate_milp(inp, DEMAND, lam=lam)
         used = a[a["vials"] > 0].sort_values("vials", ascending=False)
         c5 = d["C5_crisis"] if mode == "crisis" else d["C5_normal"]
@@ -401,11 +414,12 @@ locked = pd.DataFrame({
     # agreed extra columns
     "parent_group": d["parent_group"], "landed_cost_usd_per_vial": lc, "c1_imputed": d["c1_imputed"], "c3_status": d["c3_status"],
     "c4_evidence_status": d["c4_evidence_status"], "nlp_status": d["nlp_status"], "C5_route_exposure_crisis": d["C5_crisis"],
-    "trial_gate_pass": d["trial_gate_pass"], "unit_share_2025": d["unit_share_2025"]}).reset_index(drop=True)
+    "trial_gate_pass": d["trial_gate_pass"], "unit_share_2025": d["unit_share_2025"], "compliance_gated": d["gated"]}).reset_index(drop=True)
 locked.to_csv(PROCESSED / "suppliers_matrix.csv", index=False)
 shape("Saved data/processed/suppliers_matrix.csv", locked)
 for mode in MODES:
-    r = rank[[f"S_{mode}", f"rank_{mode}", f"S_ahp_only_{mode}", "is_probation"]].rename(columns={f"S_{mode}": "S", f"rank_{mode}": "rank", f"S_ahp_only_{mode}": "S_ahp_only"})
+    r = rank[[f"S_{mode}", f"rank_{mode}", f"S_ahp_only_{mode}", f"S_risk_{mode}", "is_probation"]].rename(
+        columns={f"S_{mode}": "S", f"rank_{mode}": "rank", f"S_ahp_only_{mode}": "S_ahp_only", f"S_risk_{mode}": "S_risk"})
     r["composite_risk"] = 1 - r["S"]
     r.sort_values("rank").to_csv(OUTPUTS / f"topsis_ranking_carboplatin_{mode}.csv")
     alloc[mode].to_csv(OUTPUTS / f"lp_allocation_carboplatin_{mode}.csv")
@@ -419,7 +433,7 @@ for m, r in d.iterrows():
         "id": m, "name": r["labeler_name_fda"], "parent": r["parent_group"], "country": r["manufacturing_country"],
         "is_probation": bool(r["is_probation"]), "trial_gate_pass": bool(r["trial_gate_pass"]), "c1_imputed": bool(r["c1_imputed"]),
         "landed_cost": r["landed_cost_per_vial_usd"], "price_per_ml": r["price_per_ml_usd"], "unit_share_2025": r["unit_share_2025"],
-        "capacity": int(r["monthly_capacity_units"]), "active_fda_shortage": bool(r["active_fda_shortage"]),
+        "capacity": int(r["monthly_capacity_units"]), "active_fda_shortage": bool(r["active_fda_shortage"]), "compliance_gated": bool(r["gated"]),
         "current_shortage_records": int(r["current_shortage_records"]), "oai_count_5yr": int(r["oai_count_5yr"]), "vai_count_5yr": int(r["vai_count_5yr"]),
         "inspections_5yr": int(r["inspections_5yr"]), "class_i_ii_5yr": int(r["class_i_ii_5yr"]), "class_i_5yr": int(r["class_i_5yr"]),
         "nlp_citations_5yr": int(r["nlp_citations_5yr"]), "nlp_severity": r["nlp_severity"], "nlp_status": r["nlp_status"],
@@ -428,7 +442,7 @@ for m, r in d.iterrows():
         "criteria": {"C1": r["C1"], "C2": r["C2"], "C3": r["C3"], "C4": r["C4"], "C5_normal": r["C5_normal"], "C5_crisis": r["C5_crisis"]},
         "shap_top3": json.loads(r["shap_top3_reasons"])})
 export.write("suppliers.json", {"sku_id": SKU_ID, "sku_label": "Carboplatin injection 10 mg/mL (45 mL vial)", "tier": TIER, "demand": DEMAND,
-                                "lambda_default": LAMBDA, "data_criteria": DATA_CRITERIA, "entropy_inputs": {"C1": "landed_cost of makers with c1_imputed false", "C2": "criteria.C2", "C4": "criteria.C4"},
+                                "lambda_default": MODE_LAMBDA["normal"], "mode_lambda": MODE_LAMBDA, "compliance_gate": COMPLIANCE_GATE, "data_criteria": DATA_CRITERIA, "entropy_inputs": {"C1": "landed_cost of makers with c1_imputed false", "C2": "criteria.C2", "C4": "criteria.C4"},
                                 "makers": makers_json})
 normal_rank = rank["rank_normal"]
 for mode in MODES:
@@ -438,9 +452,10 @@ for mode in MODES:
         "c5_column": "C5_crisis" if mode == "crisis" else "C5_normal"})
     export.write(f"rankings_{mode}.json", {"mode": mode, "rows": [{"id": m, "S": rank.loc[m, f"S_{mode}"], "composite_risk": 1 - rank.loc[m, f"S_{mode}"],
         "rank": int(rank.loc[m, f"rank_{mode}"]), "rank_normal": int(normal_rank[m]), "rank_change_vs_normal": int(normal_rank[m] - rank.loc[m, f"rank_{mode}"]),
-        "S_ahp_only": rank.loc[m, f"S_ahp_only_{mode}"]} for m in rank.sort_values(f"rank_{mode}").index]})
+        "S_ahp_only": rank.loc[m, f"S_ahp_only_{mode}"], "S_risk": rank.loc[m, f"S_risk_{mode}"]} for m in rank.sort_values(f"rank_{mode}").index]})
     a = alloc[mode]
-    export.write(f"allocations_{mode}.json", {"mode": mode, "demand": DEMAND, "lambda": LAMBDA, "status": summary[mode]["status"],
+    export.write(f"allocations_{mode}.json", {"mode": mode, "demand": DEMAND, "lambda": MODE_LAMBDA[mode], "status": summary[mode]["status"],
+        "gated_blocked": summary[mode]["gated_blocked"], "gate_relaxed": summary[mode]["gate_relaxed"],
         "objective": summary[mode]["objective"], "spot_buy_vials": summary[mode]["spot_buy_vials"], "kpis": kpis(mode),
         "rows": [{"id": m, "vials": int(a.loc[m, "vials"]), "share": a.loc[m, "share"], "role": a.loc[m, "role"],
                   "unit_objective_cost": a.loc[m, "unit_objective_cost"]} for m in a.sort_values("vials", ascending=False).index],
@@ -455,7 +470,7 @@ export.write("model_metrics.json", metrics_doc)
 export.write("nlp_letters.json", export.processed_json("nlp_summary.json"))
 export.write("contract_clauses.json", export.processed_json("contract_clauses.json"))
 export.write("shortages_cache.json", export.shortages_cache())
-export.write("meta.json", export.meta({"sku_id": SKU_ID, "demand": DEMAND, "lambda_default": LAMBDA, "modes": MODES, "makers": len(d),
+export.write("meta.json", export.meta({"sku_id": SKU_ID, "demand": DEMAND, "lambda_default": MODE_LAMBDA["normal"], "mode_lambda": MODE_LAMBDA, "modes": MODES, "makers": len(d),
     "notebooks": ["01_scms_eda_cleaning", "02_scoring_panel_2026", "03_risk_models_xgb_iforest_nlp", "04_mcdm_topsis_milp"]}))
 written = sorted(p.name for p in export.WEB_DATA.glob("*.json"))
 print(f"Wrote {len(written)} JSON files to web/data:", written)

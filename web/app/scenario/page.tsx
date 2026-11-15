@@ -12,21 +12,27 @@ const ROLE_COLOR: Record<string, string> = { primary: "#1f4e79", backup: "#4f8f4
 
 export default function Scenario() {
   const [mode, setMode] = useState<Mode>("normal");
-  const [lambda, setLambda] = useState<number>(suppliers.lambda_default);
+  const [lambda, setLambda] = useState<number>(suppliers.mode_lambda.normal);
+  // Each mode is a full profile: AHP weights + C5 stress factor + lambda. Switching mode resets lambda to the profile value.
+  const changeMode = (m: Mode) => {
+    setMode(m);
+    setLambda(suppliers.mode_lambda[m]);
+  };
   const live = PARITY.ok;
   const demand = suppliers.demand;
 
-  const { rows, spot, scores } = useMemo(() => {
+  const { rows, spot, scores, gateRelaxed } = useMemo(() => {
     if (!live) {
       const a = allocations[mode];
       return {
         rows: a.rows.map((r) => ({ id: r.id, vials: r.vials, share: r.share, role: r.role })),
         spot: a.spot_buy_vials,
         scores: Object.fromEntries(rankings[mode].map((r) => [r.id, r.S])),
+        gateRelaxed: a.gate_relaxed,
       };
     }
     const res = liveAllocation(mode, lambda);
-    return { rows: res.rows, spot: res.spotBuyVials, scores: liveScores(mode) };
+    return { rows: res.rows, spot: res.spotBuyVials, scores: liveScores(mode), gateRelaxed: res.gateRelaxed };
   }, [mode, lambda, live]);
 
   const used = rows.filter((r) => r.vials > 0);
@@ -51,7 +57,7 @@ export default function Scenario() {
       </PageTitle>
 
       <div className="card mb-6 flex flex-wrap items-center gap-6">
-        <ModeTabs mode={mode} onChange={setMode} />
+        <ModeTabs mode={mode} onChange={changeMode} />
         <label className="flex items-center gap-3 text-sm">
           <span className="font-medium text-slate-700">
             Lambda (price of risk) <Assumption>A12</Assumption>
@@ -69,6 +75,10 @@ export default function Scenario() {
           />
           <span className="w-10 font-mono">{lambda.toFixed(1)}</span>
         </label>
+        <span className="text-xs text-slate-500">
+          Mode profile: AHP weights + C5 stress {mode === "crisis" ? "1.5" : "1.0"} + lambda {suppliers.mode_lambda[mode].toFixed(1)}
+          <Assumption>A35</Assumption>
+        </span>
         <Badge tone={live ? "green" : "amber"}>
           {live ? "Live recompute in browser (parity with Python verified)" : "Precomputed Python results (live path disabled)"}
         </Badge>
@@ -137,6 +147,21 @@ export default function Scenario() {
               ))}
             </tbody>
           </table>
+          {gateRelaxed.length ? (
+            <p className="mt-3 rounded border border-red-300 bg-red-50 p-2 text-sm font-semibold text-red-800">
+              Compliance gate relaxed for {gateRelaxed.join(", ")}: C4 above {suppliers.compliance_gate.toFixed(2)}, used only because no feasible split
+              exists without it.
+            </p>
+          ) : (
+            <p className="mt-3 text-xs text-slate-500">
+              Compliance gate active: {suppliers.makers.filter((m) => m.compliance_gated && !m.is_probation).map((m) => m.id).join(", ")} cannot be primary
+              or backup (C4 above {suppliers.compliance_gate.toFixed(2)}, assumption A34).
+            </p>
+          )}
+          <p className="mt-2 text-sm text-slate-700">
+            Why does the top-ranked maker get a small share? AVYXA ranks first on the evidence available, but it is a probation maker with no FDA
+            inspection on file, so the MILP caps every probation maker at a 5-15% trial until its delivery record is proven.
+          </p>
           <p className="mt-3 text-xs text-slate-500">
             Demand<Assumption>A11</Assumption> and capacities<Assumption>A27-A28</Assumption> are scenario assumptions. Recommendation only: a
             category manager approves it on the Approval page.

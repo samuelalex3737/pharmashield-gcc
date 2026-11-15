@@ -77,11 +77,41 @@ def topsis(matrix, weights):
     return d_minus / (d_plus + d_minus + 1e-12)
 
 
-def allocate_milp(df, demand, lam=1.0, primary_cap=0.70, trial_min=0.05, trial_max=0.15, trial_max_relaxed=0.30,
-                  backup_min=0.10, max_probation=2, min_established=2, big_m=1e6):
+def risk_closeness(matrix_c2_c5, final_weights):
+    """S_risk: TOPSIS closeness on C2-C5 only, with the mode's final weights renormalised.
+    Used in the MILP objective so that cost (C1) is not counted twice (it is already the
+    landed-cost term of the objective)."""
+    w = np.array([final_weights[c] for c in ["C2", "C3", "C4", "C5"]], dtype=float)
+    return topsis(matrix_c2_c5, w / w.sum())
+
+
+def allocate_milp(df, demand, lam=1.0, compliance_gate=True, **kwargs):
+    """MILP order split with the compliance gate (assumption A34).
+
+    df columns: landed_cost, S (use S_risk), is_probation, trial_gate_pass, capacity, gated (bool).
+    A gated established maker (C4 above the threshold) cannot be primary or backup. If the gated
+    solution needs a spot buy (no feasible alternative), the MILP is re-solved without the gate
+    and the gated makers that receive volume are reported in summary["gate_relaxed"].
+    """
+    blocked = []
+    if compliance_gate and "gated" in df.columns:
+        blocked = [m for m in df.index if bool(df.loc[m, "gated"]) and not bool(df.loc[m, "is_probation"])]
+    alloc, summary = _solve_milp(df, demand, lam, blocked=blocked, **kwargs)
+    summary["gated_blocked"] = blocked
+    summary["gate_relaxed"] = []
+    if blocked and (summary["status"] != "Optimal" or summary["spot_buy_vials"] > 0):
+        alloc, summary = _solve_milp(df, demand, lam, blocked=[], **kwargs)
+        summary["gated_blocked"] = []
+        summary["gate_relaxed"] = [m for m in blocked if alloc.loc[m, "vials"] > 0]
+    return alloc, summary
+
+
+def _solve_milp(df, demand, lam=1.0, blocked=(), primary_cap=0.70, trial_min=0.05, trial_max=0.15, trial_max_relaxed=0.30,
+                backup_min=0.10, max_probation=2, min_established=2, big_m=1e6):
     """Mixed-integer order split (PuLP + CBC).
 
     df columns: landed_cost, S, is_probation, trial_gate_pass, capacity (index = maker id).
+    blocked: established makers that may not be selected (compliance gate).
     Returns (allocation DataFrame, summary dict).
     """
     makers = list(df.index)
@@ -106,6 +136,8 @@ def allocate_milp(df, demand, lam=1.0, primary_cap=0.70, trial_min=0.05, trial_m
     for m in est:
         model += x[m] <= primary_cap * demand * y[m], f"concentration_cap_{m}"
         model += x[m] >= backup_min * demand * y[m], f"warm_backup_min_{m}"
+        if m in blocked:
+            model += y[m] == 0, f"compliance_gate_{m}"
     for m in prob:
         if m in eligible_prob:
             model += x[m] >= trial_min * demand * y[m], f"trial_min_{m}"

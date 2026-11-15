@@ -91,13 +91,14 @@ A supplier score is only as good as its data, so we built it from seven public f
 
 ## Slide 3 - Hybrid TOPSIS ranking and the MILP order split, Normal vs Crisis (Member 3, Q1 and Q5)
 
-**Headline [GENAI]:** The board sets priorities once; in a crisis, one click and one risk dial re-split the order in milliseconds.
+**Headline [GENAI]:** The board sets priorities once; in a crisis, one click re-splits the order off the exposed lane in milliseconds.
 
 **Bullets [GENAI]**
 - Weights are 50% board judgement and 50% data. AHP consistency ratios are 0.0040 (Normal), 0.0008 (Crisis) and 0.0022 (Cost focus), all below 0.10. Entropy is applied only to real data (C1, C2, C4).
 - Final Normal weights: cost 0.137, delivery 0.318, price integrity 0.050, compliance 0.234, route 0.261. Crisis raises route exposure to 0.314.
-- The MILP (PuLP + CBC, binary supplier selection) splits 10,000 vials: Teva 70% primary, Accord 25% warm backup, AVYXA 5% probation trial. Cost 1,435,069 USD a month; every Tier 1 rule is met.
-- In Crisis mode at lambda 1.5, India-made volume falls from 25% to 0% (Fresenius Kabi replaces Accord as backup) for 8.7% more cost. Teva stays the top established maker in 98.3% of 1,000 weight shocks.
+- The MILP (PuLP + CBC, binary supplier selection) splits 10,000 vials. Normal mode: Teva 70% primary, Hospira 10% warm backup, and probation trials AVYXA 15% and Gland 5%. Cost 1,648,949 USD a month; every Tier 1 rule is met.
+- Each mode is a full profile: weights + route stress + lambda (Normal 1.0, Crisis 2.0, Cost 0.5). Crisis gives Teva 70%, Hospira 15%, AVYXA 15%: India-made volume falls from 5% to 0% for 1.4% more cost.
+- Guardrails: cost counts once (the risk term uses C2-C5 only), and a compliance gate (C4 above 0.80) bars Accord, Eugia and Fresenius Kabi from primary or backup roles. Teva stays the top established maker in 98.3% of 1,000 weight shocks.
 
 **Exact numbers and sources**
 
@@ -105,16 +106,17 @@ A supplier score is only as good as its data, so we built it from seven public f
 |---|---|
 | CR 0.0040 / 0.0008 / 0.0022 | notebook 04, section 4.1; web/data/weights_<mode>.json, cr |
 | Final weights (Normal 0.137, 0.318, 0.050, 0.234, 0.261; Crisis C5 0.314) | notebook 04, section 4.2; web/data/weights_normal.json and weights_crisis.json, final_weights |
-| 70/25/5 split, 7,000 / 2,500 / 500 vials | notebook 04, section 4.4; outputs/lp_allocation_carboplatin_normal.csv |
-| 1,435,069 USD per month | web/data/allocations_normal.json, kpis.purchase_cost_usd |
-| Crisis lambda 1.5: 1,559,745 USD, India-made 0%, +124,676 USD (+8.7%) | notebook 04, section 4.5; web/data/allocations_crisis.json, lambda_sensitivity |
+| Normal split 7,000 / 1,000 / 1,500 / 500 vials (Teva, Hospira, AVYXA, Gland) | notebook 04, section 4.4; outputs/lp_allocation_carboplatin_normal.csv |
+| 1,648,949 USD per month (Normal) | web/data/allocations_normal.json, kpis.purchase_cost_usd |
+| Crisis split 7,000 / 1,500 / 1,500 (Teva, Hospira, AVYXA); 1,672,430 USD; India-made 5% to 0%; +23,481 USD (+1.4%) | notebook 04, section 4.4; web/data/allocations_crisis.json |
+| Mode lambdas 1.0 / 2.0 / 0.5; compliance gate C4 above 0.80 | docs/assumptions.md A34, A35; decisions D21-D24 |
 | 98.3% robustness (983 of 1,000) | notebook 04, section 5; web/data/model_metrics.json, robustness |
 | Demand 10,000 vials and capacities are assumptions | docs/assumptions.md A11, A27, A28 |
 
 **Figure:** figures/fig_14_milp_split_by_mode.png and figures/fig_15_lambda_sensitivity.png [GENAI-ASSISTED CODE]. Label "Demand and capacities: assumptions A11, A27-A28".
 
 **Speaker notes (about 80 seconds) [GENAI]**
-Machine learning tells us the risk; the board must decide how much each risk matters. We use AHP, where the board compares criteria in pairs once per mode. All three matrices are consistent, with ratios below 0.005 against a limit of 0.10. We blend those judgements 50-50 with entropy weights, but only on criteria with real data, so an assumption can never earn weight by accident. TOPSIS then ranks the 11 makers on how close each is to the ideal supplier. The ranking becomes an order through a mixed-integer linear program. Binary variables pick the suppliers, then the model enforces dual sourcing, a 70% cap on the primary, and a 5 to 15% trial for new makers. For 10,000 vials a month it recommends Teva 70%, Accord 25% and AVYXA 5%, for 1.44 million dollars. In a Hormuz crisis the buyer clicks Crisis and turns the risk dial, lambda, to 1.5. The India-made share drops from 25% to zero for 8.7% more cost. And the primary choice survives 98% of random weight shocks.
+Machine learning tells us the risk; the board must decide how much each risk matters. We use AHP, where the board compares criteria in pairs once per mode. All three are consistent. We blend them 50-50 with entropy weights computed only from real data. TOPSIS then ranks the 11 makers on how close each is to the ideal supplier. The ranking becomes an order through a mixed-integer linear program. Binary variables pick the suppliers, then the model enforces dual sourcing, a 70% cap on the primary, and a 5 to 15% trial for new makers. Cost is counted only once, and a compliance gate keeps the three makers with the worst FDA records out of the main roles. For 10,000 vials a month it recommends Teva 70%, Hospira 10%, and small trials with AVYXA and Gland, for 1.65 million dollars. In a Hormuz crisis the buyer clicks Crisis. That one click changes the weights, the route stress and the price of risk together, and the India-made trial drops out: India-made volume goes from 5% to zero for 1.4% more cost. And the primary choice survives 98% of random weight shocks.
 
 **Key questions answered:** Q1 (evaluate and select), Q5 (multi-criteria decision-making).
 
@@ -189,7 +191,7 @@ Most supplier risk is written down, in inspection reports and in contracts, and 
 **Bullets [GENAI]**
 - No order is sent automatically. The buyer approves or overrides; an override needs a reason and shares that sum to 100%. Every entry stores the time, mode, final weights and allocation, and can be downloaded as CSV.
 - Every score shows its top 3 SHAP reasons. Missing evidence is treated as neutral, never as clean or guilty. Fairness: plant- and lane-level evidence where available, country-level otherwise.
-- New makers get a fair route in: 6 probation candidates, a 5-15% trial, at most 2 per order, and only if they pass the safety gate (no OAI and no Class I recall in 3 years). 5 of 6 pass.
+- New makers get a fair route in: 6 probation candidates, a 5-15% trial, at most 2 per order, and only if they pass the safety gate (no OAI and no Class I recall in 3 years). 5 of 6 pass. Established makers with a compliance score above 0.80 cannot be primary or backup.
 - UAE PDPL (Federal Decree-Law 45 of 2021) data minimisation: the log stores business decisions, not personal contact data. The live dashboard shows the openFDA alert feed and falls back to a dated cache.
 
 **Exact numbers and sources**
@@ -204,7 +206,7 @@ Most supplier risk is written down, in inspection reports and in contracts, and 
 **Figure:** live demo (docs/demo_script.md, 30 seconds), with the backup video ready. Optional static: Approval page screenshot.
 
 **Speaker notes (about 80 seconds) [GENAI]**
-An AI that picks suppliers raises three questions: who decides, is it fair, and is it lawful? Who decides: a human. PharmaShield never sends an order. The category manager sees the recommended split and approves it or overrides it. An override needs a written reason, and every decision is logged with its weights and allocation. Is it fair: every score shows its top three reasons, so a supplier can be challenged. Missing data is treated as neutral, so a maker is never punished or rewarded for being unknown. We use plant and lane evidence where we have it, and country-level evidence only where we do not. New makers get a structured path in: a capped 5 to 15% trial, but only after passing a safety gate. Is it lawful: the log holds business decisions only, in line with the UAE data protection law. Let me show you in 30 seconds. Here is the scorecard. I click Crisis, raise the risk dial, and the order moves off the exposed lane. Then I approve, and the decision is logged.
+An AI that picks suppliers raises three questions: who decides, is it fair, and is it lawful? Who decides: a human. PharmaShield never sends an order. The category manager sees the recommended split and approves it or overrides it. An override needs a written reason, and every decision is logged with its weights and allocation. Is it fair: every score shows its top three reasons, so a supplier can be challenged. Missing data is treated as neutral, so a maker is never punished or rewarded for being unknown. We use plant and lane evidence where we have it, and country-level evidence only where we do not. New makers get a structured path in: a capped 5 to 15% trial, but only after passing a safety gate. Is it lawful: the log holds business decisions only, in line with the UAE data protection law. Let me show you in 30 seconds. Here is the scorecard. I click Crisis, and the order moves off the exposed lane. Then I approve, and the decision is logged.
 
 **Key questions answered:** Q6 (ethics and compliance), Q7 (transparency and resilience).
 
@@ -221,22 +223,22 @@ An AI that picks suppliers raises three questions: who decides, is it fair, and 
   - A pre-qualified backup bench for every pilot SKU (carboplatin today: 5 gate-passing probation makers).
   - On-time-in-full delivery tracked monthly.
   - The false-alarm rate of delivery alerts tracked monthly.
-- Trade-off: the risk-balanced split costs 211,311 USD a month (17.3%) more than single-sourcing the cheapest maker, which breaks Tier 1 rules. In a crisis, a further 124,676 USD a month (8.7%) removes India-made lane exposure.
+- Trade-off: the risk-balanced split costs 171,568 USD a month (11.6%) more than single-sourcing Teva, the cheapest maker that passes the compliance gate, which breaks Tier 1 rules. In a crisis, a further 23,481 USD a month (1.4%) removes India-made lane exposure.
 - The ask: approve the 90-day pilot, a data-sharing agreement for ERP and Tatmeen data, and one category manager as product owner.
 
 **Exact numbers and sources**
 
 | Number | Source |
 |---|---|
-| 211,311 USD (17.3%) premium over all-Accord | notebook 04, section 4.4 (KPI table and reference line) |
-| 124,676 USD (8.7%) crisis premium at lambda 1.5 | notebook 04, section 4.5 |
+| 171,568 USD (11.6%) premium over all-Teva | notebook 04, section 4.4 (KPI table and reference line) |
+| 23,481 USD (1.4%) crisis premium (Crisis profile, lambda 2.0) | notebook 04, section 4.4 |
 | 5 gate-passing probation makers | notebook 02, section 4.4 |
 | Pilot scope, phases and KPI targets | team targets (assumption A17), not sourced figures |
 
 **Figure:** simple 90-day timeline (draw in PowerPoint; team-made, no GenAI mark needed if drawn by the team).
 
 **Speaker notes (about 80 seconds) [GENAI]**
-We are not asking for a big-bang system. We are asking for 90 days. In the first month we connect the GPO's own delivery records and Tatmeen scan data, and retrain the delivery model on our real lanes instead of the historical proxy. In the second month the cockpit runs in shadow mode next to today's buying, so we can compare its alerts with what actually happens. In the third month buyers use it for live approvals on carboplatin and four more critical oncology drugs. We will judge it on four measures: dual-source coverage on every pilot drug, a pre-qualified backup bench for each one, on-time-in-full delivery, and the false-alarm rate of our alerts. We are transparent about cost. Resilience costs about 17% more than buying everything from the cheapest maker, a split our own Tier 1 rules forbid. In a crisis, another 8.7% takes the exposed lane out of the order. That is the insurance premium. The aim is to reduce stock-outs, not to promise they disappear. We ask for approval of the pilot, a data-sharing agreement, and one category manager to own it.
+We are not asking for a big-bang system. We are asking for 90 days. In the first month we connect the GPO's own delivery records and Tatmeen scan data, and retrain the delivery model on our real lanes instead of the historical proxy. In the second month the cockpit runs in shadow mode next to today's buying, so we can compare its alerts with what actually happens. In the third month buyers use it for live approvals on carboplatin and four more critical oncology drugs. We will judge it on four measures: dual-source coverage on every pilot drug, a pre-qualified backup bench for each one, on-time-in-full delivery, and the false-alarm rate of our alerts. We are transparent about cost. Resilience costs about 12% more than buying everything from the cheapest compliant maker, a split our own Tier 1 rules forbid. In a crisis, another 1.4% takes the exposed lane out of the order. That is the insurance premium. The aim is to reduce stock-outs, not to promise they disappear. We ask for approval of the pilot, a data-sharing agreement, and one category manager to own it.
 
 **Key questions answered:** Q7 (resilience), roadmap; closes Q1-Q6.
 
@@ -251,8 +253,9 @@ We are not asking for a big-bang system. We are asking for 90 days. In the first
 - Isolation Forest: 475 of 9,207 lines (5.16%).
 - NLP: macro F1 0.987 vs 0.657; hand-check about 83% (10 of 12).
 - AHP CR 0.0040 / 0.0008 / 0.0022. Final Normal weights 0.137 / 0.318 / 0.050 / 0.234 / 0.261.
-- Split: Teva 7,000 (70%), Accord 2,500 (25%), AVYXA 500 (5%); 1,435,069 USD a month; lambda 1.0.
-- Crisis lambda 1.5: India-made 25% to 0%, +124,676 USD (+8.7%).
+- Normal split: Teva 7,000 (70%), Hospira 1,000 (10%), AVYXA 1,500 (15%), Gland 500 (5%); 1,648,949 USD a month; lambda 1.0.
+- Crisis split (lambda 2.0): Teva 7,000 (70%), Hospira 1,500 (15%), AVYXA 1,500 (15%); 1,672,430 USD; India-made 5% to 0%; +23,481 USD (+1.4%).
+- Compliance gate: C4 above 0.80 (Accord, Eugia, Fresenius Kabi) cannot be primary or backup.
 - Robustness 98.3% (983 of 1,000).
 - "MILP" (mixed-integer linear program), not "LP".
 - "Reduce stock-outs", never "eliminate".

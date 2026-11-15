@@ -14,12 +14,12 @@ Presenter: Member 5 (slide 6). Device: the presentation laptop, browser at full 
 | Time | Action | Say |
 |---|---|---|
 | 0:00 | Scorecard tab, Normal mode. Click the Eugia row. | "Every maker is scored on five risks. Eugia ranks last: here are the three reasons the model gives." |
-| 0:08 | Scenario tab. Click "Crisis (Hormuz)". | "Hormuz closes. One click re-weights the board's priorities." |
-| 0:13 | Drag the lambda slider from 1.0 to 1.5. | "We raise the price of risk. The order moves off India-made supply: from 25% to 0%, for 8.7% more cost." |
+| 0:08 | Scenario tab, Normal mode. Point at the split (Teva 70%, AVYXA 15%, Hospira 10%, Gland 5%). | "Today's split keeps a small India-made trial." |
+| 0:13 | Click "Crisis (Hormuz)". | "Hormuz closes. One click changes the weights, the route stress and the price of risk. The India-made trial drops out: India-made volume goes from 5% to 0%, for 1.4% more cost." |
 | 0:21 | Approval tab, Crisis mode. Type "CPO" as approver. Click "Approve and log". | "A human approves. Nothing is ordered automatically, and the decision is logged with its weights." |
 | 0:28 | Point at the new log row. | "Full audit trail, downloadable as CSV." |
 
-Expected values on screen at 0:13 (Crisis, lambda 1.5): Teva 70%, AVYXA 15%, Fresenius Kabi 15%; monthly purchase cost USD 1,559,745; India-made 0%; expected late shipments 1.59%.
+Expected values on screen at 0:13 (Crisis profile, lambda 2.0): Teva 70%, Hospira 15%, AVYXA 15%; monthly purchase cost USD 1,672,430; India-made 0%; expected late shipments 1.59%. Normal (lambda 1.0) shows USD 1,648,949 and India-made 5%.
 
 ## If something fails
 

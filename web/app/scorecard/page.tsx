@@ -5,7 +5,7 @@ import Chart from "@/components/Chart";
 import ModeTabs from "@/components/ModeTabs";
 import { Assumption, Badge, PageTitle, pct, usd } from "@/components/ui";
 import { CRITERIA } from "@/lib/engine";
-import { c5For, makerById, MODE_LABEL, rankings, weights, type Mode } from "@/lib/data";
+import { c5For, makerById, MODE_LABEL, rankings, suppliers, weights, type Mode } from "@/lib/data";
 
 const CRITERION_LABEL: Record<string, string> = {
   C1: "C1 Landed cost",
@@ -22,12 +22,16 @@ export default function Scorecard() {
   const m = makerById[selected];
   const fw = weights[mode].final_weights;
   const values = [m.criteria.C1, m.criteria.C2, m.criteria.C3, m.criteria.C4, c5For(m, mode)];
+  const estRank: Record<string, number> = {};
+  rows.filter((r) => !makerById[r.id].is_probation).forEach((r, i) => (estRank[r.id] = i + 1));
 
   return (
     <div>
       <PageTitle title="Supplier Scorecard" question="Q1 Q6">
-        Eleven qualified makers of carboplatin injection, ranked by TOPSIS closeness S (higher is better; composite risk = 1 - S). Click a row
-        to see its five criteria and the plain-English reasons behind its delivery-risk score.
+        Eleven qualified makers of carboplatin injection, ranked by TOPSIS closeness S (higher is better; composite risk = 1 - S). The overall
+        rank includes probation makers, which can only receive a 5-15% trial; &quot;Est. rank&quot; orders the 5 established makers that can be primary or
+        backup. Makers above the compliance gate (C4 above {suppliers.compliance_gate.toFixed(2)}, assumption A34) are flagged and cannot be primary or backup.
+        Click a row to see its five criteria and the reasons behind its delivery-risk score.
       </PageTitle>
       <div className="mb-4 flex flex-wrap items-center gap-4">
         <ModeTabs mode={mode} onChange={setMode} />
@@ -40,6 +44,7 @@ export default function Scorecard() {
             <thead>
               <tr>
                 <th>Rank</th>
+                <th title="Rank among the 5 established (incumbent) makers that can be primary or backup">Est. rank</th>
                 <th>Maker</th>
                 <th>S score</th>
                 <th>Composite risk</th>
@@ -57,6 +62,7 @@ export default function Scorecard() {
                     className={`cursor-pointer ${selected === r.id ? "bg-navy-50" : "hover:bg-slate-50"}`}
                   >
                     <td className="font-semibold">{r.rank}</td>
+                    <td className="font-mono text-slate-600">{estRank[r.id] ?? "-"}</td>
                     <td>
                       <div className="font-medium text-navy-900">{mk.name}</div>
                       <div className="text-xs text-slate-500">
@@ -74,7 +80,12 @@ export default function Scorecard() {
                     <td className="space-x-1 space-y-1">
                       {mk.is_probation ? (
                         <Badge tone="amber" title="Not a current incumbent (assumption A23); trial share 5-15% only">
-                          Probation
+                          Probation - capped at trial share (5-15%)
+                        </Badge>
+                      ) : null}
+                      {mk.compliance_gated ? (
+                        <Badge tone="red" title={`C4 compliance risk ${mk.criteria.C4.toFixed(3)} is above the ${suppliers.compliance_gate.toFixed(2)} gate (assumption A34): cannot be primary or backup while an alternative exists`}>
+                          Gated (C4 &gt; {suppliers.compliance_gate.toFixed(2)})
                         </Badge>
                       ) : null}
                       {mk.c1_imputed ? (

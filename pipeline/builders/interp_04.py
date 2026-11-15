@@ -38,3 +38,38 @@ INTERP = {
 - Add a multi-period model that tracks safety stock.
 - Re-run monthly as the openFDA and FDA feeds refresh.""",
 }
+
+# Review fixes (15 Nov 2026): mode profiles, S_risk in the MILP objective, compliance gate. These texts replace the
+# earlier versions of the same keys.
+INTERP.update({
+    "tier": "Carboplatin is Tier 1 (life-critical oncology), so the split must use at least 2 established makers, cap the primary at 70% and keep trial volume between 5% and 15%. Capacities are scenario values: 10,000 vials a month for an established maker and 2,000 for a probation maker, cut by 20% when the maker has a current US shortage record (8 of 11 makers). The compliance gate (C4 above 0.80, assumption A34) blocks three makers from primary or backup roles: Fresenius Kabi (0.970), Eugia (0.965) and Accord (0.851). That leaves Teva and Hospira as the only established makers eligible for volume.",
+    "milp": "Each mode now produces a different decision. Normal (lambda 1.0): Teva 7,000 vials as primary (70%), Hospira 1,000 as warm backup (10%), and two probation trials, AVYXA 1,500 (15%) and Gland 500 (5%). Crisis (lambda 2.0): Teva 7,000, Hospira 1,500 (15%) and AVYXA 1,500; the India-made Gland trial drops out. Cost focus (lambda 0.5) gives the same split as Normal. No spot buy is needed and the compliance gate never had to be relaxed. The two probation trials receive 20% together because their imputed prices (about 189 USD a vial) are below Hospira's (236 USD); the 15% cap per trial maker is what keeps them small.",
+    "kpis": "The Normal split costs 1,648,949 USD a month (164.89 USD per vial) with an expected late share of 1.68% and 5% India-made volume. The Crisis split costs 1,672,430 USD (23,481 USD or 1.4% more), cuts the India-made share to 0% and the expected late share to 1.59%, while route exposure rises to 0.240 because Crisis mode stresses every lane. Buying everything from Teva, the cheapest maker that passes the compliance gate, would cost 1,477,380 USD but breaks the Tier 1 rules; the rule-compliant Normal split costs 171,568 USD (11.6%) more. That is the price of dual sourcing plus two qualified trial suppliers.",
+    "fig14": "Normal and Cost focus share one split, and Crisis moves volume from the India-made Gland trial to the US-made Hospira backup. The compliance gate is why Accord, the cheapest maker, receives nothing in any mode: its C4 of 0.851 reflects 2 OAI inspections and 101 Class I or II recalls in 5 years.",
+    "lambda": "Lambda shows the board where the decision turns. At lambda 0 (price only) the MILP buys from Teva, Hospira and two India-made trials (Gland 15%, Teyro 5%); India-made volume is 20%. From lambda 0.5 to 1.5 the split is Teva 70%, AVYXA 15%, Hospira 10%, Gland 5%. From lambda 2.0 the Gland trial is replaced by more Hospira volume, India-made volume falls to 0%, and expected late shipments fall from 1.68% to 1.59% for 23,481 USD more per month. The review proposed lambda 1.5 for Crisis mode; at 1.5 the Crisis split equals Normal, so the Crisis profile uses 2.0, the first grid value at which the decision changes (decision D22).",
+    "fig15": "Cost rises in two steps: a small one when the probation mix changes at lambda 0.5 and a second at lambda 2.0 when the India-made trial is replaced. The right chart shows the India-made share falling from 20% at lambda 0 to 5% and then 0%. Each step buys lower delivery and route risk for a known monthly cost.",
+    "saved_csv": "The locked-schema table (11 makers, 16 locked columns plus 10 agreed extras, including the compliance-gate flag) and the per-mode ranking and allocation files are saved. The ranking files now also carry S_risk, the risk-only closeness used by the MILP.",
+    "conclusion": """**Recommendation for the GPO (carboplatin injection, Tier 1, 10,000 vials a month).**
+- Normal mode (lambda 1.0): Teva Parenteral Medicines as primary (7,000 vials, 70%), Hospira as warm backup (1,000, 10%), and probation trials with AVYXA (1,500, 15%) and Gland (500, 5%). This costs 1,648,949 USD a month and meets every Tier 1 rule.
+- Crisis mode (Hormuz or Gulf airspace shock, lambda 2.0): Teva 70%, Hospira 15%, AVYXA 15%. India-made volume falls from 5% to 0% for 1.4% more cost (23,481 USD a month).
+- Accord, Eugia and Fresenius Kabi are excluded from primary and backup roles by the compliance gate (C4 above 0.80).
+- A human category manager approves every split (dashboard Approval page). No order is sent automatically.
+
+**Why it can be trusted.**
+- AHP consistency ratios are below 0.005.
+- Entropy is applied only to real data.
+- Cost is counted once in the MILP (S_risk excludes C1).
+- The top established maker survives 98.3% of random weight changes.
+- Every imputed, neutral or gated value is flagged.
+
+**Limits.**
+- Demand, capacities, the route mix, the mode lambdas and the 0.80 gate are scenario assumptions (A8, A11, A27, A28, A34, A35).
+- Prices are a US Medicaid proxy (A4).
+- The two probation trials together take 20% because their prices are imputed at the median.
+
+**Future improvements.**
+- Calibrate lambda with the board using past stock-out costs.
+- Replace assumed capacities with supplier-confirmed allocations.
+- Add a multi-period model that tracks safety stock.
+- Re-run monthly as the openFDA and FDA feeds refresh.""",
+})

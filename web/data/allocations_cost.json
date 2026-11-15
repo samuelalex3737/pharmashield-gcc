@@ -1,20 +1,26 @@
 {
  "mode": "cost",
  "demand": 10000,
- "lambda": 1.0,
+ "lambda": 0.5,
  "status": "Optimal",
- "objective": 1883846.2214037064,
+ "gated_blocked": [
+  "ACCORD",
+  "EUGIA",
+  "FRESENIUS"
+ ],
+ "gate_relaxed": [],
+ "objective": 1820780.3585994006,
  "spot_buy_vials": 0,
  "kpis": {
-  "purchase_cost_usd": 1435069.4328365047,
-  "cost_per_vial_usd": 143.50694328365046,
-  "expected_late_share": 0.02313821971810865,
-  "route_exposure_weighted": 0.23899999999999996,
-  "india_made_share": 0.25,
+  "purchase_cost_usd": 1648948.5968253901,
+  "cost_per_vial_usd": 164.89485968253902,
+  "expected_late_share": 0.016782415564302523,
+  "route_exposure_weighted": 0.2301999999999999,
+  "india_made_share": 0.05,
   "primary_share": 0.7,
-  "suppliers_used": 3,
-  "probation_trial_share": 0.05,
-  "warm_backup_share": 0.25,
+  "suppliers_used": 4,
+  "probation_trial_share": 0.2,
+  "warm_backup_share": 0.1,
   "spot_buy_vials": 0
  },
  "rows": [
@@ -23,77 +29,77 @@
    "vials": 7000,
    "share": 0.7,
    "role": "primary",
-   "unit_objective_cost": 183.47273571663032
-  },
-  {
-   "id": "ACCORD",
-   "vials": 2500,
-   "share": 0.25,
-   "role": "backup",
-   "unit_objective_cost": 194.78541317289876
+   "unit_objective_cost": 166.93601341090476
   },
   {
    "id": "AVYXA",
+   "vials": 1500,
+   "share": 0.15,
+   "role": "probation trial",
+   "unit_objective_cost": 200.63058684951082
+  },
+  {
+   "id": "HOSPIRA",
+   "vials": 1000,
+   "share": 0.1,
+   "role": "backup",
+   "unit_objective_cost": 246.1982819681088
+  },
+  {
+   "id": "GLAND",
    "vials": 500,
    "share": 0.05,
    "role": "probation trial",
-   "unit_objective_cost": 225.14707691009446
+   "unit_objective_cost": 210.16820496138433
+  },
+  {
+   "id": "ACCORD",
+   "vials": 0,
+   "share": 0.0,
+   "role": "not selected",
+   "unit_objective_cost": 167.39086927437268
   },
   {
    "id": "APOTEX",
    "vials": 0,
    "share": 0.0,
    "role": "not selected",
-   "unit_objective_cost": 430.29070380483455
+   "unit_objective_cost": 365.0924689612144
   },
   {
    "id": "BPI",
    "vials": 0,
    "share": 0.0,
    "role": "not selected",
-   "unit_objective_cost": 258.0497832127639
+   "unit_objective_cost": 224.4944227936811
   },
   {
    "id": "FRESENIUS",
    "vials": 0,
    "share": 0.0,
    "role": "not selected",
-   "unit_objective_cost": 215.95723414318806
+   "unit_objective_cost": 189.9899751945567
   },
   {
    "id": "EUGIA",
    "vials": 0,
    "share": 0.0,
    "role": "not selected",
-   "unit_objective_cost": 367.4102476021915
-  },
-  {
-   "id": "GLAND",
-   "vials": 0,
-   "share": 0.0,
-   "role": "not selected",
-   "unit_objective_cost": 237.1796285696994
-  },
-  {
-   "id": "HOSPIRA",
-   "vials": 0,
-   "share": 0.0,
-   "role": "not selected",
-   "unit_objective_cost": 286.2274544538031
+   "unit_objective_cost": 315.2376263611203
   },
   {
    "id": "NATCO",
    "vials": 0,
    "share": 0.0,
    "role": "not selected",
-   "unit_objective_cost": 266.1371998687609
+   "unit_objective_cost": 229.85298586263727
   },
   {
    "id": "TEYRO",
    "vials": 0,
    "share": 0.0,
    "role": "not selected",
-   "unit_objective_cost": 254.47699517957253
+   "unit_objective_cost": 222.06703865736
   }
  ],
  "lambda_sensitivity": []

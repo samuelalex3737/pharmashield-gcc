@@ -1,6 +1,7 @@
 // Audit log storage. Uses Upstash Redis (Vercel Marketplace) through its REST API when the environment
 // variables are set; otherwise reports "not configured" and the page keeps a local demo log in the browser.
 import { NextResponse } from "next/server";
+import { timingSafeEqual } from "crypto";
 
 export const dynamic = "force-dynamic";
 
@@ -51,5 +52,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ configured: true, stored });
   } catch (err) {
     return NextResponse.json({ error: err instanceof Error ? err.message : "write failed" }, { status: 502 });
+  }
+}
+
+// Admin-only: clear the whole audit log. Requires the passcode in the x-admin-key header to equal AUDIT_ADMIN_KEY.
+export async function DELETE(req: Request) {
+  const adminKey = process.env.AUDIT_ADMIN_KEY;
+  if (!adminKey) return NextResponse.json({ error: "admin clearing is not configured" }, { status: 503 });
+  const given = req.headers.get("x-admin-key") ?? "";
+  if (given.length !== adminKey.length || !timingSafeEqual(Buffer.from(given), Buffer.from(adminKey))) {
+    return NextResponse.json({ error: "wrong admin passcode" }, { status: 401 });
+  }
+  if (!URL_ENV || !TOKEN_ENV) return NextResponse.json({ configured: false }, { status: 503 });
+  try {
+    const { result } = await redis(["LLEN", KEY]);
+    await redis(["DEL", KEY]);
+    return NextResponse.json({ cleared: Number(result) });
+  } catch (err) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : "clear failed" }, { status: 502 });
   }
 }

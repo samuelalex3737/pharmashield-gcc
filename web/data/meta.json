@@ -1,5 +1,5 @@
 {
- "run_utc": "2026-11-14T21:04:26Z",
+ "run_utc": "2026-11-15T07:41:02Z",
  "data_cutoff": "2026-11-14",
  "raw_files": [
   "fda_dashboard_citations_20261114.xlsx",
@@ -32,6 +32,11 @@
  "sku_id": "CARBOPLATIN_INJ_10MG_ML",
  "demand": 10000,
  "lambda_default": 1.0,
+ "mode_lambda": {
+  "normal": 1.0,
+  "crisis": 2.0,
+  "cost": 0.5
+ },
  "modes": [
   "normal",
   "crisis",

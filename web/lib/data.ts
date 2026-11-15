@@ -35,6 +35,7 @@ export interface Maker {
   unit_share_2025: number;
   capacity: number;
   active_fda_shortage: boolean;
+  compliance_gated: boolean;
   current_shortage_records: number;
   oai_count_5yr: number;
   vai_count_5yr: number;
@@ -78,6 +79,7 @@ export interface RankingRow {
   rank_normal: number;
   rank_change_vs_normal: number;
   S_ahp_only: number;
+  S_risk: number;
 }
 
 export interface AllocationRow {
@@ -116,6 +118,8 @@ export interface AllocationDoc {
   lambda: number;
   status: string;
   objective: number;
+  gated_blocked: string[];
+  gate_relaxed: string[];
   spot_buy_vials: number;
   kpis: Kpis;
   rows: AllocationRow[];
@@ -128,6 +132,8 @@ export const suppliers = suppliersJson as unknown as {
   tier: { tier: number; basis: string; primary_cap: number; min_established_makers: number; trial_share: number[] };
   demand: number;
   lambda_default: number;
+  mode_lambda: Record<Mode, number>;
+  compliance_gate: number;
   data_criteria: string[];
   makers: Maker[];
 };

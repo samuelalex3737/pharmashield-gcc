@@ -15,7 +15,8 @@ NUM = (int, float)
 
 CONTRACTS = {
     "meta.json": {"run_utc": str, "data_cutoff": str, "raw_files": list, "sku_id": str, "demand": int, "lambda_default": NUM, "modes": list, "makers": int},
-    "suppliers.json": {"sku_id": str, "sku_label": str, "tier": dict, "demand": int, "lambda_default": NUM, "data_criteria": list, "makers": list},
+    "suppliers.json": {"sku_id": str, "sku_label": str, "tier": dict, "demand": int, "lambda_default": NUM, "mode_lambda": dict, "compliance_gate": NUM,
+                       "data_criteria": list, "makers": list},
     "shap.json": {"global_importance": dict, "per_maker": dict, "unit": str},
     "model_metrics.json": {"c2": dict, "c3": dict, "nlp": dict, "robustness": dict},
     "nlp_letters.json": {"corpus_class_counts": dict, "severity_weights": dict, "per_maker": dict, "examples": list},
@@ -27,11 +28,11 @@ for m in MODES:
                                       "data_criteria": list, "final_weights": dict, "plan_target": dict, "c5_column": str}
     CONTRACTS[f"rankings_{m}.json"] = {"mode": str, "rows": list}
     CONTRACTS[f"allocations_{m}.json"] = {"mode": str, "demand": int, "lambda": NUM, "status": str, "spot_buy_vials": int,
-                                          "kpis": dict, "rows": list, "lambda_sensitivity": list}
+                                          "gated_blocked": list, "gate_relaxed": list, "kpis": dict, "rows": list, "lambda_sensitivity": list}
 
 MAKER_KEYS = {"id": str, "name": str, "country": str, "is_probation": bool, "trial_gate_pass": bool, "c1_imputed": bool,
               "landed_cost": NUM, "capacity": int, "active_fda_shortage": bool, "oai_count_5yr": int, "criteria": dict, "shap_top3": list,
-              "c3_status": str, "nlp_status": str, "c4_evidence_status": str}
+              "c3_status": str, "nlp_status": str, "c4_evidence_status": str, "compliance_gated": bool}
 
 
 def check_types(obj, spec, where, errors):
@@ -61,6 +62,8 @@ def business_rules(name, doc, errors):
     if name.startswith("rankings_"):
         if len(doc["rows"]) != 11 or sorted(r["rank"] for r in doc["rows"]) != list(range(1, 12)):
             errors.append(f"{name}: ranks must be 1 to 11")
+        if any(not (0 <= r.get("S_risk", -1) <= 1) for r in doc["rows"]):
+            errors.append(f"{name}: every row needs S_risk in [0, 1]")
     if name.startswith("allocations_"):
         total = sum(r["vials"] for r in doc["rows"]) + doc["spot_buy_vials"]
         if total != doc["demand"]:
@@ -69,6 +72,13 @@ def business_rules(name, doc, errors):
             errors.append(f"{name}: MILP status {doc['status']}")
         if sum(r["role"] == "probation trial" for r in doc["rows"]) > 2:
             errors.append(f"{name}: more than 2 probation suppliers")
+        sup = json.loads((WEB_DATA / "suppliers.json").read_text(encoding="utf-8"))
+        gated = {m["id"] for m in sup["makers"] if m["compliance_gated"] and not m["is_probation"]}
+        for r in doc["rows"]:
+            if r["id"] in gated and r["vials"] > 0 and r["id"] not in doc["gate_relaxed"]:
+                errors.append(f"{name}: gated maker {r['id']} has volume without a gate relaxation flag")
+        if doc["lambda"] != sup["mode_lambda"][doc["mode"]]:
+            errors.append(f"{name}: lambda does not match the mode profile")
     if name == "contract_clauses.json" and doc["synthetic"] is not True:
         errors.append("contract_clauses.json must be flagged synthetic")
 
@@ -87,6 +97,14 @@ def validate_all():
     extra = sorted({p.name for p in WEB_DATA.glob("*.json")} - set(CONTRACTS))
     if extra:
         errors.append(f"Files without a contract: {extra}")
+    try:
+        def split(m):
+            d = json.loads((WEB_DATA / f"allocations_{m}.json").read_text(encoding="utf-8"))
+            return [(r["id"], r["vials"]) for r in d["rows"] if r["vials"] > 0]
+        if split("normal") == split("crisis"):
+            errors.append("Normal and Crisis must produce different splits (review fix 1)")
+    except FileNotFoundError:
+        pass
     if errors:
         print("Contract validation FAILED:")
         for e in errors:

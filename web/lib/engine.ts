@@ -80,6 +80,7 @@ export interface MilpMaker {
   isProbation: boolean;
   trialGatePass: boolean;
   capacity: number;
+  gated?: boolean; // compliance gate (C4 above the threshold, assumption A34)
 }
 
 export interface MilpRow {
@@ -95,14 +96,25 @@ export interface MilpResult {
   rows: MilpRow[];
   spotBuyVials: number;
   purchaseCost: number;
+  gatedBlocked: string[];
+  gateRelaxed: string[];
 }
 
-export function allocateMilp(
-  makers: MilpMaker[],
-  demand: number,
-  lambda = 1.0,
-  opts = { primaryCap: 0.7, trialMin: 0.05, trialMax: 0.15, trialMaxRelaxed: 0.3, backupMin: 0.1, maxProbation: 2, minEstablished: 2, bigM: 1e6 },
-): MilpResult {
+export const MILP_DEFAULTS = { primaryCap: 0.7, trialMin: 0.05, trialMax: 0.15, trialMaxRelaxed: 0.3, backupMin: 0.1, maxProbation: 2, minEstablished: 2, bigM: 1e6 };
+
+// Same logic as pipeline/src/mcdm.py allocate_milp: solve with the compliance gate; if that needs a spot buy
+// or is infeasible (no feasible alternative), re-solve without the gate and report which gated makers got volume.
+export function allocateMilp(makers: MilpMaker[], demand: number, lambda = 1.0, compliance = true, opts = MILP_DEFAULTS): MilpResult {
+  const blocked = compliance ? makers.filter((m) => m.gated && !m.isProbation).map((m) => m.id) : [];
+  const first = solveMilp(makers, demand, lambda, new Set(blocked), opts);
+  if (blocked.length && (!first.feasible || first.spotBuyVials > 0)) {
+    const relaxed = solveMilp(makers, demand, lambda, new Set(), opts);
+    return { ...relaxed, gatedBlocked: [], gateRelaxed: blocked.filter((id) => (relaxed.rows.find((r) => r.id === id)?.vials ?? 0) > 0) };
+  }
+  return { ...first, gatedBlocked: blocked, gateRelaxed: [] };
+}
+
+function solveMilp(makers: MilpMaker[], demand: number, lambda: number, blocked: Set<string>, opts = MILP_DEFAULTS): Omit<MilpResult, "gatedBlocked" | "gateRelaxed"> {
   const meanCost = makers.reduce((a, m) => a + m.landedCost, 0) / makers.length;
   const unitCost: Record<string, number> = {};
   // Tie-break identical to pipeline/src/mcdm.py: higher S wins when landed costs are equal.
@@ -128,6 +140,10 @@ export function allocateMilp(
       y.estCount = 1;
       constraints[`conc_${m.id}`] = { max: 0 };
       constraints[`wb_${m.id}`] = { min: 0 };
+      if (blocked.has(m.id)) {
+        y[`cgate_${m.id}`] = 1;
+        constraints[`cgate_${m.id}`] = { max: 0 };
+      }
     } else {
       y.probCount = 1;
       if (m.trialGatePass) {
@@ -148,7 +164,7 @@ export function allocateMilp(
     binaries[`y_${m.id}`] = 1;
   }
   constraints.probCount = { max: opts.maxProbation };
-  constraints.estCount = { min: Math.min(opts.minEstablished, est.length) };
+  constraints.estCount = { min: Math.min(opts.minEstablished, est.filter((m) => m.capacity > 0).length) };
   if (eligible.length) constraints.trialAtLeast = { min: 1 };
 
   const result = solver.Solve({ optimize: "cost", opType: "min", constraints, variables, binaries }) as Record<string, number | boolean>;
