@@ -546,3 +546,22 @@ lets havew a pause and continue later
 ````text
 ok continue
 ````
+
+---
+
+## Entry 15
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Second-review fixes (decision confirmation) |
+| Team member | Sam |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app |
+| Output produced | Recorded Sam's confirmation of Crisis lambda 2.0 in docs/decisions.md (D22). |
+| Where used | docs/decisions.md. |
+
+### Exact prompt
+
+````text
+Keep 2.0
+````
