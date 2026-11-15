@@ -91,14 +91,14 @@ A supplier score is only as good as its data, so we built it from seven public f
 
 ## Slide 3 - Hybrid TOPSIS ranking and the MILP order split, Normal vs Crisis (Member 3, Q1 and Q5)
 
-**Headline [GENAI]:** The board sets priorities once; in a crisis, one click re-splits the order off the exposed lane in milliseconds.
+**Headline [GENAI]:** The board sets priorities once; in a crisis, one click moves the sea volume around the Strait in milliseconds.
 
 **Bullets [GENAI]**
 - Weights are 50% board judgement and 50% data. AHP consistency ratios are 0.0040 (Normal), 0.0008 (Crisis) and 0.0022 (Cost focus), all below 0.10. Entropy is applied only to real data (C1, C2, C4).
 - Final Normal weights: cost 0.137, delivery 0.318, price integrity 0.050, compliance 0.234, route 0.261. Crisis raises route exposure to 0.314.
-- The MILP (PuLP + CBC, binary supplier selection) splits 10,000 vials. Normal mode: Teva 70% primary, Hospira 10% warm backup, and probation trials AVYXA 15% and Gland 5%. Cost 1,648,949 USD a month; every Tier 1 rule is met.
-- Each mode is a full profile: weights + route stress + lambda (Normal 1.0, Crisis 2.0, Cost 0.5). Crisis gives Teva 70%, Hospira 15%, AVYXA 15%: India-made volume falls from 5% to 0% for 1.4% more cost.
-- Guardrails: cost counts once (the risk term uses C2-C5 only), and a compliance gate (C4 above 0.80) bars Accord, Eugia and Fresenius Kabi from primary or backup roles. Teva stays the top established maker in 98.3% of 1,000 weight shocks.
+- The MILP (PuLP + CBC, binary supplier selection) splits 10,000 vials: Teva 70% primary, Hospira 15% warm backup, AVYXA 15% probation trial, for 1,672,430 USD a month. Tier 1 guardrails: probation at most 15% with the backup at least as large, cost counted once, and a compliance gate (C4 above 0.80) barring Accord, Eugia and Fresenius Kabi.
+- One click on Crisis keeps the suppliers and changes the route plan: 1,000 Hormuz-bound sea vials land at Fujairah or Khor Fakkan, so Hormuz sea share falls from 10.0% to 0.0% for 3,000 USD a month and 3 extra days. Gulf air share stays 85.0%: the exposure to watch.
+- Crisis lambda 2.0, because a stock-out costs more than the price premium. The split changes only at lambda 0.06 and is stable up to 5; Teva stays the top established maker in 98.3% of 1,000 weight shocks.
 
 **Exact numbers and sources**
 
@@ -106,17 +106,18 @@ A supplier score is only as good as its data, so we built it from seven public f
 |---|---|
 | CR 0.0040 / 0.0008 / 0.0022 | notebook 04, section 4.1; web/data/weights_<mode>.json, cr |
 | Final weights (Normal 0.137, 0.318, 0.050, 0.234, 0.261; Crisis C5 0.314) | notebook 04, section 4.2; web/data/weights_normal.json and weights_crisis.json, final_weights |
-| Normal split 7,000 / 1,000 / 1,500 / 500 vials (Teva, Hospira, AVYXA, Gland) | notebook 04, section 4.4; outputs/lp_allocation_carboplatin_normal.csv |
-| 1,648,949 USD per month (Normal) | web/data/allocations_normal.json, kpis.purchase_cost_usd |
-| Crisis split 7,000 / 1,500 / 1,500 (Teva, Hospira, AVYXA); 1,672,430 USD; India-made 5% to 0%; +23,481 USD (+1.4%) | notebook 04, section 4.4; web/data/allocations_crisis.json |
-| Mode lambdas 1.0 / 2.0 / 0.5; compliance gate C4 above 0.80 | docs/assumptions.md A34, A35; decisions D21-D24 |
+| Supplier split in every mode 7,000 / 1,500 / 1,500 vials (Teva, Hospira, AVYXA) | notebook 04, section 4.4; outputs/lp_allocation_carboplatin_normal.csv |
+| 1,672,430 USD per month (supply) | web/data/allocations_normal.json, kpis.purchase_cost_usd |
+| Hormuz sea share 10.0% to 0.0%; Gulf air share 85.0%; 1,000 vials rerouted; 3,000 USD a month; 3 extra days | notebook 04, section 4.4 KPI table; web/data/allocations_crisis.json, kpis; assumption A36 |
+| Lambda at which the split changes: 0.06 (Normal), 0.05 (Crisis) | notebook 04, section 4.5 lambda scan; web/data/suppliers.json, lambda_switches |
+| Mode lambdas 1.0 / 2.0 / 0.5; compliance gate C4 above 0.80; Tier 1 backup rule | docs/assumptions.md A34, A35, A37; decisions D21-D24, D31-D33 |
 | 98.3% robustness (983 of 1,000) | notebook 04, section 5; web/data/model_metrics.json, robustness |
 | Demand 10,000 vials and capacities are assumptions | docs/assumptions.md A11, A27, A28 |
 
 **Figure:** docs/screenshots/05_scenario_crisis.png (live app, Crisis profile) with figures/fig_15_lambda_sensitivity.png as backup [GENAI-ASSISTED CODE]. Label "Demand and capacities: assumptions A11, A27-A28".
 
 **Speaker notes (about 80 seconds) [GENAI]**
-Machine learning tells us the risk; the board must decide how much each risk matters. We use AHP, where the board compares criteria in pairs once per mode. All three are consistent. We blend them 50-50 with entropy weights computed only from real data. TOPSIS then ranks the 11 makers on how close each is to the ideal supplier. The ranking becomes an order through a mixed-integer linear program. Binary variables pick the suppliers, then the model enforces dual sourcing, a 70% cap on the primary, and a 5 to 15% trial for new makers. Cost is counted only once, and a compliance gate keeps the three makers with the worst FDA records out of the main roles. For 10,000 vials a month it recommends Teva 70%, Hospira 10%, and small trials with AVYXA and Gland, for 1.65 million dollars. In a Hormuz crisis the buyer clicks Crisis. That one click changes the weights, the route stress and the price of risk together, and the India-made trial drops out: India-made volume goes from 5% to zero for 1.4% more cost. And the primary choice survives 98% of random weight shocks.
+Machine learning tells us the risk; the board must decide how much each risk matters. The board compares criteria in pairs once per mode with AHP, blended 50-50 with entropy weights from real data. TOPSIS then ranks the 11 makers on how close each is to the ideal supplier. The ranking becomes an order through a mixed-integer linear program. Binary variables pick the suppliers under Tier 1 rules: dual sourcing, a 70% cap on the primary, a capped trial for new makers, and a compliance gate that keeps the three worst FDA records out of the main roles. For 10,000 vials a month it recommends Teva 70%, Hospira 15% as warm backup and a 15% trial with AVYXA, for 1.67 million dollars; the backup always covers at least the trial. In a Hormuz crisis the buyer clicks Crisis. The suppliers stay, and the sea volume that would cross the Strait lands at Fujairah or Khor Fakkan instead: Hormuz sea share goes from 10% to zero for 3,000 dollars a month. Air freight through Gulf airspace stays at 85%, and that is the risk the board must watch.
 
 **Key questions answered:** Q1 (evaluate and select), Q5 (multi-criteria decision-making).
 
@@ -223,22 +224,22 @@ An AI that picks suppliers raises three questions: who decides, is it fair, and 
   - A pre-qualified backup bench for every pilot SKU (carboplatin today: 5 gate-passing probation makers).
   - On-time-in-full delivery tracked monthly.
   - The false-alarm rate of delivery alerts tracked monthly.
-- Trade-off: the risk-balanced split costs 171,568 USD a month (11.6%) more than single-sourcing Teva, the cheapest maker that passes the compliance gate, which breaks Tier 1 rules. In a crisis, a further 23,481 USD a month (1.4%) removes India-made lane exposure.
+- Trade-off: the risk-balanced split costs 195,049 USD a month (13.2%) more than single-sourcing Teva, the cheapest maker that passes the compliance gate, which breaks Tier 1 rules. In a crisis, the east-coast reroute adds 3,000 USD a month and takes sea volume out of the Strait.
 - The ask: approve the 90-day pilot, a data-sharing agreement for ERP and Tatmeen data, and one category manager as product owner.
 
 **Exact numbers and sources**
 
 | Number | Source |
 |---|---|
-| 171,568 USD (11.6%) premium over all-Teva | notebook 04, section 4.4 (KPI table and reference line) |
-| 23,481 USD (1.4%) crisis premium (Crisis profile, lambda 2.0) | notebook 04, section 4.4 |
+| 195,049 USD (13.2%) premium over all-Teva | notebook 04, section 4.4 (KPI table and reference line) |
+| 3,000 USD a month east-coast reroute premium in Crisis | notebook 04, section 4.4; assumption A36 |
 | 5 gate-passing probation makers | notebook 02, section 4.4 |
 | Pilot scope, phases and KPI targets | team targets (assumption A17), not sourced figures |
 
 **Figure:** simple 90-day timeline (draw in PowerPoint; team-made, no GenAI mark needed if drawn by the team).
 
 **Speaker notes (about 80 seconds) [GENAI]**
-We are not asking for a big-bang system. We are asking for 90 days. In the first month we connect the GPO's own delivery records and Tatmeen scan data, and retrain the delivery model on our real lanes instead of the historical proxy. In the second month the cockpit runs in shadow mode next to today's buying, so we can compare its alerts with what actually happens. In the third month buyers use it for live approvals on carboplatin and four more critical oncology drugs. We will judge it on four measures: dual-source coverage on every pilot drug, a pre-qualified backup bench for each one, on-time-in-full delivery, and the false-alarm rate of our alerts. We are transparent about cost. Resilience costs about 12% more than buying everything from the cheapest compliant maker, a split our own Tier 1 rules forbid. In a crisis, another 1.4% takes the exposed lane out of the order. That is the insurance premium. The aim is to reduce stock-outs, not to promise they disappear. We ask for approval of the pilot, a data-sharing agreement, and one category manager to own it.
+We are not asking for a big-bang system. We are asking for 90 days. In the first month we connect the GPO's own delivery records and Tatmeen scan data, and retrain the delivery model on our real lanes instead of the historical proxy. In the second month the cockpit runs in shadow mode next to today's buying, so we can compare its alerts with what actually happens. In the third month buyers use it for live approvals on carboplatin and four more critical oncology drugs. We will judge it on four measures: dual-source coverage on every pilot drug, a pre-qualified backup bench for each one, on-time-in-full delivery, and the false-alarm rate of our alerts. We are transparent about cost. Resilience costs about 13% more than buying everything from the cheapest compliant maker, a split our own Tier 1 rules forbid. In a crisis, 3,000 dollars a month moves the sea volume around the Strait. That is the insurance premium. The aim is to reduce stock-outs, not to promise they disappear. We ask for approval of the pilot, a data-sharing agreement, and one category manager to own it.
 
 **Key questions answered:** Q7 (resilience), roadmap; closes Q1-Q6.
 
@@ -253,8 +254,10 @@ We are not asking for a big-bang system. We are asking for 90 days. In the first
 - Isolation Forest: 475 of 9,207 lines (5.16%).
 - NLP: macro F1 0.987 vs 0.657; hand-check about 83% (10 of 12).
 - AHP CR 0.0040 / 0.0008 / 0.0022. Final Normal weights 0.137 / 0.318 / 0.050 / 0.234 / 0.261.
-- Normal split: Teva 7,000 (70%), Hospira 1,000 (10%), AVYXA 1,500 (15%), Gland 500 (5%); 1,648,949 USD a month; lambda 1.0.
-- Crisis split (lambda 2.0): Teva 7,000 (70%), Hospira 1,500 (15%), AVYXA 1,500 (15%); 1,672,430 USD; India-made 5% to 0%; +23,481 USD (+1.4%).
+- Supplier split in every mode: Teva 7,000 (70%), Hospira 1,500 (15%), AVYXA 1,500 (15%); 1,672,430 USD a month.
+- Crisis route plan: Hormuz sea share 10.0% to 0.0%, Gulf air share 85.0%, 1,000 vials rerouted, 3,000 USD a month, 3 extra days (A36).
+- Lambda: Normal 1.0, Crisis 2.0, Cost 0.5; split changes only at lambda 0.06 (Normal) and 0.05 (Crisis).
+- Tier 1 backup rule: probation at most 15%, backup at least the probation total (A37).
 - Compliance gate: C4 above 0.80 (Accord, Eugia, Fresenius Kabi) cannot be primary or backup.
 - Robustness 98.3% (983 of 1,000).
 - "MILP" (mixed-integer linear program), not "LP".

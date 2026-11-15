@@ -36,11 +36,18 @@ export default function RouteMap({ crisis }: { crisis: boolean }) {
   for (const r of suppliers.route_mix.filter((x) => origins.has(x.origin_country))) {
     const o = ORIGIN[r.origin_country];
     const sea = [o, ...SEA_PATH[r.origin_country]];
-    const lanes: { name: string; pts: LatLon[]; share: number; stressed: boolean; color: string }[] = [
-      { name: "Gulf air", pts: [o, DUBAI], share: r.air_gulf_share, stressed: true, color: "#0284c7" },
-      { name: "Hormuz sea", pts: [...sea, HORMUZ, DUBAI], share: r.sea_hormuz_share, stressed: true, color: "#7c3aed" },
-      { name: "Gulf of Oman sea (outside Hormuz)", pts: [...sea, FUJAIRAH], share: r.sea_gulf_of_oman_share, stressed: false, color: "#0d9488" },
-    ];
+    // In Crisis mode the Hormuz-bound sea volume is rerouted to the east coast (Fujairah / Khor Fakkan), assumption A36.
+    const lanes: { name: string; pts: LatLon[]; share: number; stressed: boolean; color: string }[] = crisis
+      ? [
+          { name: "Gulf air (cannot reroute)", pts: [o, DUBAI], share: r.air_gulf_share, stressed: true, color: "#0284c7" },
+          { name: "Sea rerouted to east coast (was Hormuz)", pts: [...sea, FUJAIRAH], share: r.sea_hormuz_share, stressed: false, color: "#0f766e" },
+          { name: "Gulf of Oman sea", pts: [...sea, FUJAIRAH], share: r.sea_gulf_of_oman_share, stressed: false, color: "#0d9488" },
+        ]
+      : [
+          { name: "Gulf air", pts: [o, DUBAI], share: r.air_gulf_share, stressed: true, color: "#0284c7" },
+          { name: "Hormuz sea", pts: [...sea, HORMUZ, DUBAI], share: r.sea_hormuz_share, stressed: true, color: "#7c3aed" },
+          { name: "Gulf of Oman sea (outside Hormuz)", pts: [...sea, FUJAIRAH], share: r.sea_gulf_of_oman_share, stressed: false, color: "#0d9488" },
+        ];
     for (const l of lanes) {
       const hot = crisis && l.stressed;
       traces.push({
@@ -48,7 +55,7 @@ export default function RouteMap({ crisis }: { crisis: boolean }) {
         mode: "lines",
         lat: l.pts.map((p) => p[0]),
         lon: l.pts.map((p) => p[1]),
-        line: { width: 1.5 + l.share * 9, color: hot ? "#be123c" : l.color, dash: hot ? "solid" : l.name.startsWith("Gulf air") ? "dot" : "solid" },
+        line: { width: 1.5 + l.share * 9, color: hot ? "#be123c" : l.color, dash: l.name.startsWith("Sea rerouted") ? "dash" : l.name.startsWith("Gulf air") ? "dot" : "solid" },
         opacity: 0.85,
         name: `${r.origin_country}: ${l.name} ${(l.share * 100).toFixed(0)}%`,
         hoverinfo: "name",

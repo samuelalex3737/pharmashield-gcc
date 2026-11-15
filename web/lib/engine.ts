@@ -100,7 +100,17 @@ export interface MilpResult {
   gateRelaxed: string[];
 }
 
-export const MILP_DEFAULTS = { primaryCap: 0.7, trialMin: 0.05, trialMax: 0.15, trialMaxRelaxed: 0.3, backupMin: 0.1, maxProbation: 2, minEstablished: 2, bigM: 1e6 };
+export const MILP_DEFAULTS = {
+  primaryCap: 0.7,
+  trialMin: 0.05,
+  trialMax: 0.15,
+  trialMaxRelaxed: 0.3,
+  backupMin: 0.1,
+  maxProbation: 2,
+  minEstablished: 2,
+  bigM: 1e6,
+  probationTotalCap: 0.15, // Tier 1 rule (third review): total probation share at most 15%
+};
 
 // Same logic as pipeline/src/mcdm.py allocate_milp: solve with the compliance gate; if that needs a spot buy
 // or is infeasible (no feasible alternative), re-solve without the gate and report which gated makers got volume.
@@ -164,6 +174,17 @@ function solveMilp(makers: MilpMaker[], demand: number, lambda: number, blocked:
     binaries[`y_${m.id}`] = 1;
   }
   constraints.probCount = { max: opts.maxProbation };
+  // Tier 1 rule (third review): backup share >= total probation share. Backup = established volume minus the
+  // primary; requiring sum(established except i) >= probation total for every established maker i is linear and
+  // binds at the primary. Same formulation as pipeline/src/mcdm.py.
+  constraints.probTotal = { max: opts.probationTotalCap * demand };
+  for (const m of prob) variables[`x_${m.id}`].probTotal = 1;
+  for (const i of est) {
+    const row = `bkp_${i.id}`;
+    constraints[row] = { min: 0 };
+    for (const j of est) if (j.id !== i.id) variables[`x_${j.id}`][row] = 1;
+    for (const k of prob) variables[`x_${k.id}`][row] = -1;
+  }
   constraints.estCount = { min: Math.min(opts.minEstablished, est.filter((m) => m.capacity > 0).length) };
   if (eligible.length) constraints.trialAtLeast = { min: 1 };
 

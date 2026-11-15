@@ -143,18 +143,21 @@ export default function Overview() {
           <div className="mt-3">
             <AllocationBar rows={n.rows} demand={n.demand} label="Normal mode order split" />
           </div>
-          <p className="caption mt-2">India-made volume {pct(n.kpis.india_made_share, 0)}; expected late shipments {pct(n.kpis.expected_late_share, 2)}.</p>
+          <p className="caption mt-2">
+            Hormuz sea share {pct(n.kpis.hormuz_sea_share)}; Gulf air share {pct(n.kpis.gulf_air_share)}; expected late shipments {pct(n.kpis.expected_late_share, 2)}.
+          </p>
         </div>
         <div className="card">
           <div className="flex items-center justify-between">
             <h2 className="h-section">Crisis profile (lambda {c.lambda.toFixed(1)})</h2>
-            <span className="tnum text-sm font-semibold">{usd(c.kpis.purchase_cost_usd)} / month</span>
+            <span className="tnum text-sm font-semibold">{usd(c.kpis.total_cost_usd)} / month</span>
           </div>
           <div className="mt-3">
             <AllocationBar rows={c.rows} demand={c.demand} label="Crisis mode order split" />
           </div>
           <p className="caption mt-2">
-            India-made volume {pct(c.kpis.india_made_share, 0)}; expected late shipments {pct(c.kpis.expected_late_share, 2)}. Awaiting human approval.
+            Same suppliers; {c.kpis.rerouted_vials.toLocaleString("en-US")} Hormuz-bound sea vials landed on the east coast (+{usd(c.kpis.reroute_premium_usd)}):
+            Hormuz sea share {pct(c.kpis.hormuz_sea_share)}, Gulf air share {pct(c.kpis.gulf_air_share)}. Awaiting human approval.
           </p>
         </div>
       </section>

@@ -97,16 +97,21 @@ export default function Boardroom() {
 
         {step === 2 ? (
           <section className="mt-4">
-            <h1 className="text-4xl font-bold leading-tight">Hormuz closes. One click re-splits the order.</h1>
-            <p className="mt-3 text-lg text-muted">Crisis mode changes the weights, the route stress and the price of risk together.</p>
-            <div className="mt-8 space-y-6">
-              <Split title={`Normal (lambda ${n.lambda.toFixed(1)})`} rows={n.rows} demand={n.demand} note={`${usd(nM.cost)} a month, India-made ${pct(nM.indiaShare, 0)}`} />
-              <Split title={`Crisis (lambda ${c.lambda.toFixed(1)})`} rows={c.rows} demand={c.demand} note={`${usd(cM.cost)} a month, India-made ${pct(cM.indiaShare, 0)}`} />
-            </div>
-            <p className="mt-6 text-2xl font-semibold">
-              India-made volume {pct(nM.indiaShare, 0)} to {pct(cM.indiaShare, 0)} for {signedUsd(cM.cost - nM.cost)} a month (
-              {pct(cM.cost / nM.cost - 1)}).
+            <h1 className="text-4xl font-bold leading-tight">Hormuz closes. One click re-routes the sea volume around the Strait.</h1>
+            <p className="mt-3 text-lg text-muted">
+              Crisis mode keeps the Tier 1 supplier split and lands Hormuz-bound sea volume at {suppliers.east_coast_reroute.ports}, outside the Strait.
             </p>
+            <div className="mt-8 grid gap-6 sm:grid-cols-3">
+              <Big value={`${pct(nM.route.hormuzSea)} to ${pct(cM.route.hormuzSea)}`} label="Hormuz sea share, Normal to Crisis" />
+              <Big value={pct(cM.route.gulfAir)} label="Gulf air share in both modes: the exposure that cannot be rerouted" tone="risk" />
+              <Big
+                value={usd(cM.route.reroutePremium)}
+                label={`a month for ${cM.route.reroutedVials.toLocaleString("en-US")} rerouted vials, +${cM.route.leadTimeDays} days (A36)`}
+              />
+            </div>
+            <div className="mt-8">
+              <Split title={`Supplier split, both modes (Crisis lambda ${c.lambda.toFixed(1)})`} rows={c.rows} demand={c.demand} note={`${usd(cM.totalCost)} a month in Crisis`} />
+            </div>
           </section>
         ) : null}
 
@@ -116,11 +121,11 @@ export default function Boardroom() {
             <p className="mt-3 text-lg text-muted">Teva shut down in Crisis mode. The MILP re-solves live in the browser.</p>
             {failure ? (
               <div className="mt-8 space-y-6">
-                <Split title="Before" rows={c.rows} demand={c.demand} note={`${usd(cM.cost)} a month`} />
-                <Split title="After: Teva plant down" rows={failure.rows} spot={failure.spot} demand={c.demand} note={`${usd(failure.m.cost)} a month`} />
+                <Split title="Before" rows={c.rows} demand={c.demand} note={`${usd(cM.totalCost)} a month`} />
+                <Split title="After: Teva plant down" rows={failure.rows} spot={failure.spot} demand={c.demand} note={`${usd(failure.m.totalCost)} a month`} />
                 <p className="text-2xl font-semibold">
-                  Cost {signedUsd(failure.m.cost - cM.cost)} a month; spot buy {failure.spot.toLocaleString("en-US")} vials; Hormuz-exposed share{" "}
-                  {pct(cM.hormuzShare)} to {pct(failure.m.hormuzShare)}.
+                  Cost {signedUsd(failure.m.totalCost - cM.totalCost)} a month; spot buy {failure.spot.toLocaleString("en-US")} vials; Hormuz sea share{" "}
+                  {pct(cM.route.hormuzSea)} to {pct(failure.m.route.hormuzSea)}; Gulf air share {pct(cM.route.gulfAir)} to {pct(failure.m.route.gulfAir)}.
                 </p>
                 {failure.relaxed.length ? (
                   <p className="rounded-xl border border-risk/40 bg-risk-soft p-4 text-lg font-semibold text-risk">
@@ -141,10 +146,10 @@ export default function Boardroom() {
               <AllocationBar rows={c.rows} demand={c.demand} label="Recommended Crisis split" />
             </div>
             <div className="mt-8 grid gap-6 sm:grid-cols-4">
-              <Big value={usd(cM.cost)} label="monthly purchase cost" />
+              <Big value={usd(cM.totalCost)} label="monthly cost incl. east-coast reroute" />
               <Big value={pct(cM.lateShare, 2)} label="expected late shipments" />
-              <Big value={pct(cM.indiaShare, 0)} label="India-made volume" />
-              <Big value={`${c.spot_buy_vials}`} label="vials bought on the spot market" />
+              <Big value={pct(cM.route.hormuzSea)} label="Hormuz sea share after reroute" />
+              <Big value={pct(cM.route.gulfAir)} label="Gulf air share (residual exposure)" />
             </div>
             <p className="mt-6 text-lg text-muted">
               Compliance gate: {c.gated_blocked.join(", ")} cannot be primary or backup (C4 above {suppliers.compliance_gate.toFixed(2)}).

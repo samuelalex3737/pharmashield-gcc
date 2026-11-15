@@ -11,18 +11,19 @@ import { CRITERION_LABEL, establishedRanks } from "@/lib/insights";
 export default function Memo() {
   const [mode, setMode] = useState<Mode>("normal");
   const [logged, setLogged] = useState<string | null>(null);
+  const [today, setToday] = useState("");
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     const m = q.get("mode");
     if (m && (MODES as string[]).includes(m)) setMode(m as Mode);
     setLogged(q.get("logged"));
+    setToday(new Date().toISOString().slice(0, 10)); // set on the client so the prerendered HTML never disagrees with the viewing date
   }, []);
 
   const a = allocations[mode];
   const w = weights[mode];
   const est = establishedRanks(rankings[mode].map((r) => r.id));
   const used = a.rows.filter((r) => r.vials > 0);
-  const today = new Date().toISOString().slice(0, 10);
 
   return (
     <article className="mx-auto max-w-[210mm] rounded-xl border border-line bg-surface p-8 text-ink print:border-0 print:p-0">
@@ -43,7 +44,7 @@ export default function Memo() {
         <div className="text-xs font-semibold uppercase tracking-widest text-muted">Board decision memo - for approval</div>
         <h1 className="mt-1 text-2xl font-bold">Carboplatin injection 10 mg/mL: monthly order split ({MODE_LABEL[mode]})</h1>
         <p className="mt-1 text-sm text-muted">
-          PharmaShield GCC, hypothetical UAE group purchasing organisation. Prepared {today}. Data cut-off 2026-11-14. Recommendation only: no order is sent
+          PharmaShield GCC, hypothetical UAE group purchasing organisation. Prepared {today || "on viewing"}. Data cut-off 2026-11-14. Recommendation only: no order is sent
           automatically.
           {logged ? ` Linked audit entry: ${logged}.` : ""}
         </p>
@@ -82,6 +83,13 @@ export default function Memo() {
           Monthly purchase cost <strong>{usd(a.kpis.purchase_cost_usd)}</strong> ({usd(a.kpis.cost_per_vial_usd, 2)} per vial). Expected late shipments{" "}
           {pct(a.kpis.expected_late_share, 2)}. India-made volume {pct(a.kpis.india_made_share, 0)}. Spot buy {a.spot_buy_vials} vials. Lambda {a.lambda.toFixed(1)}
           . MILP status {a.status}.
+        </p>
+        <p className="mt-2 text-sm">
+          Route plan: Hormuz sea share <strong>{pct(a.kpis.hormuz_sea_share)}</strong>, Gulf air share <strong>{pct(a.kpis.gulf_air_share)}</strong>, east coast
+          (Gulf of Oman) {pct(a.kpis.east_coast_sea_share)}.
+          {a.kpis.rerouted_vials > 0
+            ? ` ${a.kpis.rerouted_vials.toLocaleString("en-US")} Hormuz-bound sea vials are landed at ${suppliers.east_coast_reroute.ports} for ${usd(a.kpis.reroute_premium_usd)} a month and ${a.kpis.reroute_lead_time_premium_days} extra days (assumption A36). Total monthly cost ${usd(a.kpis.total_cost_usd)}.`
+            : " No east-coast reroute in this mode."}
         </p>
       </section>
 
@@ -170,6 +178,10 @@ export default function Memo() {
           <li>A8: route mix by origin country is a scenario assumption.</li>
           <li>A11: monthly demand of 10,000 vials (45 mL). A27-A28: capacities 10,000 / 2,000 vials, cut by 20% for makers in shortage.</li>
           <li>A34: compliance gate at C4 = 0.80. A35: lambda 1.0 (Normal), 2.0 (Crisis), 0.5 (Cost focus).</li>
+          <li>
+            A36: east-coast reroute via {suppliers.east_coast_reroute.ports} costs USD {suppliers.east_coast_reroute.cost_premium_usd_per_vial.toFixed(2)} per vial and{" "}
+            {suppliers.east_coast_reroute.lead_time_premium_days} extra days. A37: total probation at most 15%, backup at least the probation total.
+          </li>
         </ul>
       </section>
 

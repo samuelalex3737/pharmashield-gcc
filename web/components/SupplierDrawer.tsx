@@ -175,7 +175,10 @@ export default function SupplierDrawer({
           <li>Price integrity (C3): {m.c3_status}</li>
           <li>Citations (C4 NLP): {m.nlp_status}</li>
           <li>SCMS shipment lines (parent): {m.scms_lines.toLocaleString("en-US")}</li>
-          <li>Route (C5): {pct(m.hormuz_air_share, 0)} via Hormuz or Gulf air, LPI {m.lpi} <Assumption>A8</Assumption></li>
+          <li>
+            Route (C5): Gulf air {pct(m.air_gulf_share, 0)}, Hormuz sea {pct(m.sea_hormuz_share, 0)}, Gulf of Oman sea {pct(m.sea_gulf_of_oman_share, 0)}; LPI{" "}
+            {m.lpi} <Assumption>A8</Assumption>
+          </li>
         </ul>
       </aside>
     </div>

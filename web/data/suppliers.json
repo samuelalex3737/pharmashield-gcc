@@ -50,6 +50,37 @@
   }
  ],
  "route_mix_note": "ASSUMPTION A8: route mix by origin country is a scenario assumption, not observed data",
+ "east_coast_reroute": {
+  "ports": "Fujairah, Khor Fakkan",
+  "cost_premium_usd_per_vial": 3.0,
+  "lead_time_premium_days": 3,
+  "applies_in": [
+   "crisis"
+  ],
+  "note": "ASSUMPTION A36: team estimate of extra port handling and overland trucking"
+ },
+ "lambda_switches": [
+  {
+   "mode": "normal",
+   "from_lambda": 0.0,
+   "split": "TEVA 7,000, GLAND 1,500, HOSPIRA 1,500"
+  },
+  {
+   "mode": "normal",
+   "from_lambda": 0.06,
+   "split": "TEVA 7,000, AVYXA 1,500, HOSPIRA 1,500"
+  },
+  {
+   "mode": "crisis",
+   "from_lambda": 0.0,
+   "split": "TEVA 7,000, GLAND 1,500, HOSPIRA 1,500"
+  },
+  {
+   "mode": "crisis",
+   "from_lambda": 0.05,
+   "split": "TEVA 7,000, AVYXA 1,500, HOSPIRA 1,500"
+  }
+ ],
  "makers": [
   {
    "id": "AVYXA",
@@ -106,6 +137,9 @@
      "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.85,
+   "sea_hormuz_share": 0.1,
+   "sea_gulf_of_oman_share": 0.05,
    "c4_parts": {
     "inspection": 0.1,
     "recalls": 0.0,
@@ -174,6 +208,9 @@
      "reason": "Air shipment mode lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.55,
+   "sea_hormuz_share": 0.3,
+   "sea_gulf_of_oman_share": 0.15,
    "c4_parts": {
     "inspection": 0.3,
     "recalls": 0.2,
@@ -242,6 +279,9 @@
      "reason": "Air shipment mode lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.85,
+   "sea_hormuz_share": 0.1,
+   "sea_gulf_of_oman_share": 0.05,
    "c4_parts": {
     "inspection": 0.4,
     "recalls": 0.2,
@@ -310,6 +350,9 @@
      "reason": "Air shipment mode lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.55,
+   "sea_hormuz_share": 0.3,
+   "sea_gulf_of_oman_share": 0.15,
    "c4_parts": {
     "inspection": 0.1,
     "recalls": 0.0,
@@ -378,6 +421,9 @@
      "reason": "Air shipment mode lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.55,
+   "sea_hormuz_share": 0.3,
+   "sea_gulf_of_oman_share": 0.15,
    "c4_parts": {
     "inspection": 0.4,
     "recalls": 0.2,
@@ -446,6 +492,9 @@
      "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.85,
+   "sea_hormuz_share": 0.1,
+   "sea_gulf_of_oman_share": 0.05,
    "c4_parts": {
     "inspection": 0.4,
     "recalls": 0.2,
@@ -514,6 +563,9 @@
      "reason": "Air shipment mode lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.55,
+   "sea_hormuz_share": 0.3,
+   "sea_gulf_of_oman_share": 0.15,
    "c4_parts": {
     "inspection": 0.1,
     "recalls": 0.0,
@@ -582,6 +634,9 @@
      "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.85,
+   "sea_hormuz_share": 0.1,
+   "sea_gulf_of_oman_share": 0.05,
    "c4_parts": {
     "inspection": 0.1,
     "recalls": 0.0,
@@ -650,6 +705,9 @@
      "reason": "Air shipment mode lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.55,
+   "sea_hormuz_share": 0.3,
+   "sea_gulf_of_oman_share": 0.15,
    "c4_parts": {
     "inspection": 0.1,
     "recalls": 0.2,
@@ -718,6 +776,9 @@
      "reason": "Typical air consignment of 187 kg from this origin lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.85,
+   "sea_hormuz_share": 0.1,
+   "sea_gulf_of_oman_share": 0.05,
    "c4_parts": {
     "inspection": 0.1,
     "recalls": 0.2,
@@ -786,6 +847,9 @@
      "reason": "Air shipment mode lowers delay risk"
     }
    ],
+   "air_gulf_share": 0.55,
+   "sea_hormuz_share": 0.3,
+   "sea_gulf_of_oman_share": 0.15,
    "c4_parts": {
     "inspection": 0.1,
     "recalls": 0.0,

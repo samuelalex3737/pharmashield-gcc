@@ -565,3 +565,30 @@ ok continue
 ````text
 Keep 2.0
 ````
+
+---
+
+## Entry 16
+
+| Field | Value |
+|---|---|
+| Date | 15 Nov 2026 |
+| Phase | Third-review fixes (final before freeze) |
+| Team member | Sam (review findings from a third reviewer) |
+| Tool | Claude Code (Anthropic, model Claude Opus 5.5), desktop app, built-in browser |
+| Output produced | Hormuz sea vs Gulf air split with east-coast reroute (A36); Tier 1 backup rule (A37) in Python, TypeScript, validator and tests; A35 justification and lambda switch scan; decisions D31-D33; deck, Q&A, demo script, number trace and screenshots updated; redeployed. |
+| Where used | pipeline/src/mcdm.py, notebook 04, web/, deck/, docs/. |
+
+### Exact prompt
+
+````text
+Third review, final fixes before freeze. Apply autonomously, re-run run_all.py, parity tests, number trace, redeploy, update source pack / speaker script / qa_prep / screenshots, log in decisions.md.
+
+1. Hormuz KPI is misleading: Crisis shows "Hormuz-exposed share 95.0%". Split it into "Hormuz sea share" and "Gulf air share" in the data, KPI tiles, memo and route map. Add a labelled assumption for an east-coast reroute option (Fujairah / Khor Fakkan, outside the Strait) with a stated cost and lead-time premium; in Crisis mode, allow the MILP or route model to shift sea volume to the east-coast lane and show the exposure reduction and its cost. Report Normal vs Crisis values for both shares.
+
+2. Tier 1 rule: backup share must be >= total probation share, and total probation share <= 15%. Add to Python and TypeScript, keep parity tests passing, add to validate_contract.py, and report the new Normal and Crisis splits.
+
+3. Add a short justification for Crisis lambda 2.0 to assumptions A35 and qa_prep ("crisis doubles the price of risk because a stock-out costs more than the price premium"), plus a lambda sensitivity line showing at which lambda the split changes.
+
+No other changes. No long dashes.
+````

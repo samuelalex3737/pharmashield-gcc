@@ -107,7 +107,7 @@ def allocate_milp(df, demand, lam=1.0, compliance_gate=True, **kwargs):
 
 
 def _solve_milp(df, demand, lam=1.0, blocked=(), primary_cap=0.70, trial_min=0.05, trial_max=0.15, trial_max_relaxed=0.30,
-                backup_min=0.10, max_probation=2, min_established=2, big_m=1e6):
+                backup_min=0.10, max_probation=2, min_established=2, big_m=1e6, probation_total_cap=0.15):
     """Mixed-integer order split (PuLP + CBC).
 
     df columns: landed_cost, S, is_probation, trial_gate_pass, capacity (index = maker id).
@@ -145,6 +145,12 @@ def _solve_milp(df, demand, lam=1.0, blocked=(), primary_cap=0.70, trial_min=0.0
         else:
             model += y[m] == 0, f"trial_gate_{m}"
     model += pulp.lpSum(y[m] for m in prob) <= max_probation, "max_probation"
+    # Tier 1 rule (third review): total probation share <= 15% of demand, and backup share >= total probation share.
+    # Backup = established volume minus the primary (the largest established allocation). Requiring
+    # sum(established except i) >= probation total for EVERY established maker i is linear and binds at the primary.
+    model += pulp.lpSum(x[m] for m in prob) <= probation_total_cap * demand, "probation_total_cap"
+    for i in est:
+        model += pulp.lpSum(x[j] for j in est if j != i) >= pulp.lpSum(x[m] for m in prob), f"backup_ge_probation_{i}"
     if eligible_prob:
         model += pulp.lpSum(y[m] for m in eligible_prob) >= 1, "one_trial_per_order"
     model += pulp.lpSum(y[m] for m in est) >= min(min_established, len(est)), "dual_source"

@@ -176,3 +176,17 @@ One short report per phase: what was built, key numbers, issues, self-check. All
   - Teva failure in Crisis: 1,761,473 USD, with the gate relaxed for Fresenius Kabi.
   - Command palette jump to a maker, theme toggle, memo.
 - **Docs:** demo_script.md now uses Boardroom mode; the source pack figure list uses the screenshots; prompt log entries 6-14; decisions D27-D30.
+
+## Third-review fixes (15 Nov 2026)
+
+- **Fix 1, route exposure split:**
+  - Route exposure is now reported as Hormuz sea share and Gulf air share (plus east-coast sea) in the data, KPI tiles, memo, route map and Boardroom mode.
+  - East-coast reroute assumption A36: Fujairah or Khor Fakkan, 3.00 USD per vial, 3 extra days, applied in Crisis mode.
+  - Normal: Hormuz sea 10.0%, Gulf air 85.0%.
+  - Crisis: Hormuz sea 0.0% (1,000 vials rerouted for 3,000 USD a month), Gulf air 85.0%.
+- **Fix 2, Tier 1 backup rule (A37):** probation at most 15%, backup at least the probation total. Added to the Python and TypeScript MILP, validate_contract.py and the parity tests (now 22).
+  - New split in every mode: Teva 7,000, Hospira 1,500, AVYXA 1,500; 1,672,430 USD a month.
+  - Normal and Crisis now differ in the route plan, not the supplier split (D32).
+- **Fix 3, A35 justification:** "a crisis doubles the price of risk because a stock-out costs more than the price premium", plus a fine lambda scan. The split changes at lambda 0.06 (Normal) and 0.05 (Crisis) and is stable from there up to 5 (D33).
+- **Updated:** source pack (slides 3 and 7, "Do not change" list), speaker script (165-187 words a slide), Q&A prep (questions 4, 9, 11 and new 21, 22), demo script, assumptions A35-A37, decisions D31-D33, number trace, screenshots.
+- **Also fixed:** the board memo date is now set in the browser (D34). Live check: Normal and Crisis values match notebook 04. Lighthouse desktop gives 100 for performance, accessibility and best practices on all 8 pages. 10 screenshots were recaptured from the live URL.

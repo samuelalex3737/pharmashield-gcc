@@ -104,13 +104,19 @@ export default function Scenario() {
         </span>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <Kpi
-          label="Monthly purchase cost"
-          value={usd(mAfter.cost)}
-          delta={disrupted ? signedUsd(mAfter.cost - mBase.cost) : mode !== "normal" ? signedUsd(mAfter.cost - normalRef.purchase_cost_usd) : undefined}
+          label="Monthly cost"
+          value={usd(mAfter.totalCost)}
+          delta={disrupted ? signedUsd(mAfter.totalCost - mBase.totalCost) : mode !== "normal" ? signedUsd(mAfter.totalCost - normalRef.total_cost_usd) : undefined}
           deltaTone="neutral"
-          sub={disrupted ? "change vs no disruption" : mode !== "normal" ? "change vs Normal profile" : `${usd(mAfter.costPerVial, 2)} per vial`}
+          sub={
+            mAfter.route.reroutePremium > 0
+              ? `supply ${usd(mAfter.cost)} + east-coast reroute ${usd(mAfter.route.reroutePremium)}`
+              : disrupted
+                ? "change vs no disruption"
+                : `${usd(mAfter.costPerVial, 2)} per vial`
+          }
           source={live ? "Live engine" : "notebook 04"}
         />
         <Kpi
@@ -123,11 +129,22 @@ export default function Scenario() {
           source="XGBoost + MILP"
         />
         <Kpi
-          label="Hormuz-exposed share"
-          term="hormuz"
-          value={pct(mAfter.hormuzShare)}
-          delta={disrupted ? signedPts(mAfter.hormuzShare - mBase.hormuzShare) : undefined}
-          deltaTone={mAfter.hormuzShare <= mBase.hormuzShare ? "good" : "risk"}
+          label="Hormuz sea share"
+          term="hormuz_sea"
+          value={pct(mAfter.route.hormuzSea)}
+          delta={mAfter.route.reroutedVials > 0 ? signedPts(mAfter.route.hormuzSea - mAfter.route.hormuzSeaBefore) : undefined}
+          deltaTone="good"
+          sub={
+            mAfter.route.reroutedVials > 0
+              ? `${mAfter.route.reroutedVials.toLocaleString("en-US")} vials landed at ${suppliers.east_coast_reroute.ports} (+${mAfter.route.leadTimeDays} days)`
+              : `east-coast reroute used in Crisis mode only`
+          }
+          source="Route mix A8, A36"
+        />
+        <Kpi
+          label="Gulf air share"
+          term="gulf_air"
+          value={pct(mAfter.route.gulfAir)}
           sub={`India-made volume ${pct(mAfter.indiaShare, 0)}`}
           source="Route mix A8"
         />
@@ -270,10 +287,14 @@ export default function Scenario() {
               <AllocationBar rows={after.rows} spot={after.spot} demand={demand} label="Order split after the disruption" />
               <dl className="mt-3 grid grid-cols-2 gap-1 text-xs">
                 <dt className="text-muted">Cost change</dt>
-                <dd className="tnum font-semibold">{signedUsd(mAfter.cost - mBase.cost)} a month</dd>
-                <dt className="text-muted">Hormuz-exposed share</dt>
+                <dd className="tnum font-semibold">{signedUsd(mAfter.totalCost - mBase.totalCost)} a month</dd>
+                <dt className="text-muted">Hormuz sea share</dt>
                 <dd className="tnum font-semibold">
-                  {pct(mBase.hormuzShare)} to {pct(mAfter.hormuzShare)}
+                  {pct(mBase.route.hormuzSea)} to {pct(mAfter.route.hormuzSea)}
+                </dd>
+                <dt className="text-muted">Gulf air share</dt>
+                <dd className="tnum font-semibold">
+                  {pct(mBase.route.gulfAir)} to {pct(mAfter.route.gulfAir)}
                 </dd>
                 <dt className="text-muted">Expected late share</dt>
                 <dd className="tnum font-semibold">
@@ -333,8 +354,9 @@ export default function Scenario() {
             </button>
           </div>
           <p className="caption mt-1">
-            Lane width = share of volume by route from each plant country (scenario assumption A8, not observed data). In Crisis mode the Hormuz sea and Gulf air
-            lanes are highlighted in red.
+            Lane width = share of volume by route from each plant country (scenario assumption A8, not observed data). In Crisis mode Gulf air lanes turn red
+            and Hormuz-bound sea volume is rerouted to {suppliers.east_coast_reroute.ports}, outside the Strait (A36, +USD{" "}
+            {suppliers.east_coast_reroute.cost_premium_usd_per_vial.toFixed(2)} per vial, +{suppliers.east_coast_reroute.lead_time_premium_days} days).
           </p>
           {showMap ? <RouteMap crisis={mode === "crisis"} /> : <div className="mt-3 rounded-lg border border-dashed border-line p-8 text-center text-sm text-muted">The map loads on request to keep the page fast.</div>}
         </div>

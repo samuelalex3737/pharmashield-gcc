@@ -73,3 +73,36 @@ INTERP.update({
 - Add a multi-period model that tracks safety stock.
 - Re-run monthly as the openFDA and FDA feeds refresh.""",
 })
+
+# Third review (15 Nov 2026): Tier 1 backup rule, Hormuz sea vs Gulf air split, east-coast reroute, lambda switch scan.
+INTERP.update({
+    "tier": "Carboplatin is Tier 1 (life-critical oncology), so the split must use at least 2 established makers, cap the primary at 70%, keep each trial between 5% and 15%, keep total probation volume at or below 15%, and give the backup at least as much as all probation trials together (A37). Capacities are scenario values: 10,000 vials a month for an established maker and 2,000 for a probation maker, cut by 20% when the maker has a current US shortage record (8 of 11 makers). The compliance gate (C4 above 0.80, A34) blocks Fresenius Kabi (0.970), Eugia (0.965) and Accord (0.851) from primary or backup roles, which leaves Teva and Hospira as the only established makers eligible for volume.",
+    "milp": "The MILP returns one supplier split in all three modes: Teva 7,000 vials as primary (70%), Hospira 1,500 as warm backup (15%) and AVYXA 1,500 as probation trial (15%). The new Tier 1 rule settles it: with total probation capped at 15% and the backup required to match it, the 30% left after the primary is shared 15/15 between Hospira and one trial. No spot buy is needed and the compliance gate was not relaxed. Crisis mode now changes the decision through the route plan (next cell), not the supplier split.",
+    "kpis": "All three modes cost 1,672,430 USD a month for supply (167.24 USD per vial) with an expected late share of 1.59% and no India-made volume. The route plan is where Crisis differs. In Normal mode, 10.0% of volume crosses the Strait of Hormuz by sea and 85.0% flies through Gulf airspace. In Crisis mode the 1,000 Hormuz-bound sea vials are landed at Fujairah or Khor Fakkan on the Gulf of Oman coast instead (A36): Hormuz sea share falls to 0.0% for a premium of 3,000 USD a month (0.18%) and 3 extra days on those vials. Gulf air share stays at 85.0% because air freight cannot avoid Gulf airspace. Buying everything from Teva, the cheapest maker that passes the compliance gate, would cost 1,477,380 USD but breaks the Tier 1 rules; the rule-compliant split costs 195,049 USD (13.2%) more.",
+    "fig14": "The three bars are identical because the Tier 1 backup rule fixes the shares once the compliance gate leaves Teva and Hospira as the only eligible established makers. The cheapest maker, Accord, gets nothing in any mode: its C4 of 0.851 reflects 2 OAI inspections and 101 Class I or II recalls in 5 years.",
+    "lambda": "The fine scan shows where the decision turns. Below lambda 0.06 (Normal) or 0.05 (Crisis) the MILP prefers the India-made Gland trial, which is 1.31 USD a vial cheaper; from those values up to lambda 5 the split is Teva 70%, AVYXA 15%, Hospira 15% in both modes. The Crisis profile uses lambda 2.0 (A35): in a crisis a stock-out costs more than the price premium, so the board doubles the price of risk. With the backup rule in place that higher price no longer moves volume between suppliers; it is still the setting the board would use for any re-solve during the crisis, for example after a plant failure.",
+    "fig15": "Cost is flat from lambda 0.5 to 5 because the split does not change; the only step is at the very low end, where the cheaper India-made Gland trial (15% India-made volume) gives way to AVYXA. The right chart shows the India-made share falling from 15% to 0% at that step.",
+    "conclusion": """**Recommendation for the GPO (carboplatin injection, Tier 1, 10,000 vials a month).**
+- Supplier split in every mode: Teva Parenteral Medicines as primary (7,000 vials, 70%), Hospira as warm backup (1,500, 15%) and AVYXA as probation trial (1,500, 15%), costing 1,672,430 USD a month and meeting every Tier 1 rule, including backup at least equal to probation.
+- Crisis mode (Hormuz or Gulf airspace shock): keep the suppliers and land the Hormuz-bound sea volume (1,000 vials) at Fujairah or Khor Fakkan. Hormuz sea share falls from 10.0% to 0.0% for 3,000 USD a month and 3 extra days. Gulf air share stays at 85.0%, which is the residual exposure the board should watch.
+- Accord, Eugia and Fresenius Kabi are excluded from primary and backup roles by the compliance gate (C4 above 0.80).
+- A human category manager approves every split (dashboard Approval page). No order is sent automatically.
+
+**Why it can be trusted.**
+- AHP consistency ratios are below 0.005.
+- Entropy is applied only to real data.
+- Cost is counted once in the MILP (S_risk excludes C1).
+- The split is stable for every lambda from 0.06 to 5.
+- The top established maker survives 98.3% of random weight changes.
+- Every imputed, neutral or gated value is flagged.
+
+**Limits.**
+- Demand, capacities, the route mix, the east-coast premium, the mode lambdas and the 0.80 gate are scenario assumptions (A8, A11, A27, A28, A34, A35, A36).
+- Prices are a US Medicaid proxy (A4).
+
+**Future improvements.**
+- Price the east-coast lane with real freight quotes.
+- Add an air-routing alternative that avoids Gulf airspace.
+- Calibrate lambda with past stock-out costs.
+- Replace assumed capacities with supplier-confirmed allocations.""",
+})

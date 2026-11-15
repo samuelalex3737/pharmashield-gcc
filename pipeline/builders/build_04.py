@@ -123,6 +123,14 @@ d["monthly_capacity_units"] = (np.where(d["is_probation"], CAPACITY_PROBATION, C
                                * np.where(d["active_fda_shortage"], SHORTAGE_FACTOR, 1.0)).astype(int)
 print("Tier rules:", TIER)
 d["gated"] = d["C4"] > COMPLIANCE_GATE
+# Third review: split route exposure into Hormuz sea and Gulf air shares (route-mix assumption A8, by plant country).
+route_mix = pd.read_csv(Path.cwd().parents[0] / "reference" / "route_mix_assumptions.csv").set_index("origin_country")
+for col in ["air_gulf_share", "sea_hormuz_share", "sea_gulf_of_oman_share"]:
+    d[col] = d["manufacturing_country"].map(route_mix[col])
+# ASSUMPTION A36: east-coast reroute. In Crisis mode, sea volume that would cross the Strait of Hormuz is landed at
+# Fujairah or Khor Fakkan (Gulf of Oman coast, outside the Strait) and trucked to Dubai.
+EAST_COAST = {"ports": "Fujairah, Khor Fakkan", "cost_premium_usd_per_vial": 3.00, "lead_time_premium_days": 3,
+              "applies_in": ["crisis"], "note": "ASSUMPTION A36: team estimate of extra port handling and overland trucking"}
 print("Compliance-gated makers (C4 >", COMPLIANCE_GATE, "):", list(d.index[d["gated"]]))
 d[["is_probation", "trial_gate_pass", "active_fda_shortage", "monthly_capacity_units", "C4", "gated"]].round(3)
 """),
@@ -263,6 +271,8 @@ plt.show()
 - Tier 1 concentration: an established maker gets at most 70% of demand; if selected, at least 10% (a warm backup, assumption A30).
 - Dual sourcing: at least 2 established makers selected.
 - Probation: at most 2 trial makers; if selected, 5% to 15% of demand (30% if fewer than 2 established makers exist); a maker failing the safety gate cannot be selected (A13); at least one eligible trial maker per order (A29).
+- Tier 1 backup rule (third review, A37): total probation share at most 15% of demand, and the backup share (established volume other than the primary) at least the total probation share. It is written as: for every established maker i, the volume of the other established makers is at least the total probation volume, which binds at the primary and keeps the model linear.
+- Route plan (A36): after the split, Crisis mode lands Hormuz-bound sea volume at Fujairah or Khor Fakkan (outside the Strait) for 3.00 USD per vial and 3 extra days. Hormuz sea share and Gulf air share are reported separately.
 - Spot buy: an emergency slack that the large penalty keeps at zero unless capacity runs out.
 - Tie-break: a negligible term of 0.001 USD x (1 - S) per vial makes the higher-ranked maker win when landed costs are identical (the five imputed prices). It changes the monthly cost by at most 10 USD, and it makes the Python (CBC) and browser (JavaScript) solvers return the same split.
 """),
@@ -282,11 +292,23 @@ split
 """),
     bi("milp"),
     code("""
+def route_plan(vials, mode):
+    # Hormuz sea and Gulf air shares of a split, with the east-coast reroute applied in Crisis mode (A36).
+    sea = float((vials * d["sea_hormuz_share"]).sum() / DEMAND)
+    air = float((vials * d["air_gulf_share"]).sum() / DEMAND)
+    oman = float((vials * d["sea_gulf_of_oman_share"]).sum() / DEMAND)
+    rerouted = sea if mode in EAST_COAST["applies_in"] else 0.0
+    return {"hormuz_sea_share_before_reroute": sea, "hormuz_sea_share": sea - rerouted, "gulf_air_share": air,
+            "east_coast_sea_share": oman + rerouted, "rerouted_vials": int(round(rerouted * DEMAND)),
+            "reroute_premium_usd": float(round(rerouted * DEMAND) * EAST_COAST["cost_premium_usd_per_vial"]),
+            "reroute_lead_time_premium_days": EAST_COAST["lead_time_premium_days"] if rerouted > 0 else 0}
+
 def kpis(mode):
     a = alloc[mode]
     v = a["vials"]
     c5 = d["C5_crisis"] if mode == "crisis" else d["C5_normal"]
-    return {"purchase_cost_usd": float((v * lc).sum()), "cost_per_vial_usd": float((v * lc).sum() / DEMAND),
+    rp = route_plan(v, mode)
+    return {**rp, "total_cost_usd": float((v * lc).sum()) + rp["reroute_premium_usd"],"purchase_cost_usd": float((v * lc).sum()), "cost_per_vial_usd": float((v * lc).sum() / DEMAND),
             "expected_late_share": float((v * d["C2"]).sum() / DEMAND), "route_exposure_weighted": float((v * c5).sum() / DEMAND),
             "india_made_share": float(v[d["manufacturing_country"].eq("India")].sum() / DEMAND),
             "primary_share": float(a["share"].max()), "suppliers_used": int((v > 0).sum()),
@@ -345,6 +367,21 @@ for mode in ["normal", "crisis"]:
                           "india_made_share": float(a.loc[d["manufacturing_country"].eq("India"), "vials"].sum() / DEMAND),
                           "route_exposure_weighted": float((a["vials"] * c5).sum() / DEMAND)})
 sens = pd.DataFrame(sens_rows)
+# Third review: find the exact lambda at which the supplier split changes (scan 0 to 5 in steps of 0.01).
+switch_rows = []
+for mode in ["normal", "crisis"]:
+    prev = None
+    for lam in np.round(np.arange(0, 5.001, 0.01), 2):
+        inp = pd.DataFrame({"landed_cost": lc, "S": rank[f"S_risk_{mode}"], "is_probation": d["is_probation"],
+                            "trial_gate_pass": d["trial_gate_pass"], "capacity": d["monthly_capacity_units"], "gated": d["gated"]})
+        a, s = allocate_milp(inp, DEMAND, lam=float(lam))
+        split_key = ", ".join(f"{m} {v:,}" for m, v in a[a["vials"] > 0].sort_values("vials", ascending=False)["vials"].items())
+        if split_key != prev:
+            switch_rows.append({"mode": mode, "from_lambda": float(lam), "split": split_key})
+            prev = split_key
+switches = pd.DataFrame(switch_rows)
+print("Supplier split by lambda range (first lambda at which each split appears):")
+print(switches.to_string(index=False))
 sens
 """),
     bi("lambda"),
@@ -443,6 +480,7 @@ for m, r in d.iterrows():
         "scms_lines": int(r["scms_lines"]), "site_prior_source": r["site_prior_source"], "hormuz_air_share": r["hormuz_air_share"], "lpi": r["lpi_2023"],
         "criteria": {"C1": r["C1"], "C2": r["C2"], "C3": r["C3"], "C4": r["C4"], "C5_normal": r["C5_normal"], "C5_crisis": r["C5_crisis"]},
         "shap_top3": json.loads(r["shap_top3_reasons"]),
+        "air_gulf_share": r["air_gulf_share"], "sea_hormuz_share": r["sea_hormuz_share"], "sea_gulf_of_oman_share": r["sea_gulf_of_oman_share"],
         # Drill-down drawer data (Phase 11): C4 composition as used in the score, evidence dates, labeler codes
         "c4_parts": {"inspection": float(insp_term[m]), "recalls": float(0.20 * recall_term[m]), "nlp": float(0.20 * nlp_term[m]),
                      "shortage": float(0.20 * shortage_term[m])},
@@ -454,6 +492,8 @@ export.write("suppliers.json", {"sku_id": SKU_ID, "sku_label": "Carboplatin inje
                                 "route_mix": pd.read_csv(Path.cwd().parents[0] / "reference" / "route_mix_assumptions.csv")[
                                     ["origin_country", "air_gulf_share", "sea_hormuz_share", "sea_gulf_of_oman_share"]].to_dict(orient="records"),
                                 "route_mix_note": "ASSUMPTION A8: route mix by origin country is a scenario assumption, not observed data",
+                                "east_coast_reroute": EAST_COAST,
+                                "lambda_switches": switches.to_dict(orient="records"),
                                 "makers": makers_json})
 normal_rank = rank["rank_normal"]
 for mode in MODES:

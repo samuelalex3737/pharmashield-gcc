@@ -36,16 +36,40 @@ export interface SplitRow {
   role: string;
 }
 
+// Route plan of a split (same rule as notebook 04, assumption A36): Hormuz sea and Gulf air shares, with the
+// east-coast reroute (Fujairah / Khor Fakkan, outside the Strait) applied in Crisis mode.
+export function routePlan(rows: SplitRow[], mode: Mode) {
+  const demand = suppliers.demand;
+  const used = rows.filter((r) => r.vials > 0);
+  const share = (k: "sea_hormuz_share" | "air_gulf_share" | "sea_gulf_of_oman_share") =>
+    used.reduce((a, r) => a + r.vials * makerById[r.id][k], 0) / demand;
+  const sea = share("sea_hormuz_share");
+  const ec = suppliers.east_coast_reroute;
+  const rerouted = ec.applies_in.includes(mode) ? sea : 0;
+  const reroutedVials = Math.round(rerouted * demand);
+  return {
+    hormuzSeaBefore: sea,
+    hormuzSea: sea - rerouted,
+    gulfAir: share("air_gulf_share"),
+    eastCoast: share("sea_gulf_of_oman_share") + rerouted,
+    reroutedVials,
+    reroutePremium: reroutedVials * ec.cost_premium_usd_per_vial,
+    leadTimeDays: reroutedVials > 0 ? ec.lead_time_premium_days : 0,
+  };
+}
+
 export function splitMetrics(rows: SplitRow[], mode: Mode) {
   const demand = suppliers.demand;
   const used = rows.filter((r) => r.vials > 0);
   const cost = used.reduce((a, r) => a + r.vials * makerById[r.id].landed_cost, 0);
+  const route = routePlan(rows, mode);
   return {
+    route,
+    totalCost: cost + route.reroutePremium,
     cost,
     costPerVial: cost / demand,
     lateShare: used.reduce((a, r) => a + r.vials * makerById[r.id].criteria.C2, 0) / demand,
     indiaShare: used.filter((r) => makerById[r.id].country === "India").reduce((a, r) => a + r.vials, 0) / demand,
-    hormuzShare: used.reduce((a, r) => a + r.vials * makerById[r.id].hormuz_air_share, 0) / demand,
     routeExposure: used.reduce((a, r) => a + r.vials * c5For(makerById[r.id], mode), 0) / demand,
     suppliersUsed: used.length,
   };

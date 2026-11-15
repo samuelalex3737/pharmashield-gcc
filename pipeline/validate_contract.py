@@ -79,6 +79,16 @@ def business_rules(name, doc, errors):
                 errors.append(f"{name}: gated maker {r['id']} has volume without a gate relaxation flag")
         if doc["lambda"] != sup["mode_lambda"][doc["mode"]]:
             errors.append(f"{name}: lambda does not match the mode profile")
+        # Third review, Tier 1 rule A37: probation total <= 15% and backup share >= probation share
+        prob_share = sum(r["share"] for r in doc["rows"] if r["role"] == "probation trial")
+        backup_share = sum(r["share"] for r in doc["rows"] if r["role"] == "backup")
+        if prob_share > 0.15 + 1e-9:
+            errors.append(f"{name}: total probation share {prob_share:.3f} above 15%")
+        if backup_share + 1e-9 < prob_share:
+            errors.append(f"{name}: backup share {backup_share:.3f} below probation share {prob_share:.3f}")
+        for key in ["hormuz_sea_share", "gulf_air_share", "east_coast_sea_share", "reroute_premium_usd", "total_cost_usd"]:
+            if key not in doc["kpis"]:
+                errors.append(f"{name}: kpis missing {key}")
     if name == "contract_clauses.json" and doc["synthetic"] is not True:
         errors.append("contract_clauses.json must be flagged synthetic")
 
@@ -101,8 +111,11 @@ def validate_all():
         def split(m):
             d = json.loads((WEB_DATA / f"allocations_{m}.json").read_text(encoding="utf-8"))
             return [(r["id"], r["vials"]) for r in d["rows"] if r["vials"] > 0]
-        if split("normal") == split("crisis"):
-            errors.append("Normal and Crisis must produce different splits (review fix 1)")
+        def plan(m):
+            d = json.loads((WEB_DATA / f"allocations_{m}.json").read_text(encoding="utf-8"))
+            return (split(m), round(d["kpis"]["hormuz_sea_share"], 6), d["kpis"]["rerouted_vials"])
+        if plan("normal") == plan("crisis"):
+            errors.append("Normal and Crisis must produce a different decision: supplier split or route plan (review fixes)")
     except FileNotFoundError:
         pass
     if errors:

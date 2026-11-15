@@ -55,6 +55,9 @@ export interface Maker {
   criteria: { C1: number; C2: number; C3: number; C4: number; C5_normal: number; C5_crisis: number };
   shap_top3: ShapReason[];
   c4_parts: { inspection: number; recalls: number; nlp: number; shortage: number };
+  air_gulf_share: number;
+  sea_hormuz_share: number;
+  sea_gulf_of_oman_share: number;
   last_inspection: string | null;
   labeler_codes: string[];
   recalls_5yr: number;
@@ -96,6 +99,14 @@ export interface AllocationRow {
 }
 
 export interface Kpis {
+  hormuz_sea_share_before_reroute: number;
+  hormuz_sea_share: number;
+  gulf_air_share: number;
+  east_coast_sea_share: number;
+  rerouted_vials: number;
+  reroute_premium_usd: number;
+  reroute_lead_time_premium_days: number;
+  total_cost_usd: number;
   purchase_cost_usd: number;
   cost_per_vial_usd: number;
   expected_late_share: number;
@@ -142,6 +153,8 @@ export const suppliers = suppliersJson as unknown as {
   data_criteria: string[];
   route_mix: { origin_country: string; air_gulf_share: number; sea_hormuz_share: number; sea_gulf_of_oman_share: number }[];
   route_mix_note: string;
+  east_coast_reroute: { ports: string; cost_premium_usd_per_vial: number; lead_time_premium_days: number; applies_in: Mode[]; note: string };
+  lambda_switches: { mode: Mode; from_lambda: number; split: string }[];
   makers: Maker[];
 };
 export const meta = metaJson as unknown as { run_utc: string; data_cutoff: string; raw_files: string[]; oncology_shortages?: OncologySummary };

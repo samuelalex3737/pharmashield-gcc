@@ -17,12 +17,12 @@ Open https://pharmashield-gcc.vercel.app/boardroom (or click "Boardroom" in the 
 |---|---|---|
 | 0:00 | Step 1, the problem | "84 current US oncology shortage records, 8 of 11 carboplatin makers short, and 25 days to replace a failed supplier." |
 | 0:05 | Step 2, the ranking | "Eleven qualified makers ranked on five risks. Probation makers can only win a 5-15% trial." |
-| 0:10 | Step 3, the crisis click | "Hormuz closes. One click changes weights, route stress and the price of risk: India-made volume goes from 5% to 0% for 1.4% more cost." |
+| 0:10 | Step 3, the crisis click | "Hormuz closes. One click keeps the suppliers and lands the sea volume at Fujairah: Hormuz sea share goes from 10% to 0% for 3,000 dollars a month; Gulf air stays 85%." |
 | 0:17 | Step 4, a supplier fails | "If the primary plant fails, the MILP re-solves live. The compliance gate has to relax, and the buyer sees it flagged in red." |
-| 0:23 | Step 5, the recommended split | "Teva 70%, Hospira 15%, AVYXA 15%: 1,672,430 dollars a month, no spot buy." |
+| 0:23 | Step 5, the recommended split | "Teva 70%, Hospira 15%, AVYXA 15%: 1,675,430 dollars a month including the reroute, no spot buy." |
 | 0:27 | Step 6, human approval | "The AI recommends; a category manager approves, and every decision is logged." |
 
-Expected values: Normal USD 1,648,949 (India-made 5%); Crisis USD 1,672,430 (India-made 0%, expected late shipments 1.59%); Teva failure in Crisis: Fresenius Kabi becomes primary with "Gate relaxed", cost +USD 89,043 a month, spot buy 0.
+Expected values: supplier split Teva 70%, Hospira 15%, AVYXA 15% in every mode (USD 1,672,430 supply); Normal Hormuz sea 10.0%, Gulf air 85.0%; Crisis Hormuz sea 0.0%, Gulf air 85.0%, 1,000 vials rerouted for USD 3,000 (total USD 1,675,430). Teva failure in Crisis: values as shown live on step 4.
 
 Alternative click path (no Boardroom mode): Scenario page, click "Crisis (Hormuz)", then "Primary (Teva) plant fails" in the disruption simulator, then the Approval page.
 

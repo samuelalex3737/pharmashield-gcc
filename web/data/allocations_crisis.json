@@ -12,6 +12,14 @@
  "objective": 2377586.017707438,
  "spot_buy_vials": 0,
  "kpis": {
+  "hormuz_sea_share_before_reroute": 0.1,
+  "hormuz_sea_share": 0.0,
+  "gulf_air_share": 0.85,
+  "east_coast_sea_share": 0.15000000000000002,
+  "rerouted_vials": 1000,
+  "reroute_premium_usd": 3000.0,
+  "reroute_lead_time_premium_days": 3,
+  "total_cost_usd": 1675429.5342521712,
   "purchase_cost_usd": 1672429.5342521712,
   "cost_per_vial_usd": 167.2429534252171,
   "expected_late_share": 0.0159003412510384,
@@ -105,35 +113,35 @@
  "lambda_sensitivity": [
   {
    "lambda": 0.0,
-   "split": "TEVA 7,000, GLAND 1,500, HOSPIRA 1,000, TEYRO 500",
-   "purchase_cost_usd": 1646986.303285954,
-   "expected_late_share": 0.01999413988424481,
-   "india_made_share": 0.2,
-   "route_exposure_weighted": 0.256
+   "split": "TEVA 7,000, GLAND 1,500, HOSPIRA 1,500",
+   "purchase_cost_usd": 1670467.240712735,
+   "expected_late_share": 0.01854656419083076,
+   "india_made_share": 0.15,
+   "route_exposure_weighted": 0.252
   },
   {
    "lambda": 0.5,
-   "split": "TEVA 7,000, AVYXA 1,500, HOSPIRA 1,000, GLAND 500",
-   "purchase_cost_usd": 1648948.5968253901,
-   "expected_late_share": 0.016782415564302523,
-   "india_made_share": 0.05,
-   "route_exposure_weighted": 0.244
+   "split": "TEVA 7,000, AVYXA 1,500, HOSPIRA 1,500",
+   "purchase_cost_usd": 1672429.5342521712,
+   "expected_late_share": 0.0159003412510384,
+   "india_made_share": 0.0,
+   "route_exposure_weighted": 0.24
   },
   {
    "lambda": 1.0,
-   "split": "TEVA 7,000, AVYXA 1,500, HOSPIRA 1,000, GLAND 500",
-   "purchase_cost_usd": 1648948.5968253901,
-   "expected_late_share": 0.016782415564302523,
-   "india_made_share": 0.05,
-   "route_exposure_weighted": 0.244
+   "split": "TEVA 7,000, AVYXA 1,500, HOSPIRA 1,500",
+   "purchase_cost_usd": 1672429.5342521712,
+   "expected_late_share": 0.0159003412510384,
+   "india_made_share": 0.0,
+   "route_exposure_weighted": 0.24
   },
   {
    "lambda": 1.5,
-   "split": "TEVA 7,000, AVYXA 1,500, HOSPIRA 1,000, GLAND 500",
-   "purchase_cost_usd": 1648948.5968253901,
-   "expected_late_share": 0.016782415564302523,
-   "india_made_share": 0.05,
-   "route_exposure_weighted": 0.244
+   "split": "TEVA 7,000, AVYXA 1,500, HOSPIRA 1,500",
+   "purchase_cost_usd": 1672429.5342521712,
+   "expected_late_share": 0.0159003412510384,
+   "india_made_share": 0.0,
+   "route_exposure_weighted": 0.24
   },
   {
    "lambda": 2.0,

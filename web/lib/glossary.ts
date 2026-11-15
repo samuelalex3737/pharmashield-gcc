@@ -15,5 +15,7 @@ export const GLOSSARY: Record<string, string> = {
   gated: "Compliance gate: C4 above 0.80 (assumption A34). The maker cannot be primary or backup while a feasible alternative exists.",
   imputed: "Imputed price: no Medicaid 2025 price exists for this maker, so the median price is used (assumption A4).",
   shortage: "The maker has at least one current US carboplatin shortage record in openFDA (US data, not validated for clinical use).",
-  hormuz: "Hormuz-exposed share: volume-weighted share of supply moving through the Strait of Hormuz or Gulf airspace (route-mix assumption A8).",
+  hormuz_sea: "Hormuz sea share: volume-weighted share of supply shipped by sea through the Strait of Hormuz (route mix, assumption A8). In Crisis mode this volume is landed at Fujairah or Khor Fakkan instead (A36).",
+  gulf_air: "Gulf air share: volume-weighted share of supply flown into the UAE through Gulf airspace (route mix, assumption A8). It cannot be rerouted by sea, so it is the residual crisis exposure.",
+  east_coast: "East-coast reroute (assumption A36): Hormuz-bound sea volume landed at Fujairah or Khor Fakkan on the Gulf of Oman coast, outside the Strait, for a stated cost and lead-time premium.",
 };

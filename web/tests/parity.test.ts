@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { CRITERIA, entropyWeights, topsis } from "@/lib/engine";
 import { allocations, MODES, rankings, suppliers, weights } from "@/lib/data";
 import { liveAllocation, liveRiskScores, liveScores, liveWeights, parityCheck } from "@/lib/live";
+import { routePlan } from "@/lib/insights";
 
 describe("entropy and blended weights", () => {
   it("match the Python entropy weights", () => {
@@ -72,11 +73,37 @@ describe("MILP order split", () => {
     });
   }
 
-  it("uses the mode lambda profile and gives different Normal and Crisis splits", () => {
+  it("uses the mode lambda profile and gives a different Normal and Crisis decision (split or route plan)", () => {
     expect(allocations.normal.lambda).toBe(suppliers.mode_lambda.normal);
     expect(allocations.crisis.lambda).toBe(suppliers.mode_lambda.crisis);
-    const key = (m: "normal" | "crisis") => allocations[m].rows.filter((r) => r.vials > 0).map((r) => `${r.id}:${r.vials}`).join(",");
+    const key = (m: "normal" | "crisis") =>
+      allocations[m].rows.filter((r) => r.vials > 0).map((r) => `${r.id}:${r.vials}`).join(",") + `|${allocations[m].kpis.rerouted_vials}`;
     expect(key("normal")).not.toBe(key("crisis"));
+  });
+
+  it("route plan matches Python: Hormuz sea, Gulf air, east-coast reroute and premium", () => {
+    for (const mode of MODES) {
+      const live = liveAllocation(mode, allocations[mode].lambda);
+      const rp = routePlan(live.rows, mode);
+      const k = allocations[mode].kpis;
+      expect(Math.abs(rp.hormuzSea - k.hormuz_sea_share)).toBeLessThan(1e-9);
+      expect(Math.abs(rp.gulfAir - k.gulf_air_share)).toBeLessThan(1e-9);
+      expect(Math.abs(rp.eastCoast - k.east_coast_sea_share)).toBeLessThan(1e-9);
+      expect(rp.reroutedVials).toBe(k.rerouted_vials);
+      expect(rp.reroutePremium).toBeCloseTo(k.reroute_premium_usd, 6);
+    }
+  });
+
+  it("enforces the Tier 1 backup rule: probation total <= 15% and backup >= probation", () => {
+    for (const mode of MODES) {
+      for (const lam of [0, 0.5, 1, 2, 5]) {
+        const live = liveAllocation(mode, lam);
+        const prob = live.rows.filter((r) => r.role === "probation trial").reduce((a, r) => a + r.share, 0);
+        const backup = live.rows.filter((r) => r.role === "backup").reduce((a, r) => a + r.share, 0);
+        expect(prob).toBeLessThanOrEqual(0.15 + 1e-9);
+        expect(backup + 1e-9).toBeGreaterThanOrEqual(prob);
+      }
+    }
   });
 
   it("never gives a compliance-gated maker a primary or backup role while an alternative exists", () => {
